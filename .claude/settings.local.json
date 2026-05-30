@@ -1,0 +1,36 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(Get-ChildItem *)",
+      "Bash(grep -E \"\\\\.tsx$|\\\\.ts$|/$\")",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\" | ForEach-Object { $_.Name })",
+      "Bash(grep -E \"\\\\.tsx$\")",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\components\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\components\\\\shared\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\components\\\\ui\" | ForEach-Object { $_.Name })",
+      "PowerShell(head *)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\app\" -Recurse -Directory | ForEach-Object { $_.FullName.Replace\\(\"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\app\", \"app\"\\) } | Select-Object -First 30)",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\hooks\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\lib\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\components\\\\layout\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\components\\\\forms\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\components\\\\dashboard\" | ForEach-Object { $_.Name })",
+      "PowerShell(Get-ChildItem -Path \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\types\" | ForEach-Object { $_.Name })",
+      "Bash(npx tsc *)",
+      "Bash(New-Item -ItemType Directory -Force \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\app\\\\historique\")",
+      "Bash(Out-Null)",
+      "Bash(Write-Output \"done\")",
+      "PowerShell(New-Item *)",
+      "Bash(node -e ' *)",
+      "Bash(node --input-type=module)",
+      "Bash(Select-String -Pattern \"id: '\" data/mock-users.ts)",
+      "Bash(Measure-Object)",
+      "Bash(Select-Object -ExpandProperty Count)",
+      "Bash(Select-String -Pattern \"id: '\" data/mock-clients.ts)",
+      "Bash(Select-String -Pattern \"id: '\" data/mock-equipments.ts)",
+      "Bash(Select-String -Pattern \"id: '\" data/mock-contracts.ts)",
+      "Bash(Select-String -Pattern \"id: '\" data/mock-interventions.ts)",
+      "Bash(Select-String -Pattern \"id: '\" data/mock-invoices.ts)"
+    ]
+  }
+}
