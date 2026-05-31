@@ -15,6 +15,9 @@ import {
   Calendar,
   MoreHorizontal,
 } from 'lucide-react';
+import { SortableHeader } from '@/components/shared/SortableHeader';
+import { TablePagination } from '@/components/shared/TablePagination';
+import { type SortConfig, sortData, paginateData, toggleSort, PRIORITY_SORT_ORDER } from '@/lib/table';
 import { Intervention, InterventionStatut, User } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
@@ -87,6 +90,8 @@ export default function InterventionsPage() {
   const [technicianFilter, setTechnicianFilter] = useState('all');
   const [dateStart, setDateStart] = useState('');
   const [dateEnd, setDateEnd] = useState('');
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [page, setPage] = useState(1);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedIntervention, setSelectedIntervention] = useState<Intervention | undefined>();
@@ -166,6 +171,36 @@ export default function InterventionsPage() {
     dateStart,
     dateEnd,
   ]);
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  useEffect(() => { setPage(1); }, [searchTerm, typeFilter, statutFilter, prioriteFilter, clientFilter, technicianFilter, dateStart, dateEnd]);
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig((prev) => toggleSort(prev, key));
+  }, []);
+
+  const sortedInterventions = useMemo(
+    () =>
+      sortData(filteredInterventions, sortConfig, (i, key) => {
+        switch (key) {
+          case 'reference': return i.reference;
+          case 'type': return i.type;
+          case 'client': return mockClients.find((c) => c.id === i.clientId)?.societe ?? '';
+          case 'equipment': return mockEquipments.find((e) => e.id === i.equipementId)?.reference ?? '';
+          case 'technicien': return getTechnicianName(i.technicienId);
+          case 'datePrevue': return i.datePrevue;
+          case 'priorite': return PRIORITY_SORT_ORDER[i.priorite] ?? 0;
+          case 'statut': return i.statut;
+          default: return '';
+        }
+      }),
+    [filteredInterventions, sortConfig]
+  );
+
+  const pagedInterventions = useMemo(
+    () => paginateData(sortedInterventions, page, 10),
+    [sortedInterventions, page]
+  );
 
   const isAdmin = user?.role === ROLES.ADMIN;
   const isTechnician = user?.role === ROLES.TECHNICIAN;
@@ -446,20 +481,20 @@ export default function InterventionsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <TableHead>Référence</TableHead>
-                    <TableHead>Type</TableHead>
-                    <TableHead>Client</TableHead>
-                    <TableHead>Équipement</TableHead>
-                    <TableHead className="hidden md:table-cell">Technicien</TableHead>
-                    <TableHead>Date prévue</TableHead>
-                    <TableHead className="hidden sm:table-cell">Priorité</TableHead>
-                    <TableHead>Statut</TableHead>
+                    <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Type" sortKey="type" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Technicien" sortKey="technicien" sortConfig={sortConfig} onSort={handleSort} className="hidden md:table-cell" />
+                    <SortableHeader label="Date prévue" sortKey="datePrevue" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="hidden sm:table-cell" />
+                    <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
                     <TableHead className="hidden lg:table-cell">Couverture</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredInterventions.map((intervention) => (
+                  {pagedInterventions.map((intervention) => (
                     <InterventionTableRow
                       key={intervention.id}
                       intervention={intervention}
@@ -481,10 +516,13 @@ export default function InterventionsPage() {
                 </TableBody>
               </Table>
             </div>
-            <p className="text-sm text-muted-foreground">
-              {filteredInterventions.length} intervention
-              {filteredInterventions.length !== 1 ? 's' : ''}
-            </p>
+            <TablePagination
+              page={page}
+              pageSize={10}
+              totalItems={filteredInterventions.length}
+              onPrevious={() => setPage((p) => p - 1)}
+              onNext={() => setPage((p) => p + 1)}
+            />
           </>
         )}
       </div>
@@ -590,7 +628,7 @@ function InterventionTableRow({
       <TableCell className="hidden md:table-cell text-sm">
         {getTechnicianName(intervention.technicienId)}
       </TableCell>
-      <TableCell className="whitespace-nowrap text-sm">{intervention.datePrevue}</TableCell>
+      <TableCell className="whitespace-nowrap text-sm">{formatDate(intervention.datePrevue)}</TableCell>
       <TableCell className="hidden sm:table-cell">
         <PriorityBadge priority={intervention.priorite} />
       </TableCell>

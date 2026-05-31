@@ -41,6 +41,9 @@ import {
   FilePlus,
   Receipt,
 } from 'lucide-react';
+import { SortableHeader } from '@/components/shared/SortableHeader';
+import { TablePagination } from '@/components/shared/TablePagination';
+import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 
 import { formatDate } from '@/lib/utils';
 
@@ -63,6 +66,8 @@ export default function FacturesPage() {
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [isGenerateOpen, setIsGenerateOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     setInvoices(mockInvoices);
@@ -127,6 +132,33 @@ export default function FacturesPage() {
     );
   }, [invoices, interventions, currentUser, clientId, searchTerm, statusFilter, clientFilter, getInterventionRef]);
 
+  useEffect(() => { setPage(1); }, [searchTerm, statusFilter, clientFilter]);
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig((prev) => toggleSort(prev, key));
+  }, []);
+
+  const sortedInvoices = useMemo(() => {
+    if (!sortConfig) return filteredInvoices;
+    return sortData(filteredInvoices, sortConfig, (inv, key) => {
+      switch (key) {
+        case 'numero': return inv.numero;
+        case 'client': return mockClients.find((c) => c.id === inv.clientId)?.societe ?? '';
+        case 'intervention': return getInterventionRef(inv.interventionId);
+        case 'montantHT': return inv.montantHT;
+        case 'montantTTC': return inv.montantTTC;
+        case 'dateEmission': return inv.dateEmission;
+        case 'statut': return inv.statut;
+        default: return '';
+      }
+    });
+  }, [filteredInvoices, sortConfig, getInterventionRef]);
+
+  const pagedInvoices = useMemo(
+    () => paginateData(sortedInvoices, page, 10),
+    [sortedInvoices, page]
+  );
+
   const handleMarkPaid = useCallback(
     (invoiceId: string) => {
       setInvoices((prev) =>
@@ -185,7 +217,7 @@ export default function FacturesPage() {
                 onClick={() => router.push('/dashboard')}
                 className="w-full mt-2 gap-2 font-medium"
               >
-                Retour au dashboard
+                Retour au tableau de bord
                 <ArrowRight size={16} />
               </Button>
             </CardContent>
@@ -277,14 +309,14 @@ export default function FacturesPage() {
           <Table>
             <TableHeader>
               <TableRow className="bg-muted/40">
-                <TableHead className="font-semibold">Numéro</TableHead>
-                {isAdmin && <TableHead className="font-semibold">Client</TableHead>}
-                {isAdmin && <TableHead className="font-semibold">Intervention</TableHead>}
-                <TableHead className="text-right font-semibold">Montant HT</TableHead>
+                <SortableHeader label="Numéro" sortKey="numero" sortConfig={sortConfig} onSort={handleSort} />
+                {isAdmin && <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />}
+                {isAdmin && <SortableHeader label="Intervention" sortKey="intervention" sortConfig={sortConfig} onSort={handleSort} />}
+                <SortableHeader label="Montant HT" sortKey="montantHT" sortConfig={sortConfig} onSort={handleSort} />
                 <TableHead className="text-right font-semibold">TVA</TableHead>
-                <TableHead className="text-right font-semibold">Montant TTC</TableHead>
-                <TableHead className="text-center font-semibold">Date émission</TableHead>
-                <TableHead className="text-center font-semibold">Statut</TableHead>
+                <SortableHeader label="Montant TTC" sortKey="montantTTC" sortConfig={sortConfig} onSort={handleSort} />
+                <SortableHeader label="Date émission" sortKey="dateEmission" sortConfig={sortConfig} onSort={handleSort} />
+                <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
                 <TableHead className="text-right font-semibold">Actions</TableHead>
               </TableRow>
             </TableHeader>
@@ -299,7 +331,7 @@ export default function FacturesPage() {
                   </TableCell>
                 </TableRow>
               ) : (
-                filteredInvoices.map((invoice) => (
+                pagedInvoices.map((invoice) => (
                   <TableRow key={invoice.id} className="hover:bg-muted/30 transition-colors">
                     <TableCell className="font-mono font-bold text-xs text-primary">
                       {invoice.numero}
@@ -362,9 +394,13 @@ export default function FacturesPage() {
           </div>
         </div>
 
-        <p className="text-sm text-muted-foreground">
-          Total : {filteredInvoices.length} facture{filteredInvoices.length !== 1 ? 's' : ''} trouvée{filteredInvoices.length !== 1 ? 's' : ''}
-        </p>
+        <TablePagination
+          page={page}
+          pageSize={10}
+          totalItems={filteredInvoices.length}
+          onPrevious={() => setPage((p) => p - 1)}
+          onNext={() => setPage((p) => p + 1)}
+        />
       </div>
 
       {/* Invoice detail dialog */}

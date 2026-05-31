@@ -23,6 +23,7 @@ import {
   isTechnicianAvailable,
   TECHNICIAN_UNAVAILABLE_MESSAGE,
 } from '@/lib/interventions';
+import { formatDate } from '@/lib/utils';
 
 interface AssignTechnicianDialogProps {
   open: boolean;
@@ -84,7 +85,7 @@ export function AssignTechnicianDialog({
           <DialogTitle>Affecter un technicien</DialogTitle>
           <DialogDescription>
             {intervention
-              ? `Intervention ${intervention.reference} — ${intervention.datePrevue}`
+              ? `Intervention ${intervention.reference} — ${formatDate(intervention.datePrevue)}`
               : ''}
           </DialogDescription>
         </DialogHeader>

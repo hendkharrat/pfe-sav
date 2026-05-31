@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Equipment } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -30,6 +30,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { EquipmentDetail } from '@/components/shared/EquipmentDetail';
+import { SortableHeader } from '@/components/shared/SortableHeader';
+import { TablePagination } from '@/components/shared/TablePagination';
+import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -58,6 +61,8 @@ export default function EquipmentsPage() {
   const [detailEquipment, setDetailEquipment] = useState<Equipment | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [equipmentToDelete, setEquipmentToDelete] = useState<Equipment | null>(null);
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     setEquipments(mockEquipments);
@@ -90,6 +95,33 @@ export default function EquipmentsPage() {
 
     setFilteredEquipments(result);
   }, [equipments, searchTerm, typeFilter, clientFilter, statusFilter]);
+
+  useEffect(() => { setPage(1); }, [searchTerm, typeFilter, clientFilter, statusFilter]);
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig((prev) => toggleSort(prev, key));
+  }, []);
+
+  const sortedEquipments = useMemo(
+    () =>
+      sortData(filteredEquipments, sortConfig, (eq, key) => {
+        switch (key) {
+          case 'reference': return eq.reference;
+          case 'type': return eq.type;
+          case 'marque': return eq.marque;
+          case 'modele': return eq.modele;
+          case 'client': return mockClients.find((c) => c.id === eq.clientId)?.societe ?? '';
+          case 'statut': return eq.statut;
+          default: return '';
+        }
+      }),
+    [filteredEquipments, sortConfig]
+  );
+
+  const pagedEquipments = useMemo(
+    () => paginateData(sortedEquipments, page, 10),
+    [sortedEquipments, page]
+  );
 
   const handleAddEquipment = useCallback(
     (formData: Omit<Equipment, 'id'>) => {
@@ -238,13 +270,13 @@ export default function EquipmentsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Référence</TableHead>
-                  <TableHead>Type</TableHead>
-                  <TableHead>Marque</TableHead>
-                  <TableHead>Modèle</TableHead>
-                  <TableHead>Client</TableHead>
+                  <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Type" sortKey="type" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Marque" sortKey="marque" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Modèle" sortKey="modele" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
                   <TableHead>Localisation</TableHead>
-                  <TableHead>Statut</TableHead>
+                  <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -256,7 +288,7 @@ export default function EquipmentsPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredEquipments.map((equipment) => (
+                  pagedEquipments.map((equipment) => (
                     <TableRow key={equipment.id}>
                       <TableCell className="font-medium">{equipment.reference}</TableCell>
                       <TableCell>{EQUIPMENT_TYPE_LABELS[equipment.type]}</TableCell>
@@ -304,10 +336,13 @@ export default function EquipmentsPage() {
             </div>
           </div>
 
-          {/* Results count */}
-          <p className="text-sm text-muted-foreground">
-            {filteredEquipments.length} équipement{filteredEquipments.length !== 1 ? 's' : ''} trouvé{filteredEquipments.length !== 1 ? 's' : ''}
-          </p>
+          <TablePagination
+            page={page}
+            pageSize={10}
+            totalItems={filteredEquipments.length}
+            onPrevious={() => setPage((p) => p - 1)}
+            onNext={() => setPage((p) => p + 1)}
+          />
         </div>
 
         {/* Equipment Form */}

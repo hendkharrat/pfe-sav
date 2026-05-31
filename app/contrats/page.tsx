@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Contract } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -30,6 +30,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ContractDetail } from '@/components/shared/ContractDetail';
+import { SortableHeader } from '@/components/shared/SortableHeader';
+import { TablePagination } from '@/components/shared/TablePagination';
+import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -59,6 +62,8 @@ export default function ContratsPage() {
   const [detailContract, setDetailContract] = useState<Contract | null>(null);
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [contractToDelete, setContractToDelete] = useState<Contract | null>(null);
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [page, setPage] = useState(1);
 
   useEffect(() => {
     setContracts(mockContracts);
@@ -106,6 +111,34 @@ export default function ContratsPage() {
 
     setFilteredContracts(result);
   }, [contracts, searchTerm, clientFilter, statusFilter, frequencyFilter]);
+
+  useEffect(() => { setPage(1); }, [searchTerm, clientFilter, statusFilter, frequencyFilter]);
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig((prev) => toggleSort(prev, key));
+  }, []);
+
+  const sortedContracts = useMemo(
+    () =>
+      sortData(filteredContracts, sortConfig, (contract, key) => {
+        switch (key) {
+          case 'reference': return contract.reference;
+          case 'client': return mockClients.find((c) => c.id === contract.clientId)?.societe ?? '';
+          case 'dateDebut': return contract.dateDebut;
+          case 'dateFin': return contract.dateFin;
+          case 'periodicite': return contract.periodicite;
+          case 'equipements': return contract.equipementIds.length;
+          case 'statut': return contract.statut;
+          default: return '';
+        }
+      }),
+    [filteredContracts, sortConfig]
+  );
+
+  const pagedContracts = useMemo(
+    () => paginateData(sortedContracts, page, 10),
+    [sortedContracts, page]
+  );
 
   const handleAddContract = useCallback(
     (formData: Omit<Contract, 'id'>) => {
@@ -268,13 +301,13 @@ export default function ContratsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Référence</TableHead>
-                  <TableHead>Client</TableHead>
-                  <TableHead>Date début</TableHead>
-                  <TableHead>Date fin</TableHead>
-                  <TableHead>Périodicité</TableHead>
-                  <TableHead>Équipements</TableHead>
-                  <TableHead>Statut</TableHead>
+                  <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Date début" sortKey="dateDebut" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Date fin" sortKey="dateFin" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Périodicité" sortKey="periodicite" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Équipements" sortKey="equipements" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -286,7 +319,7 @@ export default function ContratsPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredContracts.map((contract) => (
+                  pagedContracts.map((contract) => (
                     <TableRow key={contract.id}>
                       <TableCell className="font-medium">{contract.reference}</TableCell>
                       <TableCell>{getClientName(contract.clientId)}</TableCell>
@@ -336,10 +369,13 @@ export default function ContratsPage() {
             </div>
           </div>
 
-          {/* Results count */}
-          <p className="text-sm text-muted-foreground">
-            {filteredContracts.length} contrat{filteredContracts.length !== 1 ? 's' : ''} trouvé{filteredContracts.length !== 1 ? 's' : ''}
-          </p>
+          <TablePagination
+            page={page}
+            pageSize={10}
+            totalItems={filteredContracts.length}
+            onPrevious={() => setPage((p) => p - 1)}
+            onNext={() => setPage((p) => p + 1)}
+          />
         </div>
 
         {/* Contract Form */}

@@ -7,7 +7,7 @@ import { List } from 'lucide-react';
 import { Intervention, InterventionStatut, InterventionType } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
-import { PlanningCalendar } from '@/components/shared/PlanningCalendar';
+import { PlanningCalendar, type PlanningViewMode } from '@/components/shared/PlanningCalendar';
 import { InterventionDetail } from '@/components/shared/InterventionDetail';
 import { mockInterventions } from '@/data/mock-interventions';
 import { Button } from '@/components/ui/button';
@@ -28,13 +28,23 @@ import {
   getActiveTechnicians,
   getWeekStart,
 } from '@/lib/interventions';
+import { cn } from '@/lib/utils';
+
+const VIEW_MODES: PlanningViewMode[] = ['week', 'twoWeeks', 'month'];
+
+const VIEW_MODE_LABELS: Record<PlanningViewMode, string> = {
+  week: '1 semaine',
+  twoWeeks: '2 semaines',
+  month: 'Mois',
+};
 
 export default function PlanningPage() {
   const router = useRouter();
   const { user, isLoading } = useAuth();
 
   const [interventions, setInterventions] = useState<Intervention[]>([]);
-  const [weekStart, setWeekStart] = useState(() => getWeekStart(new Date()));
+  const [viewMode, setViewMode] = useState<PlanningViewMode>('week');
+  const [viewStart, setViewStart] = useState<Date>(() => getWeekStart(new Date()));
   const [technicianFilter, setTechnicianFilter] = useState('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
@@ -49,6 +59,11 @@ export default function PlanningPage() {
   useEffect(() => {
     setInterventions(mockInterventions);
   }, []);
+
+  const handleModeChange = (newMode: PlanningViewMode) => {
+    setViewMode(newMode);
+    setViewStart(newMode === 'month' ? new Date() : getWeekStart(new Date()));
+  };
 
   const filteredForPlanning = useMemo(() => {
     if (!user) return [];
@@ -84,7 +99,7 @@ export default function PlanningPage() {
           <div>
             <h1 className="text-3xl font-bold text-foreground">Planning</h1>
             <p className="text-muted-foreground mt-2">
-              Vue hebdomadaire des interventions
+              Vue des interventions planifiées
             </p>
           </div>
           <Button variant="outline" asChild className="gap-2 w-full sm:w-auto">
@@ -93,6 +108,24 @@ export default function PlanningPage() {
               Liste des interventions
             </Link>
           </Button>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <span className="text-sm font-medium text-muted-foreground">Vue :</span>
+          <div className="inline-flex rounded-md border border-border overflow-hidden">
+            {VIEW_MODES.map((mode, i) => (
+              <Button
+                key={mode}
+                type="button"
+                variant={viewMode === mode ? 'default' : 'ghost'}
+                size="sm"
+                className={cn('rounded-none', i > 0 && 'border-l border-border')}
+                onClick={() => handleModeChange(mode)}
+              >
+                {VIEW_MODE_LABELS[mode]}
+              </Button>
+            ))}
+          </div>
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
@@ -141,8 +174,9 @@ export default function PlanningPage() {
 
         <PlanningCalendar
           interventions={filteredForPlanning}
-          weekStart={weekStart}
-          onWeekChange={setWeekStart}
+          viewStart={viewStart}
+          mode={viewMode}
+          onViewChange={setViewStart}
           onCardClick={setDetailIntervention}
         />
 

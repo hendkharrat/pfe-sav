@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { Client } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -28,6 +28,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { ClientDetail } from '@/components/shared/ClientDetail';
+import { SortableHeader } from '@/components/shared/SortableHeader';
+import { TablePagination } from '@/components/shared/TablePagination';
+import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -48,6 +51,8 @@ export default function ClientsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [cityFilter, setCityFilter] = useState('all');
   const [cities, setCities] = useState<string[]>([]);
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [page, setPage] = useState(1);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | undefined>();
@@ -82,6 +87,32 @@ export default function ClientsPage() {
 
     setFilteredClients(result);
   }, [clients, searchTerm, cityFilter]);
+
+  useEffect(() => { setPage(1); }, [searchTerm, cityFilter]);
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig((prev) => toggleSort(prev, key));
+  }, []);
+
+  const sortedClients = useMemo(
+    () =>
+      sortData(filteredClients, sortConfig, (client, key) => {
+        switch (key) {
+          case 'societe': return client.societe;
+          case 'contact': return client.contact;
+          case 'email': return client.email;
+          case 'ville': return client.ville;
+          case 'nombreEquipements': return client.nombreEquipements;
+          default: return '';
+        }
+      }),
+    [filteredClients, sortConfig]
+  );
+
+  const pagedClients = useMemo(
+    () => paginateData(sortedClients, page, 10),
+    [sortedClients, page]
+  );
 
   const handleAddClient = useCallback(
     (formData: Omit<Client, 'id' | 'dateCreation' | 'nombreEquipements' | 'userId'>) => {
@@ -208,12 +239,12 @@ export default function ClientsPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Société</TableHead>
-                  <TableHead>Contact</TableHead>
-                  <TableHead>Email</TableHead>
+                  <SortableHeader label="Société" sortKey="societe" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Contact" sortKey="contact" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Email" sortKey="email" sortConfig={sortConfig} onSort={handleSort} />
                   <TableHead>Téléphone</TableHead>
-                  <TableHead>Ville</TableHead>
-                  <TableHead className="text-center">Équipements</TableHead>
+                  <SortableHeader label="Ville" sortKey="ville" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Équipements" sortKey="nombreEquipements" sortConfig={sortConfig} onSort={handleSort} />
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -225,7 +256,7 @@ export default function ClientsPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredClients.map((client) => (
+                  pagedClients.map((client) => (
                     <TableRow key={client.id}>
                       <TableCell className="font-medium">{client.societe}</TableCell>
                       <TableCell>{client.contact}</TableCell>
@@ -270,10 +301,13 @@ export default function ClientsPage() {
             </div>
           </div>
 
-          {/* Results count */}
-          <p className="text-sm text-muted-foreground">
-            {filteredClients.length} client{filteredClients.length !== 1 ? 's' : ''} trouvé{filteredClients.length !== 1 ? 's' : ''}
-          </p>
+          <TablePagination
+            page={page}
+            pageSize={10}
+            totalItems={filteredClients.length}
+            onPrevious={() => setPage((p) => p - 1)}
+            onNext={() => setPage((p) => p + 1)}
+          />
         </div>
 
         {/* Modals */}

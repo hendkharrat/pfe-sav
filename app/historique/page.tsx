@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useCallback, useMemo, useEffect } from 'react';
 import { Intervention } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
@@ -51,6 +51,9 @@ import {
   Wrench,
   ShieldCheck,
 } from 'lucide-react';
+import { SortableHeader } from '@/components/shared/SortableHeader';
+import { TablePagination } from '@/components/shared/TablePagination';
+import { type SortConfig, sortData, paginateData, toggleSort, PRIORITY_SORT_ORDER } from '@/lib/table';
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -82,6 +85,8 @@ export default function HistoriquePage() {
   // Detail sheet
   const [selectedIntervention, setSelectedIntervention] = useState<Intervention | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [page, setPage] = useState(1);
 
   // Client ID for the logged-in client user
   const clientId = useMemo(() => {
@@ -209,6 +214,35 @@ export default function HistoriquePage() {
     getClientName,
     getEquipmentLabel,
   ]);
+
+  useEffect(() => { setPage(1); }, [searchTerm, typeFilter, statutFilter, prioriteFilter, clientFilter, techFilter, equipFilter, dateDebut, dateFin]);
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig((prev) => toggleSort(prev, key));
+  }, []);
+
+  const sortedHistorique = useMemo(() => {
+    if (!sortConfig) return filteredInterventions;
+    return sortData(filteredInterventions, sortConfig, (i, key) => {
+      switch (key) {
+        case 'reference': return i.reference;
+        case 'type': return i.type;
+        case 'client': return getClientName(i.clientId);
+        case 'equipment': return getEquipmentLabel(i.equipementId);
+        case 'technicien': return getTechnicianName(i.technicienId);
+        case 'datePrevue': return i.datePrevue;
+        case 'dateRealisation': return i.dateRealisation ?? '';
+        case 'priorite': return PRIORITY_SORT_ORDER[i.priorite] ?? 0;
+        case 'statut': return i.statut;
+        default: return '';
+      }
+    });
+  }, [filteredInterventions, sortConfig, getClientName, getEquipmentLabel]);
+
+  const pagedHistorique = useMemo(
+    () => paginateData(sortedHistorique, page, 20),
+    [sortedHistorique, page]
+  );
 
   // ─── Actions ──────────────────────────────────────────────────────────────
 
@@ -481,23 +515,23 @@ export default function HistoriquePage() {
               <Table className="min-w-[1100px]">
                 <TableHeader>
                   <TableRow className="bg-muted/40">
-                    <TableHead className="font-semibold w-[120px]">Référence</TableHead>
-                    <TableHead className="font-semibold w-[100px]">Type</TableHead>
+                    <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} className="w-[120px]" />
+                    <SortableHeader label="Type" sortKey="type" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                     {isAdmin && (
-                      <TableHead className="font-semibold min-w-[140px]">Client</TableHead>
+                      <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} className="min-w-[140px]" />
                     )}
-                    <TableHead className="font-semibold min-w-[140px]">Équipement</TableHead>
-                    <TableHead className="font-semibold min-w-[130px]">Technicien</TableHead>
-                    <TableHead className="font-semibold w-[100px]">Date prévue</TableHead>
-                    <TableHead className="font-semibold w-[110px]">Date réalisation</TableHead>
-                    <TableHead className="font-semibold w-[90px] text-center">Priorité</TableHead>
-                    <TableHead className="font-semibold w-[100px] text-center">Statut</TableHead>
+                    <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} className="min-w-[140px]" />
+                    <SortableHeader label="Technicien" sortKey="technicien" sortConfig={sortConfig} onSort={handleSort} className="min-w-[130px]" />
+                    <SortableHeader label="Date prévue" sortKey="datePrevue" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                    <SortableHeader label="Date réalisation" sortKey="dateRealisation" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
+                    <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[90px]" />
+                    <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                     <TableHead className="font-semibold w-[100px] text-center">Couverture</TableHead>
                     <TableHead className="font-semibold text-right w-[80px]">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {filteredInterventions.map((intervention) => (
+                  {pagedHistorique.map((intervention) => (
                     <TableRow
                       key={intervention.id}
                       className="hover:bg-muted/30 transition-colors"
@@ -564,12 +598,13 @@ export default function HistoriquePage() {
           </div>
         )}
 
-        {filteredInterventions.length > 0 && (
-          <p className="text-sm text-muted-foreground">
-            Affichage de {filteredInterventions.length} intervention
-            {filteredInterventions.length !== 1 ? 's' : ''} sur {historicInterventions.length} au total.
-          </p>
-        )}
+        <TablePagination
+          page={page}
+          pageSize={20}
+          totalItems={filteredInterventions.length}
+          onPrevious={() => setPage((p) => p - 1)}
+          onNext={() => setPage((p) => p + 1)}
+        />
       </div>
 
       {/* Detail sheet */}

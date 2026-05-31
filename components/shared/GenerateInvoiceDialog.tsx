@@ -28,6 +28,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { mockClients } from '@/data/mock-clients';
 import { FileText, AlertCircle } from 'lucide-react';
+import { formatDate } from '@/lib/utils';
 
 const TAUX_HORAIRE_TND = 50;
 const PRIX_MATERIEL_DEFAUT_TND = 150;
@@ -200,7 +201,7 @@ export function GenerateInvoiceDialog({
                           <span className="mx-2 text-muted-foreground">—</span>
                           <span>{client?.societe ?? 'Client inconnu'}</span>
                           <span className="mx-2 text-muted-foreground">—</span>
-                          <span className="text-muted-foreground">{int.dateRealisation ?? int.datePrevue}</span>
+                          <span className="text-muted-foreground">{formatDate(int.dateRealisation ?? int.datePrevue)}</span>
                         </SelectItem>
                       );
                     })}

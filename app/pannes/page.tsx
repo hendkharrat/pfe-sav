@@ -39,13 +39,25 @@ import {
   AlertTriangle,
   ArrowRight,
   ClipboardCheck,
+  Plus,
+  Wrench,
 } from 'lucide-react';
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from '@/components/ui/dialog';
 import { getClientIdForUser, getContractCoverage, generateInterventionReference } from '@/lib/interventions';
 import { formatDate } from '@/lib/utils';
 import { PanneForm } from '@/components/forms/PanneForm';
 import { PanneDetail } from '@/components/shared/PanneDetail';
 import { CreateCurativeFromPanneDialog } from '@/components/shared/CreateCurativeFromPanneDialog';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
+import { SortableHeader } from '@/components/shared/SortableHeader';
+import { TablePagination } from '@/components/shared/TablePagination';
+import { type SortConfig, sortData, paginateData, toggleSort, PRIORITY_SORT_ORDER } from '@/lib/table';
 
 export default function PannesPage() {
   const router = useRouter();
@@ -74,6 +86,12 @@ export default function PannesPage() {
   const [panneToCancel, setPanneToCancel] = useState<Panne | null>(null);
   const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
 
+  // Client declaration dialog state
+  const [isCreateOpen, setIsCreateOpen] = useState(false);
+
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [page, setPage] = useState(1);
+
   // Initialization
   useEffect(() => {
     setPannes(mockPannes);
@@ -87,6 +105,13 @@ export default function PannesPage() {
     const clientEqs = mockEquipments.filter((e) => e.clientId === clientId);
     return { clientId, equipments: clientEqs };
   }, [currentUser]);
+
+  const clientHasPannes = useMemo(() => {
+    if (!currentUser || currentUser.role !== 'client') return true;
+    const cid = clientInfo.clientId;
+    if (!cid) return false;
+    return pannes.some((p) => p.clientId === cid);
+  }, [pannes, currentUser, clientInfo.clientId]);
 
   const getClientName = useCallback((clientId: string): string => {
     return mockClients.find((c) => c.id === clientId)?.societe || 'N/A';
@@ -140,11 +165,36 @@ export default function PannesPage() {
       list = list.filter((p) => p.clientId === clientFilter);
     }
 
-    // Sort by date (latest first) and status urgency
     return [...list].sort(
       (a, b) => new Date(b.dateDeclaration).getTime() - new Date(a.dateDeclaration).getTime()
     );
   }, [pannes, currentUser, clientInfo.clientId, searchTerm, statusFilter, priorityFilter, clientFilter, getClientName, getEquipmentName]);
+
+  useEffect(() => { setPage(1); }, [searchTerm, statusFilter, priorityFilter, clientFilter]);
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig((prev) => toggleSort(prev, key));
+  }, []);
+
+  const sortedPannes = useMemo(() => {
+    if (!sortConfig) return filteredPannes;
+    return sortData(filteredPannes, sortConfig, (panne, key) => {
+      switch (key) {
+        case 'reference': return panne.reference;
+        case 'date': return panne.dateDeclaration;
+        case 'client': return mockClients.find((c) => c.id === panne.clientId)?.societe ?? '';
+        case 'equipment': return mockEquipments.find((e) => e.id === panne.equipementId)?.reference ?? '';
+        case 'priorite': return PRIORITY_SORT_ORDER[panne.priorite] ?? 0;
+        case 'statut': return panne.statut;
+        default: return '';
+      }
+    });
+  }, [filteredPannes, sortConfig]);
+
+  const pagedPannes = useMemo(
+    () => paginateData(sortedPannes, page, 10),
+    [sortedPannes, page]
+  );
 
   // Client Action: submit panne
   const handleClientSubmit = useCallback(
@@ -177,6 +227,7 @@ export default function PannesPage() {
       };
 
       setPannes((prev) => [newPanne, ...prev]);
+      setIsCreateOpen(false);
       showSuccess('Votre déclaration a été enregistrée.');
     },
     [clientInfo.clientId, pannes.length, showError, showSuccess]
@@ -294,7 +345,7 @@ export default function PannesPage() {
                 onClick={() => router.push('/dashboard')}
                 className="w-full mt-2 gap-2 font-medium"
               >
-                Retour au dashboard
+                Retour au tableau de bord
                 <ArrowRight size={16} />
               </Button>
             </CardContent>
@@ -308,116 +359,134 @@ export default function PannesPage() {
     <AppLayout>
       <div className="space-y-8">
         {/* Header */}
-        <div>
-          <h1 className="text-3xl font-bold text-foreground tracking-tight">
-            {currentUser?.role === 'client' ? 'Déclarer une panne' : 'Gestion des pannes'}
-          </h1>
-          <p className="text-muted-foreground mt-2 text-sm sm:text-base">
-            {currentUser?.role === 'client'
-              ? 'Déclarez et suivez vos pannes d&apos;équipements en temps réel.'
-              : 'Gérez les signalements de pannes des clients, changez leur statut ou planifiez des interventions curatives.'}
-          </p>
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-bold text-foreground tracking-tight">
+              {currentUser?.role === 'client' ? 'Mes pannes' : 'Gestion des pannes'}
+            </h1>
+            <p className="text-muted-foreground mt-2 text-sm sm:text-base">
+              {currentUser?.role === 'client'
+                ? 'Déclarez et suivez les pannes de vos équipements.'
+                : 'Gérez les signalements de pannes des clients, changez leur statut ou planifiez des interventions curatives.'}
+            </p>
+          </div>
+          {currentUser?.role === 'client' && (
+            <Button onClick={() => setIsCreateOpen(true)} className="gap-2 shrink-0">
+              <Plus size={16} />
+              Déclarer une panne
+            </Button>
+          )}
         </div>
 
         {/* CLIENT INTERFACE */}
         {currentUser?.role === 'client' && (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 items-start">
-            {/* Declaration form on the left/top */}
-            <div className="lg:col-span-1">
-              <PanneForm
-                clientId={clientInfo.clientId || ''}
-                equipments={clientInfo.equipments}
-                onSubmit={handleClientSubmit}
-              />
+          <div className="space-y-6">
+            {/* Search & Filter bar */}
+            <div className="p-4 bg-muted/30 border border-border rounded-xl shadow-sm">
+              <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
+                <div className="relative flex-1 w-full sm:max-w-72">
+                  <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
+                  <Input
+                    placeholder="Réf., équipement, mot-clé..."
+                    value={searchTerm}
+                    onChange={(e) => setSearchTerm(e.target.value)}
+                    className="pl-9 h-9 text-xs"
+                  />
+                </div>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
+                  <SelectTrigger className="w-full sm:w-[160px] h-9 text-xs">
+                    <SelectValue placeholder="Statut" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="all">Tous statuts</SelectItem>
+                    <SelectItem value="EN_ATTENTE">En attente</SelectItem>
+                    <SelectItem value="PRISE_EN_CHARGE">Prise en charge</SelectItem>
+                    <SelectItem value="CONVERTIE">Convertie</SelectItem>
+                    <SelectItem value="ANNULEE">Annulée</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
             </div>
 
-            {/* List on the right/bottom */}
-            <div className="lg:col-span-2 space-y-6">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 border-b border-border pb-4">
-                <h2 className="text-lg font-bold text-foreground">Mes pannes déclarées</h2>
-                {/* Micro search filter */}
-                <div className="flex w-full sm:w-auto items-center gap-2">
-                  <div className="relative flex-1 sm:w-60">
-                    <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
-                    <Input
-                      placeholder="Réf., équipement, mot-clé..."
-                      value={searchTerm}
-                      onChange={(e) => setSearchTerm(e.target.value)}
-                      className="pl-9 h-9 text-xs"
-                    />
-                  </div>
-                  <Select value={statusFilter} onValueChange={setStatusFilter}>
-                    <SelectTrigger className="w-[120px] h-9 text-xs">
-                      <SelectValue placeholder="Statut" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="all">Tous statuts</SelectItem>
-                      <SelectItem value="EN_ATTENTE">En attente</SelectItem>
-                      <SelectItem value="PRISE_EN_CHARGE">Prise en charge</SelectItem>
-                      <SelectItem value="CONVERTIE">Convertie</SelectItem>
-                      <SelectItem value="ANNULEE">Annulée</SelectItem>
-                    </SelectContent>
-                  </Select>
+            {/* Empty state (no pannes at all) */}
+            {!clientHasPannes ? (
+              <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-border rounded-xl bg-muted/10">
+                <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
+                  <Wrench size={28} className="text-muted-foreground" />
                 </div>
+                <h3 className="text-lg font-semibold text-foreground mb-1">Aucune panne déclarée</h3>
+                <p className="text-sm text-muted-foreground mb-6 max-w-sm">
+                  Vous pouvez déclarer une panne pour l&apos;un de vos équipements.
+                </p>
+                <Button onClick={() => setIsCreateOpen(true)} className="gap-2">
+                  <Plus size={16} />
+                  Déclarer une panne
+                </Button>
               </div>
-
-              {/* Table */}
-              <div className="border border-border rounded-xl overflow-hidden shadow-sm bg-card">
-                <div className="overflow-x-auto">
-                <Table>
-                  <TableHeader>
-                    <TableRow className="bg-muted/40">
-                      <TableHead className="w-[110px] font-semibold">Référence</TableHead>
-                      <TableHead className="w-[100px] font-semibold">Date</TableHead>
-                      <TableHead className="font-semibold">Équipement</TableHead>
-                      <TableHead className="w-[100px] font-semibold">Priorité</TableHead>
-                      <TableHead className="w-[120px] font-semibold">Statut</TableHead>
-                      <TableHead className="text-right font-semibold">Actions</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredPannes.length === 0 ? (
-                      <TableRow>
-                        <TableCell colSpan={6} className="text-center py-12 text-muted-foreground text-sm font-medium">
-                          Aucun signalement de panne trouvé
-                        </TableCell>
-                      </TableRow>
-                    ) : (
-                      filteredPannes.map((panne) => (
-                        <TableRow key={panne.id} className="hover:bg-muted/30 transition-colors">
-                          <TableCell className="font-bold text-xs text-primary">{panne.reference}</TableCell>
-                          <TableCell className="text-xs text-muted-foreground">{formatDate(panne.dateDeclaration)}</TableCell>
-                          <TableCell className="text-xs font-semibold">
-                            {getEquipmentName(panne.equipementId)}
-                          </TableCell>
-                          <TableCell>
-                            <PriorityBadge priority={panne.priorite} />
-                          </TableCell>
-                          <TableCell>
-                            <StatusBadge status={panne.statut} type="panne" />
-                          </TableCell>
-                          <TableCell className="text-right">
-                            <Button
-                              size="sm"
-                              variant="ghost"
-                              className="h-8 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
-                              onClick={() => handleViewDetail(panne)}
-                            >
-                              <Eye size={14} />
-                              Détail
-                            </Button>
-                          </TableCell>
+            ) : (
+              <>
+                {/* Mes pannes déclarées table */}
+                <div className="border border-border rounded-xl overflow-hidden shadow-sm bg-card">
+                  <div className="overflow-x-auto">
+                    <Table>
+                      <TableHeader>
+                        <TableRow className="bg-muted/40">
+                          <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
+                          <SortableHeader label="Date" sortKey="date" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                          <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
+                          <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                          <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} className="w-[120px]" />
+                          <TableHead className="text-right font-semibold">Actions</TableHead>
                         </TableRow>
-                      ))
-                    )}
-                  </TableBody>
-                </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {filteredPannes.length === 0 ? (
+                          <TableRow>
+                            <TableCell colSpan={6} className="text-center py-12 text-muted-foreground text-sm font-medium">
+                              Aucun signalement de panne ne correspond aux critères de recherche.
+                            </TableCell>
+                          </TableRow>
+                        ) : (
+                          pagedPannes.map((panne) => (
+                            <TableRow key={panne.id} className="hover:bg-muted/30 transition-colors">
+                              <TableCell className="font-bold text-xs text-primary">{panne.reference}</TableCell>
+                              <TableCell className="text-xs text-muted-foreground">{formatDate(panne.dateDeclaration)}</TableCell>
+                              <TableCell className="text-xs font-semibold">
+                                {getEquipmentName(panne.equipementId)}
+                              </TableCell>
+                              <TableCell>
+                                <PriorityBadge priority={panne.priorite} />
+                              </TableCell>
+                              <TableCell>
+                                <StatusBadge status={panne.statut} type="panne" />
+                              </TableCell>
+                              <TableCell className="text-right">
+                                <Button
+                                  size="sm"
+                                  variant="ghost"
+                                  className="h-8 gap-1.5 text-xs text-muted-foreground hover:text-foreground"
+                                  onClick={() => handleViewDetail(panne)}
+                                >
+                                  <Eye size={14} />
+                                  Détail
+                                </Button>
+                              </TableCell>
+                            </TableRow>
+                          ))
+                        )}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Affichage de {filteredPannes.length} panne{filteredPannes.length !== 1 ? 's' : ''} déclarée{filteredPannes.length !== 1 ? 's' : ''}
-              </p>
-            </div>
+                <TablePagination
+                  page={page}
+                  pageSize={10}
+                  totalItems={filteredPannes.length}
+                  onPrevious={() => setPage((p) => p - 1)}
+                  onNext={() => setPage((p) => p + 1)}
+                />
+              </>
+            )}
           </div>
         )}
 
@@ -492,12 +561,12 @@ export default function PannesPage() {
               <Table>
                 <TableHeader>
                   <TableRow className="bg-muted/40">
-                    <TableHead className="w-[100px] font-semibold">Référence</TableHead>
-                    <TableHead className="w-[100px] font-semibold text-center">Déclaré le</TableHead>
-                    <TableHead className="font-semibold">Client</TableHead>
-                    <TableHead className="font-semibold">Équipement</TableHead>
-                    <TableHead className="w-[100px] font-semibold text-center">Priorité</TableHead>
-                    <TableHead className="w-[110px] font-semibold text-center">Statut</TableHead>
+                    <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                    <SortableHeader label="Déclaré le" sortKey="date" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                    <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                    <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
                     <TableHead className="text-right font-semibold">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
@@ -509,7 +578,7 @@ export default function PannesPage() {
                       </TableCell>
                     </TableRow>
                   ) : (
-                    filteredPannes.map((panne) => (
+                    pagedPannes.map((panne) => (
                       <TableRow key={panne.id} className="hover:bg-muted/30 transition-colors">
                         <TableCell className="font-bold text-xs text-primary">{panne.reference}</TableCell>
                         <TableCell className="text-xs text-muted-foreground text-center">{formatDate(panne.dateDeclaration)}</TableCell>
@@ -590,14 +659,36 @@ export default function PannesPage() {
               </Table>
               </div>
             </div>
-            <p className="text-sm text-muted-foreground">
-              Total : {filteredPannes.length} panne{filteredPannes.length !== 1 ? 's' : ''} trouvée{filteredPannes.length !== 1 ? 's' : ''}
-            </p>
+            <TablePagination
+              page={page}
+              pageSize={10}
+              totalItems={filteredPannes.length}
+              onPrevious={() => setPage((p) => p - 1)}
+              onNext={() => setPage((p) => p + 1)}
+            />
           </div>
         )}
       </div>
 
       {/* Reusable Sheets / Modals */}
+
+      {/* Client: Declaration Dialog */}
+      <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
+        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+          <DialogHeader>
+            <DialogTitle>Déclarer une panne</DialogTitle>
+            <DialogDescription>
+              Signalez un dysfonctionnement sur l&apos;un de vos équipements.
+            </DialogDescription>
+          </DialogHeader>
+          <PanneForm
+            clientId={clientInfo.clientId || ''}
+            equipments={clientInfo.equipments}
+            onSubmit={handleClientSubmit}
+            noCard
+          />
+        </DialogContent>
+      </Dialog>
 
       {/* Panne Detail view */}
       <PanneDetail

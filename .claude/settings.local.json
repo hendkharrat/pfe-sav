@@ -30,7 +30,11 @@
       "Bash(Select-String -Pattern \"id: '\" data/mock-equipments.ts)",
       "Bash(Select-String -Pattern \"id: '\" data/mock-contracts.ts)",
       "Bash(Select-String -Pattern \"id: '\" data/mock-interventions.ts)",
-      "Bash(Select-String -Pattern \"id: '\" data/mock-invoices.ts)"
+      "Bash(Select-String -Pattern \"id: '\" data/mock-invoices.ts)",
+      "Bash(echo \"EXIT_CODE: $?\")",
+      "Bash(grep -v \"//\")",
+      "Bash(npm run *)",
+      "Bash(Test-Path *)"
     ]
   }
 }

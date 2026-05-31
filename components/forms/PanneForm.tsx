@@ -26,9 +26,10 @@ interface PanneFormProps {
     pieceJointeNom?: string;
   }) => void;
   isLoading?: boolean;
+  noCard?: boolean;
 }
 
-export function PanneForm({ clientId, equipments, onSubmit, isLoading = false }: PanneFormProps) {
+export function PanneForm({ clientId, equipments, onSubmit, isLoading = false, noCard = false }: PanneFormProps) {
   const [formData, setFormData] = useState({
     equipementId: '',
     description: '',
@@ -86,17 +87,9 @@ export function PanneForm({ clientId, equipments, onSubmit, isLoading = false }:
     setErrors({});
   };
 
-  return (
-    <Card className="shadow-lg border-border hover:shadow-xl transition-shadow duration-300">
-      <CardHeader className="space-y-1">
-        <CardTitle className="text-xl font-bold text-foreground">Déclarer une panne</CardTitle>
-        <CardDescription>
-          Signalez un dysfonctionnement sur l&apos;un de vos équipements sous contrat. Un administrateur prendra en charge votre demande rapidement.
-        </CardDescription>
-      </CardHeader>
-      <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Equipment Selector */}
+  const formBody = (
+    <form onSubmit={handleSubmit} className="space-y-6">
+      {/* Equipment Selector */}
           <div className="space-y-2">
             <Label htmlFor="equipement" className="text-sm font-semibold">
               Mon équipement *
@@ -240,8 +233,22 @@ export function PanneForm({ clientId, equipments, onSubmit, isLoading = false }:
               Envoyer la déclaration
             </Button>
           </div>
-        </form>
-      </CardContent>
+    </form>
+  );
+
+  if (noCard) {
+    return formBody;
+  }
+
+  return (
+    <Card className="shadow-lg border-border hover:shadow-xl transition-shadow duration-300">
+      <CardHeader className="space-y-1">
+        <CardTitle className="text-xl font-bold text-foreground">Déclarer une panne</CardTitle>
+        <CardDescription>
+          Signalez un dysfonctionnement sur l&apos;un de vos équipements sous contrat. Un administrateur prendra en charge votre demande rapidement.
+        </CardDescription>
+      </CardHeader>
+      <CardContent>{formBody}</CardContent>
     </Card>
   );
 }

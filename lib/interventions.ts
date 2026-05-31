@@ -163,3 +163,42 @@ export function isDateInRange(
   }
   return true;
 }
+
+export function startOfMonth(date: Date): Date {
+  const d = new Date(date);
+  d.setDate(1);
+  d.setHours(12, 0, 0, 0);
+  return d;
+}
+
+export function endOfMonth(date: Date): Date {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + 1, 0);
+  d.setHours(12, 0, 0, 0);
+  return d;
+}
+
+export function addMonths(date: Date, months: number): Date {
+  const d = new Date(date);
+  d.setMonth(d.getMonth() + months);
+  return d;
+}
+
+export function getMonthGridDays(date: Date): (Date | null)[] {
+  const first = startOfMonth(date);
+  const last = endOfMonth(date);
+  // JS getDay: 0=Sunday … 6=Saturday; we want Mon=0 as column offset
+  const jsDay = first.getDay();
+  const leadingCount = jsDay === 0 ? 6 : jsDay - 1;
+  const result: (Date | null)[] = Array.from({ length: leadingCount }, () => null);
+  const current = new Date(first);
+  while (current <= last) {
+    result.push(new Date(current));
+    current.setDate(current.getDate() + 1);
+  }
+  return result;
+}
+
+export function formatMonthYearFr(date: Date): string {
+  return date.toLocaleDateString('fr-FR', { month: 'long', year: 'numeric' });
+}

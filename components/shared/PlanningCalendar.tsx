@@ -11,43 +11,50 @@ import { mockEquipments } from '@/data/mock-equipments';
 import { INTERVENTION_TYPE_LABELS } from '@/lib/constants';
 import {
   addDays,
+  addMonths,
   formatDateFr,
+  formatMonthYearFr,
+  getMonthGridDays,
   getTechnicianName,
   getWeekStart,
   toDateInputValue,
 } from '@/lib/interventions';
 import { cn } from '@/lib/utils';
 
+export type PlanningViewMode = 'week' | 'twoWeeks' | 'month';
+
 const WEEKDAY_LABELS = ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'];
+const WEEKDAY_SHORT = ['Lun', 'Mar', 'Mer', 'Jeu', 'Ven', 'Sam', 'Dim'];
 
 interface PlanningCalendarProps {
   interventions: Intervention[];
-  weekStart: Date;
-  onWeekChange: (weekStart: Date) => void;
+  viewStart: Date;
+  mode: PlanningViewMode;
+  onViewChange: (date: Date) => void;
   onCardClick: (intervention: Intervention) => void;
 }
 
 export function PlanningCalendar({
   interventions,
-  weekStart,
-  onWeekChange,
+  viewStart,
+  mode,
+  onViewChange,
   onCardClick,
 }: PlanningCalendarProps) {
-  const weekDays = Array.from({ length: 7 }, (_, i) => addDays(weekStart, i));
-  const weekEnd = addDays(weekStart, 6);
-
-  const weekLabel = `${formatDateFr(toDateInputValue(weekStart))} — ${formatDateFr(toDateInputValue(weekEnd))}`;
-
-  const goToPreviousWeek = () => {
-    onWeekChange(addDays(weekStart, -7));
+  const goToPrev = () => {
+    if (mode === 'week') onViewChange(addDays(viewStart, -7));
+    else if (mode === 'twoWeeks') onViewChange(addDays(viewStart, -14));
+    else onViewChange(addMonths(viewStart, -1));
   };
 
-  const goToNextWeek = () => {
-    onWeekChange(addDays(weekStart, 7));
+  const goToNext = () => {
+    if (mode === 'week') onViewChange(addDays(viewStart, 7));
+    else if (mode === 'twoWeeks') onViewChange(addDays(viewStart, 14));
+    else onViewChange(addMonths(viewStart, 1));
   };
 
-  const goToCurrentWeek = () => {
-    onWeekChange(getWeekStart(new Date()));
+  const goToCurrent = () => {
+    onViewChange(mode === 'month' ? new Date() : getWeekStart(new Date()));
   };
 
   const getInterventionsForDay = (day: Date): Intervention[] => {
@@ -55,66 +62,168 @@ export function PlanningCalendar({
     return interventions.filter((i) => i.datePrevue === dayStr);
   };
 
+  let label: string;
+  if (mode === 'month') {
+    label = formatMonthYearFr(viewStart);
+  } else {
+    const rangeEnd = addDays(viewStart, mode === 'week' ? 6 : 13);
+    label = `${formatDateFr(toDateInputValue(viewStart))} — ${formatDateFr(toDateInputValue(rangeEnd))}`;
+  }
+
   return (
     <div className="space-y-4">
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
         <div className="flex items-center gap-2">
-          <Button type="button" variant="outline" size="icon" onClick={goToPreviousWeek}>
+          <Button type="button" variant="outline" size="icon" onClick={goToPrev}>
             <ChevronLeft size={18} />
           </Button>
-          <Button type="button" variant="outline" size="sm" onClick={goToCurrentWeek}>
-            Semaine en cours
+          <Button type="button" variant="outline" size="sm" onClick={goToCurrent}>
+            {mode === 'month' ? 'Mois en cours' : 'Semaine en cours'}
           </Button>
-          <Button type="button" variant="outline" size="icon" onClick={goToNextWeek}>
+          <Button type="button" variant="outline" size="icon" onClick={goToNext}>
             <ChevronRight size={18} />
           </Button>
         </div>
-        <p className="text-sm font-medium text-foreground capitalize">{weekLabel}</p>
+        <p className="text-sm font-medium text-foreground capitalize">{label}</p>
       </div>
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
-        {weekDays.map((day, index) => {
-          const dayInterventions = getInterventionsForDay(day);
-          const isToday = toDateInputValue(day) === toDateInputValue(new Date());
+      {mode !== 'month' ? (
+        <LinearDaysGrid
+          days={Array.from(
+            { length: mode === 'week' ? 7 : 14 },
+            (_, i) => addDays(viewStart, i)
+          )}
+          getInterventionsForDay={getInterventionsForDay}
+          onCardClick={onCardClick}
+        />
+      ) : (
+        <MonthGrid
+          viewStart={viewStart}
+          getInterventionsForDay={getInterventionsForDay}
+          onCardClick={onCardClick}
+        />
+      )}
+    </div>
+  );
+}
 
-          return (
+function LinearDaysGrid({
+  days,
+  getInterventionsForDay,
+  onCardClick,
+}: {
+  days: Date[];
+  getInterventionsForDay: (day: Date) => Intervention[];
+  onCardClick: (intervention: Intervention) => void;
+}) {
+  return (
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-7 gap-3">
+      {days.map((day, index) => {
+        const dayInterventions = getInterventionsForDay(day);
+        const isToday = toDateInputValue(day) === toDateInputValue(new Date());
+        return (
+          <div
+            key={toDateInputValue(day)}
+            className={cn(
+              'min-h-[200px] rounded-lg border border-border bg-card',
+              isToday && 'ring-2 ring-primary/30'
+            )}
+          >
             <div
-              key={toDateInputValue(day)}
               className={cn(
-                'min-h-[200px] rounded-lg border border-border bg-card',
-                isToday && 'ring-2 ring-primary/30'
+                'px-3 py-2 border-b border-border text-sm font-semibold',
+                isToday ? 'bg-primary/10' : 'bg-muted/40'
               )}
             >
+              <p>{WEEKDAY_LABELS[index % 7]}</p>
+              <p className="text-xs font-normal text-muted-foreground">
+                {day.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
+              </p>
+            </div>
+            <div className="p-2 space-y-2 max-h-[320px] overflow-y-auto">
+              {dayInterventions.length === 0 ? (
+                <p className="text-xs text-muted-foreground text-center py-4">
+                  Aucune intervention
+                </p>
+              ) : (
+                dayInterventions.map((intervention) => (
+                  <InterventionCard
+                    key={intervention.id}
+                    intervention={intervention}
+                    onClick={() => onCardClick(intervention)}
+                  />
+                ))
+              )}
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function MonthGrid({
+  viewStart,
+  getInterventionsForDay,
+  onCardClick,
+}: {
+  viewStart: Date;
+  getInterventionsForDay: (day: Date) => Intervention[];
+  onCardClick: (intervention: Intervention) => void;
+}) {
+  const gridDays = getMonthGridDays(viewStart);
+
+  return (
+    <div className="overflow-x-auto">
+      <div className="min-w-[700px]">
+        <div className="grid grid-cols-7 gap-1 mb-1">
+          {WEEKDAY_SHORT.map((lbl) => (
+            <div
+              key={lbl}
+              className="text-center text-xs font-semibold text-muted-foreground py-2"
+            >
+              {lbl}
+            </div>
+          ))}
+        </div>
+        <div className="grid grid-cols-7 gap-1">
+          {gridDays.map((day, index) => {
+            if (day === null) {
+              return <div key={`empty-${index}`} className="min-h-[110px] rounded-lg" />;
+            }
+            const dayInterventions = getInterventionsForDay(day);
+            const isToday = toDateInputValue(day) === toDateInputValue(new Date());
+            return (
               <div
+                key={toDateInputValue(day)}
                 className={cn(
-                  'px-3 py-2 border-b border-border text-sm font-semibold',
-                  isToday ? 'bg-primary/10' : 'bg-muted/40'
+                  'min-h-[110px] rounded-lg border border-border bg-card',
+                  isToday && 'ring-2 ring-primary/30'
                 )}
               >
-                <p>{WEEKDAY_LABELS[index]}</p>
-                <p className="text-xs font-normal text-muted-foreground">
-                  {day.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })}
-                </p>
-              </div>
-
-              <div className="p-2 space-y-2 max-h-[320px] overflow-y-auto">
-                {dayInterventions.length === 0 ? (
-                  <p className="text-xs text-muted-foreground text-center py-4">
-                    Aucune intervention
+                <div
+                  className={cn(
+                    'px-2 py-1.5 border-b border-border',
+                    isToday ? 'bg-primary/10' : 'bg-muted/40'
+                  )}
+                >
+                  <p className="text-xs font-semibold">
+                    {day.toLocaleDateString('fr-FR', { day: 'numeric' })}
                   </p>
-                ) : (
-                  dayInterventions.map((intervention) => (
+                </div>
+                <div className="p-1 space-y-1 max-h-[160px] overflow-y-auto">
+                  {dayInterventions.map((intervention) => (
                     <InterventionCard
                       key={intervention.id}
                       intervention={intervention}
                       onClick={() => onCardClick(intervention)}
                     />
-                  ))
-                )}
+                  ))}
+                </div>
               </div>
-            </div>
-          );
-        })}
+            );
+          })}
+        </div>
       </div>
     </div>
   );

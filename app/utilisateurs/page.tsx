@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useCallback } from 'react';
+import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import { User, UserRole } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
@@ -30,6 +30,9 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { RoleBadge } from '@/components/shared/RoleBadge';
+import { SortableHeader } from '@/components/shared/SortableHeader';
+import { TablePagination } from '@/components/shared/TablePagination';
+import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 import { formatDate } from '@/lib/utils';
 import { Plus, Edit2, Trash2, Filter } from 'lucide-react';
 
@@ -43,6 +46,8 @@ export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [roleFilter, setRoleFilter] = useState<'all' | UserRole>('all');
   const [statusFilter, setStatusFilter] = useState<'all' | 'active' | 'inactive'>('all');
+  const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
+  const [page, setPage] = useState(1);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
@@ -76,6 +81,32 @@ export default function UsersPage() {
 
     setFilteredUsers(result);
   }, [users, searchTerm, roleFilter, statusFilter]);
+
+  useEffect(() => { setPage(1); }, [searchTerm, roleFilter, statusFilter]);
+
+  const handleSort = useCallback((key: string) => {
+    setSortConfig((prev) => toggleSort(prev, key));
+  }, []);
+
+  const sortedUsers = useMemo(
+    () =>
+      sortData(filteredUsers, sortConfig, (user, key) => {
+        switch (key) {
+          case 'nom': return `${user.prenom} ${user.nom}`;
+          case 'email': return user.email;
+          case 'role': return user.role;
+          case 'statut': return user.actif ? 'actif' : 'inactif';
+          case 'dateCreation': return user.dateCreation;
+          default: return '';
+        }
+      }),
+    [filteredUsers, sortConfig]
+  );
+
+  const pagedUsers = useMemo(
+    () => paginateData(sortedUsers, page, 10),
+    [sortedUsers, page]
+  );
 
   const handleAddUser = useCallback(
     (formData: Omit<User, 'id' | 'dateCreation'> & { password?: string }) => {
@@ -209,11 +240,11 @@ export default function UsersPage() {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Nom complet</TableHead>
-                  <TableHead>Email</TableHead>
-                  <TableHead>Rôle</TableHead>
-                  <TableHead>Statut</TableHead>
-                  <TableHead>Date création</TableHead>
+                  <SortableHeader label="Nom complet" sortKey="nom" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Email" sortKey="email" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Rôle" sortKey="role" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Date création" sortKey="dateCreation" sortConfig={sortConfig} onSort={handleSort} />
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
               </TableHeader>
@@ -225,7 +256,7 @@ export default function UsersPage() {
                     </TableCell>
                   </TableRow>
                 ) : (
-                  filteredUsers.map((user) => (
+                  pagedUsers.map((user) => (
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{`${user.prenom} ${user.nom}`}</TableCell>
                       <TableCell className="text-muted-foreground">{user.email}</TableCell>
@@ -267,10 +298,13 @@ export default function UsersPage() {
             </div>
           </div>
 
-          {/* Results count */}
-          <p className="text-sm text-muted-foreground">
-            {filteredUsers.length} utilisateur{filteredUsers.length !== 1 ? 's' : ''} trouvé{filteredUsers.length !== 1 ? 's' : ''}
-          </p>
+          <TablePagination
+            page={page}
+            pageSize={10}
+            totalItems={filteredUsers.length}
+            onPrevious={() => setPage((p) => p - 1)}
+            onNext={() => setPage((p) => p + 1)}
+          />
         </div>
 
         {/* Modals */}
