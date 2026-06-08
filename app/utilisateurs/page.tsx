@@ -54,9 +54,9 @@ export default function UsersPage() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [userToDeactivate, setUserToDeactivate] = useState<User | null>(null);
 
-  // Initialize users from mock data
+  // Initialize users from mock data — client-role users are managed in the Clients module
   useEffect(() => {
-    setUsers(mockUsers);
+    setUsers(mockUsers.filter((u) => u.role !== ROLES.CLIENT));
   }, []);
 
   // Filter users
@@ -218,7 +218,6 @@ export default function UsersPage() {
                   <SelectItem value="all">Tous les rôles</SelectItem>
                   <SelectItem value={ROLES.ADMIN}>{ROLE_LABELS.admin}</SelectItem>
                   <SelectItem value={ROLES.TECHNICIAN}>{ROLE_LABELS.technician}</SelectItem>
-                  <SelectItem value={ROLES.CLIENT}>{ROLE_LABELS.client}</SelectItem>
                 </SelectContent>
               </Select>
               <Select value={statusFilter} onValueChange={(value) => setStatusFilter(value as 'all' | 'active' | 'inactive')}>

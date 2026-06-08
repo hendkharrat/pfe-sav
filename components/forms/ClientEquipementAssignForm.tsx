@@ -20,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { EQUIPMENT_STATUS_LABELS, EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
+import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
 
 interface ClientEquipementAssignFormProps {
   open: boolean;
@@ -47,7 +47,6 @@ export function ClientEquipementAssignForm({
     equipementId: editingAssignment?.equipementId ?? '',
     localisation: editingAssignment?.localisation ?? '',
     dateInstallation: editingAssignment?.dateInstallation ?? '',
-    statut: editingAssignment?.statut ?? ('EN_SERVICE' as const),
     notes: editingAssignment?.notes ?? '',
   });
 
@@ -67,7 +66,6 @@ export function ClientEquipementAssignForm({
     if (!formData.equipementId) newErrors.equipementId = "Veuillez sélectionner un équipement";
     if (!formData.localisation.trim()) newErrors.localisation = "La localisation est obligatoire";
     if (!formData.dateInstallation) newErrors.dateInstallation = "La date d'installation est obligatoire";
-    if (!formData.statut) newErrors.statut = "Le statut est obligatoire";
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -82,7 +80,6 @@ export function ClientEquipementAssignForm({
       equipementId: formData.equipementId,
       localisation: formData.localisation.trim(),
       dateInstallation: formData.dateInstallation,
-      statut: formData.statut,
       notes: formData.notes.trim() || undefined,
     };
 
@@ -166,27 +163,6 @@ export function ClientEquipementAssignForm({
             {errors.dateInstallation && (
               <p className="text-xs text-red-500">{errors.dateInstallation}</p>
             )}
-          </div>
-
-          {/* Statut */}
-          <div className="space-y-2">
-            <Label>Statut chez le client *</Label>
-            <Select
-              value={formData.statut}
-              onValueChange={(v) =>
-                setFormData({ ...formData, statut: v as 'EN_SERVICE' | 'EN_PANNE' | 'HORS_SERVICE' })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="EN_SERVICE">{EQUIPMENT_STATUS_LABELS['EN_SERVICE']}</SelectItem>
-                <SelectItem value="EN_PANNE">{EQUIPMENT_STATUS_LABELS['EN_PANNE']}</SelectItem>
-                <SelectItem value="HORS_SERVICE">{EQUIPMENT_STATUS_LABELS['HORS_SERVICE']}</SelectItem>
-              </SelectContent>
-            </Select>
-            {errors.statut && <p className="text-xs text-red-500">{errors.statut}</p>}
           </div>
 
           {/* Notes */}

@@ -43,7 +43,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal } from 'lucide-react';
 import { CONTRACT_FREQUENCY_LABELS } from '@/lib/constants';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 import { preventivePreviewToIntervention } from '@/lib/interventions';
 
 export default function ContratsPage() {
@@ -95,9 +95,7 @@ export default function ContratsPage() {
       result = result.filter(
         (c) =>
           c.reference.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          mockClients.find((client) => client.id === c.clientId)?.societe
-            .toLowerCase()
-            .includes(searchTerm.toLowerCase())
+          (() => { const cl = mockClients.find((client) => client.id === c.clientId); return cl ? getClientDisplayName(cl).toLowerCase().includes(searchTerm.toLowerCase()) : false; })()
       );
     }
 
@@ -127,7 +125,7 @@ export default function ContratsPage() {
       sortData(filteredContracts, sortConfig, (contract, key) => {
         switch (key) {
           case 'reference': return contract.reference;
-          case 'client': return mockClients.find((c) => c.id === contract.clientId)?.societe ?? '';
+          case 'client': { const cl = mockClients.find((c) => c.id === contract.clientId); return cl ? getClientDisplayName(cl) : ''; }
           case 'dateDebut': return contract.dateDebut;
           case 'dateFin': return contract.dateFin;
           case 'periodicite': return contract.periodicite;
@@ -206,7 +204,8 @@ export default function ContratsPage() {
   };
 
   const getClientName = (clientId: string): string => {
-    return mockClients.find((c) => c.id === clientId)?.societe || 'N/A';
+    const c = mockClients.find((cl) => cl.id === clientId);
+    return c ? getClientDisplayName(c) : 'N/A';
   };
 
   const getEquipmentCount = (ids: string[]): number => ids.length;
@@ -282,7 +281,7 @@ export default function ContratsPage() {
                   <SelectItem value="all">Tous les clients</SelectItem>
                   {mockClients.map((client) => (
                     <SelectItem key={client.id} value={client.id}>
-                      {client.societe}
+                      {getClientDisplayName(client)}
                     </SelectItem>
                   ))}
                 </SelectContent>

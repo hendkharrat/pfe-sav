@@ -13,6 +13,7 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useAuth } from '@/hooks/useAuth';
 import { logoutUser } from '@/lib/auth';
+import { ThemeToggle } from '@/components/theme/ThemeToggle';
 import { MobileNavDialog } from './MobileNavDialog';
 
 export function AppHeader() {
@@ -54,8 +55,9 @@ export function AppHeader() {
           {/* Spacer on desktop (sidebar carries the brand) */}
           <div className="hidden lg:block" />
 
-          {/* Right side: user dropdown */}
-          <div className="flex items-center gap-4">
+          {/* Right side: theme toggle + user dropdown */}
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             {user && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>

@@ -63,7 +63,7 @@ import {
   findActiveContractForClientEquipement,
   generateInterventionReference,
 } from '@/lib/interventions';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 import { PanneForm } from '@/components/forms/PanneForm';
 import { PanneDetail } from '@/components/shared/PanneDetail';
 import { CreateCurativeFromPanneDialog } from '@/components/shared/CreateCurativeFromPanneDialog';
@@ -122,8 +122,10 @@ export default function PannesPage() {
   }, [pannes, currentUser, clientInfo.clientId]);
 
   const getClientName = useCallback(
-    (clientId: string): string =>
-      mockClients.find((c) => c.id === clientId)?.societe || 'N/A',
+    (clientId: string): string => {
+      const c = mockClients.find((cl) => cl.id === clientId);
+      return c ? getClientDisplayName(c) : 'N/A';
+    },
     []
   );
 
@@ -179,7 +181,7 @@ export default function PannesPage() {
       switch (key) {
         case 'reference': return panne.reference;
         case 'date': return panne.dateDeclaration;
-        case 'client': return mockClients.find((c) => c.id === panne.clientId)?.societe ?? '';
+        case 'client': { const cl = mockClients.find((c) => c.id === panne.clientId); return cl ? getClientDisplayName(cl) : ''; }
         case 'equipment': return mockEquipments.find((e) => e.id === panne.equipementId)?.reference ?? '';
         case 'priorite': return PRIORITY_SORT_ORDER[panne.priorite] ?? 0;
         case 'statut': return panne.statut;
@@ -290,7 +292,6 @@ export default function PannesPage() {
         technicienId: formData.technicienId,
         contractId,
         datePrevue: formData.datePrevue,
-        priorite: panneToConvert.priorite,
         statut: 'PLANIFIEE',
         couvertureContrat,
         description: formData.description,
@@ -519,7 +520,7 @@ export default function PannesPage() {
                     <SelectItem value="all">Tous les clients</SelectItem>
                     {mockClients.map((client) => (
                       <SelectItem key={client.id} value={client.id}>
-                        {client.societe}
+                        {getClientDisplayName(client)}
                       </SelectItem>
                     ))}
                   </SelectContent>
@@ -658,7 +659,7 @@ export default function PannesPage() {
 
       {/* Client: Declaration Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
-        <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+        <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto">
           <DialogHeader>
             <DialogTitle>Déclarer une panne</DialogTitle>
             <DialogDescription>

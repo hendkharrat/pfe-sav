@@ -14,7 +14,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-1',
     localisation: 'Bureau Étage 2',
     dateInstallation: '2023-06-15',
-    statut: 'EN_SERVICE',
   },
   // client-1 (EDI Solutions) — eq-2
   {
@@ -23,7 +22,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-2',
     localisation: 'Sécurité',
     dateInstallation: '2023-08-20',
-    statut: 'EN_SERVICE',
   },
   // client-2 (Résidence Les Berges du Lac) — eq-3
   {
@@ -32,7 +30,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-3',
     localisation: 'Halls Communs',
     dateInstallation: '2022-11-01',
-    statut: 'EN_PANNE',
   },
   // client-3 (Ahmed Ben Salah) — eq-4
   {
@@ -41,7 +38,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-4',
     localisation: 'Résidentielle',
     dateInstallation: '2023-03-10',
-    statut: 'EN_SERVICE',
   },
   // client-1 (EDI Solutions) — eq-5
   {
@@ -50,7 +46,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-5',
     localisation: 'Salle de Réunion',
     dateInstallation: '2023-09-10',
-    statut: 'EN_SERVICE',
   },
   // client-1 (EDI Solutions) — eq-6
   {
@@ -59,7 +54,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-6',
     localisation: 'Chaufferie Sous-Sol',
     dateInstallation: '2023-11-05',
-    statut: 'EN_SERVICE',
   },
   // client-1 (EDI Solutions) — eq-7
   {
@@ -68,7 +62,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-7',
     localisation: 'Atelier de Production',
     dateInstallation: '2022-07-20',
-    statut: 'HORS_SERVICE',
   },
   // client-2 (Résidence Les Berges du Lac) — eq-8
   {
@@ -77,7 +70,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-8',
     localisation: 'Bureaux Administratifs',
     dateInstallation: '2024-01-15',
-    statut: 'EN_SERVICE',
   },
   // client-2 (Résidence Les Berges du Lac) — eq-9
   {
@@ -86,7 +78,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-9',
     localisation: 'Local Technique RDC',
     dateInstallation: '2023-04-18',
-    statut: 'EN_PANNE',
   },
   // client-3 (Ahmed Ben Salah) — eq-10
   {
@@ -95,7 +86,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-10',
     localisation: 'Cave Technique',
     dateInstallation: '2024-02-28',
-    statut: 'EN_SERVICE',
   },
   // client-3 (Ahmed Ben Salah) — eq-11
   {
@@ -104,7 +94,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-11',
     localisation: 'Chambre Principale',
     dateInstallation: '2024-03-05',
-    statut: 'EN_SERVICE',
   },
   // client-4 (Groupe Sahel Industrie) — eq-12
   {
@@ -113,7 +102,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-12',
     localisation: 'Open Space Étage 1',
     dateInstallation: '2024-02-10',
-    statut: 'EN_SERVICE',
   },
   // client-4 (Groupe Sahel Industrie) — eq-13
   {
@@ -122,7 +110,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-13',
     localisation: 'Local Technique Sous-Sol',
     dateInstallation: '2024-02-15',
-    statut: 'EN_SERVICE',
   },
   // client-5 (Hôtel Les Jasmins Hammamet) — eq-14
   {
@@ -131,7 +118,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-14',
     localisation: 'Hall de Réception',
     dateInstallation: '2023-05-12',
-    statut: 'EN_SERVICE',
   },
   // client-5 (Hôtel Les Jasmins Hammamet) — eq-15
   {
@@ -140,7 +126,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-15',
     localisation: 'Local Technique Piscine',
     dateInstallation: '2023-06-20',
-    statut: 'EN_SERVICE',
   },
   // client-6 (Centre Médical Ibn Sina) — eq-16
   {
@@ -149,7 +134,6 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-16',
     localisation: 'Bloc Consultation A',
     dateInstallation: '2024-03-10',
-    statut: 'EN_SERVICE',
   },
   // client-6 (Centre Médical Ibn Sina) — eq-17
   {
@@ -158,6 +142,5 @@ export const mockClientEquipements: ClientEquipement[] = [
     equipementId: 'eq-17',
     localisation: 'Chaufferie Bloc B',
     dateInstallation: '2024-03-15',
-    statut: 'EN_PANNE',
   },
 ];

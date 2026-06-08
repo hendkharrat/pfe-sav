@@ -45,7 +45,7 @@ import { SortableHeader } from '@/components/shared/SortableHeader';
 import { TablePagination } from '@/components/shared/TablePagination';
 import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 
 function formatTND(amount: number): string {
   return `${amount.toFixed(2)} TND`;
@@ -80,7 +80,8 @@ export default function FacturesPage() {
   }, [currentUser]);
 
   const getClientName = useCallback((id: string): string => {
-    return mockClients.find((c) => c.id === id)?.societe ?? 'N/A';
+    const c = mockClients.find((cl) => cl.id === id);
+    return c ? getClientDisplayName(c) : 'N/A';
   }, []);
 
   const getInterventionRef = useCallback(
@@ -113,7 +114,7 @@ export default function FacturesPage() {
         const intRef = getInterventionRef(inv.interventionId).toLowerCase();
         return (
           inv.numero.toLowerCase().includes(term) ||
-          (client?.societe.toLowerCase().includes(term) ?? false) ||
+          (client ? getClientDisplayName(client).toLowerCase().includes(term) : false) ||
           intRef.includes(term)
         );
       });
@@ -143,7 +144,7 @@ export default function FacturesPage() {
     return sortData(filteredInvoices, sortConfig, (inv, key) => {
       switch (key) {
         case 'numero': return inv.numero;
-        case 'client': return mockClients.find((c) => c.id === inv.clientId)?.societe ?? '';
+        case 'client': { const cl = mockClients.find((c) => c.id === inv.clientId); return cl ? getClientDisplayName(cl) : ''; }
         case 'intervention': return getInterventionRef(inv.interventionId);
         case 'montantHT': return inv.montantHT;
         case 'montantTTC': return inv.montantTTC;
@@ -294,7 +295,7 @@ export default function FacturesPage() {
                   <SelectItem value="all">Tous les clients</SelectItem>
                   {mockClients.map((client) => (
                     <SelectItem key={client.id} value={client.id}>
-                      {client.societe}
+                      {getClientDisplayName(client)}
                     </SelectItem>
                   ))}
                 </SelectContent>

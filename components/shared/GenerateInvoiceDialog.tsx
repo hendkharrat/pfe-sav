@@ -28,7 +28,7 @@ import {
 import { Separator } from '@/components/ui/separator';
 import { mockClients } from '@/data/mock-clients';
 import { FileText, AlertCircle } from 'lucide-react';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 
 const TAUX_HORAIRE_TND = 50;
 const PRIX_MATERIEL_DEFAUT_TND = 150;
@@ -199,7 +199,7 @@ export function GenerateInvoiceDialog({
                         <SelectItem key={int.id} value={int.id}>
                           <span className="font-mono text-xs">{int.reference}</span>
                           <span className="mx-2 text-muted-foreground">—</span>
-                          <span>{client?.societe ?? 'Client inconnu'}</span>
+                          <span>{client ? getClientDisplayName(client) : 'Client inconnu'}</span>
                           <span className="mx-2 text-muted-foreground">—</span>
                           <span className="text-muted-foreground">{formatDate(int.dateRealisation ?? int.datePrevue)}</span>
                         </SelectItem>
@@ -215,7 +215,7 @@ export function GenerateInvoiceDialog({
                     <h4 className="text-sm font-semibold text-foreground mb-1">Aperçu de la facture</h4>
                     <p className="text-xs text-muted-foreground">
                       Client : <span className="font-medium text-foreground">
-                        {mockClients.find((c) => c.id === selectedIntervention.clientId)?.societe}
+                        {(() => { const cl = mockClients.find((c) => c.id === selectedIntervention.clientId); return cl ? getClientDisplayName(cl) : ''; })()}
                       </span>
                     </p>
                   </div>

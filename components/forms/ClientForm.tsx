@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Client, ClientEquipement } from '@/types';
+import { Client, ClientEquipement, ClientType } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,12 +12,22 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { ClientEquipementAssignForm } from '@/components/forms/ClientEquipementAssignForm';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockEquipments } from '@/data/mock-equipments';
-import { EQUIPMENT_TYPE_LABELS, EQUIPMENT_STATUS_LABELS } from '@/lib/constants';
+import { EQUIPMENT_TYPE_LABELS, TUNISIAN_CITIES } from '@/lib/constants';
 import { formatDate } from '@/lib/utils';
+import { findActiveContractForClientEquipement } from '@/lib/interventions';
+import { mockContracts } from '@/data/mock-contracts';
+import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 import { Plus, Edit2, Trash2, PackageOpen } from 'lucide-react';
 
 export type ClientFormPayload = {
@@ -36,13 +46,15 @@ interface ClientFormProps {
 
 export function ClientForm({ open, client, onClose, onSubmit, isLoading = false, clientEquipements = mockClientEquipements }: ClientFormProps) {
   const [formData, setFormData] = useState({
+    typeClient: (client?.typeClient ?? 'SOCIETE') as ClientType,
     societe: client?.societe ?? '',
     contact: client?.contact ?? '',
+    prenom: client?.prenom ?? '',
+    nom: client?.nom ?? '',
     email: client?.email ?? '',
     telephone: client?.telephone ?? '',
     adresse: client?.adresse ?? '',
     ville: client?.ville ?? '',
-    codePostal: client?.codePostal ?? '',
   });
 
   // Initialize assignments from live session state for edit mode
@@ -58,8 +70,12 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.societe.trim()) newErrors.societe = 'La société/nom est obligatoire';
-    if (!formData.contact.trim()) newErrors.contact = 'Le contact est obligatoire';
+    if (formData.typeClient === 'SOCIETE') {
+      if (!formData.societe.trim()) newErrors.societe = 'La société est obligatoire';
+    } else {
+      if (!formData.prenom.trim()) newErrors.prenom = 'Le prénom est obligatoire';
+      if (!formData.nom.trim()) newErrors.nom = 'Le nom est obligatoire';
+    }
     if (!formData.email.trim()) {
       newErrors.email = "L'email est obligatoire";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -70,7 +86,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
   };
 
   const reset = () => {
-    setFormData({ societe: '', contact: '', email: '', telephone: '', adresse: '', ville: '', codePostal: '' });
+    setFormData({ typeClient: 'SOCIETE', societe: '', contact: '', prenom: '', nom: '', email: '', telephone: '', adresse: '', ville: '' });
     setAssignments([]);
     setErrors({});
     setIsAssignFormOpen(false);
@@ -80,13 +96,27 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    onSubmit({ clientData: formData, assignments });
+    const { typeClient, societe, contact, prenom, nom, ...shared } = formData;
+    const clientData: Omit<Client, 'id' | 'dateCreation' | 'nombreEquipements' | 'userId'> =
+      typeClient === 'SOCIETE'
+        ? { typeClient, societe: societe || undefined, contact: contact || undefined, ...shared }
+        : { typeClient, prenom: prenom || undefined, nom: nom || undefined, ...shared };
+    onSubmit({ clientData, assignments });
     if (!client) reset();
   };
 
   const handleClose = () => {
     reset();
     onClose();
+  };
+
+  const handleTypeChange = (value: ClientType) => {
+    setFormData((prev) =>
+      value === 'SOCIETE'
+        ? { ...prev, typeClient: value, prenom: '', nom: '' }
+        : { ...prev, typeClient: value, societe: '', contact: '' }
+    );
+    setErrors({});
   };
 
   const handleAssignmentSubmit = (ce: ClientEquipement) => {
@@ -111,9 +141,11 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
     setIsAssignFormOpen(true);
   };
 
+  const isSociete = formData.typeClient === 'SOCIETE';
+
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{client ? 'Modifier le client' : 'Ajouter un client'}</DialogTitle>
           <DialogDescription>
@@ -124,31 +156,76 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
         </DialogHeader>
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
-          {/* Société */}
+          {/* Type de client */}
           <div className="space-y-2">
-            <Label htmlFor="societe">Société/Nom *</Label>
-            <Input
-              id="societe"
-              value={formData.societe}
-              onChange={(e) => setFormData({ ...formData, societe: e.target.value })}
+            <Label htmlFor="typeClient">Type de client *</Label>
+            <Select
+              value={formData.typeClient}
+              onValueChange={(v) => handleTypeChange(v as ClientType)}
               disabled={isLoading}
-              placeholder="Société Médina SARL"
-            />
-            {errors.societe && <p className="text-xs text-red-500">{errors.societe}</p>}
+            >
+              <SelectTrigger id="typeClient">
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="SOCIETE">Société</SelectItem>
+                <SelectItem value="PERSONNE_PHYSIQUE">Personne physique</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
 
-          {/* Contact */}
-          <div className="space-y-2">
-            <Label htmlFor="contact">Contact *</Label>
-            <Input
-              id="contact"
-              value={formData.contact}
-              onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-              disabled={isLoading}
-              placeholder="Ahmed Ben Salah"
-            />
-            {errors.contact && <p className="text-xs text-red-500">{errors.contact}</p>}
-          </div>
+          {/* Société fields */}
+          {isSociete ? (
+            <>
+              <div className="space-y-2">
+                <Label htmlFor="societe">Société *</Label>
+                <Input
+                  id="societe"
+                  value={formData.societe}
+                  onChange={(e) => setFormData({ ...formData, societe: e.target.value })}
+                  disabled={isLoading}
+                  placeholder="EDI Solutions SARL"
+                />
+                {errors.societe && <p className="text-xs text-red-500">{errors.societe}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="contact">Contact</Label>
+                <Input
+                  id="contact"
+                  value={formData.contact}
+                  onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                  disabled={isLoading}
+                  placeholder="Ahmed Ben Salah"
+                />
+              </div>
+            </>
+          ) : (
+            /* Personne physique fields */
+            <div className="grid grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="prenom">Prénom *</Label>
+                <Input
+                  id="prenom"
+                  value={formData.prenom}
+                  onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
+                  disabled={isLoading}
+                  placeholder="Ahmed"
+                />
+                {errors.prenom && <p className="text-xs text-red-500">{errors.prenom}</p>}
+              </div>
+              <div className="space-y-2">
+                <Label htmlFor="nom">Nom *</Label>
+                <Input
+                  id="nom"
+                  value={formData.nom}
+                  onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+                  disabled={isLoading}
+                  placeholder="Ben Salah"
+                />
+                {errors.nom && <p className="text-xs text-red-500">{errors.nom}</p>}
+              </div>
+            </div>
+          )}
 
           {/* Email / Téléphone */}
           <div className="grid grid-cols-2 gap-4">
@@ -188,27 +265,32 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
             />
           </div>
 
-          {/* Ville / Code postal */}
+          {/* Ville / Pays */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="ville">Ville</Label>
-              <Input
-                id="ville"
+              <Label>Ville</Label>
+              <Select
                 value={formData.ville}
-                onChange={(e) => setFormData({ ...formData, ville: e.target.value })}
+                onValueChange={(v) => setFormData({ ...formData, ville: v })}
                 disabled={isLoading}
-                placeholder="Tunis"
-              />
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Sélectionner une ville" />
+                </SelectTrigger>
+                <SelectContent>
+                  {TUNISIAN_CITIES.map((city) => (
+                    <SelectItem key={city} value={city}>
+                      {city}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
             <div className="space-y-2">
-              <Label htmlFor="codePostal">Code postal</Label>
-              <Input
-                id="codePostal"
-                value={formData.codePostal}
-                onChange={(e) => setFormData({ ...formData, codePostal: e.target.value })}
-                disabled={isLoading}
-                placeholder="1001"
-              />
+              <Label>Pays</Label>
+              <div className="flex h-9 w-full items-center rounded-md border border-input bg-muted/50 px-3 text-sm text-muted-foreground">
+                Tunisie
+              </div>
             </div>
           </div>
 
@@ -248,19 +330,26 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
                 <table className="w-full text-xs">
                   <thead>
                     <tr className="bg-muted/40 border-b border-border">
+                      <th className="px-2 py-2" />
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Équipement</th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Type</th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Localisation</th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Installation</th>
-                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Statut</th>
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Contrat</th>
                       <th className="text-right px-3 py-2 font-medium text-muted-foreground">Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {assignments.map((ce) => {
                       const eq = mockEquipments.find((e) => e.id === ce.equipementId);
+                      const activeContract = client?.id
+                        ? findActiveContractForClientEquipement(ce.id, client.id, mockContracts)
+                        : undefined;
                       return (
                         <tr key={ce.id} className="border-b border-border last:border-0">
+                          <td className="px-2 py-1.5">
+                            <EquipmentThumbnail equipment={eq} size="sm" />
+                          </td>
                           <td className="px-3 py-2 font-medium">
                             {eq ? `${eq.reference} — ${eq.modele}` : ce.equipementId}
                           </td>
@@ -272,9 +361,20 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
                             {formatDate(ce.dateInstallation)}
                           </td>
                           <td className="px-3 py-2">
-                            <Badge variant="outline" className="text-[10px] h-4">
-                              {EQUIPMENT_STATUS_LABELS[ce.statut]}
-                            </Badge>
+                            {activeContract ? (
+                              <div className="space-y-0.5">
+                                <Badge className="bg-green-100 text-green-800 border-green-200 text-[10px] h-5 font-medium">
+                                  Sous contrat
+                                </Badge>
+                                <p className="text-[10px] text-muted-foreground leading-none">
+                                  {activeContract.reference}
+                                </p>
+                              </div>
+                            ) : (
+                              <Badge variant="outline" className="text-muted-foreground text-[10px] h-5">
+                                {client?.id ? 'Hors contrat' : 'Contrat à créer'}
+                              </Badge>
+                            )}
                           </td>
                           <td className="px-3 py-2 text-right">
                             <div className="flex items-center justify-end gap-1">

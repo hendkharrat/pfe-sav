@@ -17,8 +17,9 @@ import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockInterventions } from '@/data/mock-interventions';
 import { CONTRACT_FREQUENCY_LABELS } from '@/lib/constants';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 import { getTechnicianName } from '@/lib/interventions';
+import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 import { CalendarCheck2 } from 'lucide-react';
 
 function calculateStatus(contract: Contract): 'ACTIF' | 'EXPIRE' | 'BIENTOT_EXPIRE' {
@@ -50,7 +51,8 @@ export function ContractDetail({
 }: ContractDetailProps) {
   if (!contract) return null;
 
-  const clientName = mockClients.find((c) => c.id === contract.clientId)?.societe || 'N/A';
+  const foundClient = mockClients.find((c) => c.id === contract.clientId);
+  const clientName = foundClient ? getClientDisplayName(foundClient) : 'N/A';
 
   // Resolve CE → Equipment for each covered installation
   const coveredInstallations = contract.clientEquipementIds.map((ceId) => {
@@ -76,7 +78,7 @@ export function ContractDetail({
 
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
-      <DialogContent className="max-w-4xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Fiche contrat</DialogTitle>
           <DialogDescription>Informations détaillées du contrat</DialogDescription>
@@ -146,13 +148,16 @@ export function ContractDetail({
             ) : (
               <div className="space-y-2">
                 {coveredInstallations.map(({ ceId, ce, eq }) => (
-                  <div key={ceId} className="text-sm bg-muted/50 rounded p-2">
-                    <p className="font-medium">
-                      {eq?.reference || 'N/A'} — {eq?.marque} {eq?.modele}
-                    </p>
-                    <p className="text-muted-foreground text-xs">
-                      {ce?.localisation || 'N/A'}
-                    </p>
+                  <div key={ceId} className="text-sm bg-muted/50 rounded p-2 flex items-center gap-3">
+                    <EquipmentThumbnail equipment={eq} size="sm" />
+                    <div>
+                      <p className="font-medium">
+                        {eq?.reference || 'N/A'} — {eq?.marque} {eq?.modele}
+                      </p>
+                      <p className="text-muted-foreground text-xs">
+                        {ce?.localisation || 'N/A'}
+                      </p>
+                    </div>
                   </div>
                 ))}
               </div>

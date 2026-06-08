@@ -4,7 +4,6 @@ import { Intervention } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
@@ -19,7 +18,7 @@ import {
   getWeekStart,
   toDateInputValue,
 } from '@/lib/interventions';
-import { cn } from '@/lib/utils';
+import { cn, getClientDisplayName } from '@/lib/utils';
 
 export type PlanningViewMode = 'week' | 'twoWeeks' | 'month';
 
@@ -249,7 +248,7 @@ function InterventionCard({
         {INTERVENTION_TYPE_LABELS[intervention.type] ?? intervention.type}
       </Badge>
       <p className="text-xs font-semibold">{intervention.reference}</p>
-      <p className="text-xs text-muted-foreground truncate">{client?.societe}</p>
+      <p className="text-xs text-muted-foreground truncate">{client ? getClientDisplayName(client) : ''}</p>
       <p className="text-xs text-muted-foreground truncate">
         {equipment?.reference ?? 'Équipement'}
       </p>
@@ -258,7 +257,6 @@ function InterventionCard({
       </p>
       <div className="flex flex-wrap gap-1">
         <StatusBadge status={intervention.statut} type="intervention" />
-        <PriorityBadge priority={intervention.priorite} />
       </div>
     </button>
   );

@@ -1,11 +1,12 @@
 // Auth & Users
 export type UserRole = 'admin' | 'technician' | 'client';
 
+export type ClientType = 'SOCIETE' | 'PERSONNE_PHYSIQUE';
+
 export type InterventionType = 'PREVENTIVE' | 'CURATIVE';
 export type InterventionStatut = 'PLANIFIEE' | 'EN_COURS' | 'REALISEE' | 'ANNULEE';
 export type InterventionPriorite = 'FAIBLE' | 'MOYENNE' | 'ELEVEE' | 'URGENTE';
 export type ContractStatut = 'ACTIF' | 'EXPIRE' | 'BIENTOT_EXPIRE';
-export type EquipmentStatut = 'EN_SERVICE' | 'EN_PANNE' | 'HORS_SERVICE';
 export type EquipmentType = 'CLIMATISEUR' | 'SYSTEME_SURPRESSION';
 export type InvoiceStatut = 'PAYEE' | 'IMPAYEE' | 'EN_ATTENTE';
 
@@ -21,13 +22,19 @@ export interface User {
 
 export interface Client {
   id: string;
-  societe: string;
-  contact: string;
+  typeClient: ClientType;
+  /** Company name — required when typeClient === 'SOCIETE'. */
+  societe?: string;
+  /** Primary contact person — used for SOCIETE only. */
+  contact?: string;
+  /** First name — required when typeClient === 'PERSONNE_PHYSIQUE'. */
+  prenom?: string;
+  /** Last name — required when typeClient === 'PERSONNE_PHYSIQUE'. */
+  nom?: string;
   email: string;
   telephone: string;
   adresse: string;
   ville: string;
-  codePostal: string;
   dateCreation: string;
   nombreEquipements: number;
   userId: string;
@@ -50,7 +57,6 @@ export interface Equipment {
   marque: string;
   modele: string;
   numeroSerie: string;
-  statut: EquipmentStatut;
   description?: string;
   images?: EquipmentImage[];
 }
@@ -62,7 +68,6 @@ export interface ClientEquipement {
   equipementId: string;
   localisation: string;
   dateInstallation: string;
-  statut: EquipmentStatut;
   notes?: string;
 }
 
@@ -97,7 +102,6 @@ export interface Intervention {
   contractId?: string;
   datePrevue: string;
   dateRealisation?: string;
-  priorite: InterventionPriorite;
   statut: InterventionStatut;
   couvertureContrat: boolean;
   description: string;

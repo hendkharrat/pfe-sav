@@ -21,7 +21,7 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { EquipmentImageUpload } from '@/components/shared/EquipmentImageUpload';
-import { EQUIPMENT_TYPE_LABELS, EQUIPMENT_STATUS_LABELS } from '@/lib/constants';
+import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
 
 interface EquipmentFormProps {
   open: boolean;
@@ -44,7 +44,6 @@ export function EquipmentForm({
     marque: equipment?.marque ?? '',
     modele: equipment?.modele ?? '',
     numeroSerie: equipment?.numeroSerie ?? '',
-    statut: equipment?.statut ?? ('EN_SERVICE' as const),
     description: equipment?.description ?? '',
   });
 
@@ -68,7 +67,6 @@ export function EquipmentForm({
       marque: '',
       modele: '',
       numeroSerie: '',
-      statut: 'EN_SERVICE',
       description: '',
     });
     setImages([]);
@@ -85,7 +83,6 @@ export function EquipmentForm({
       marque: formData.marque.trim(),
       modele: formData.modele.trim(),
       numeroSerie: formData.numeroSerie.trim(),
-      statut: formData.statut,
       description: formData.description.trim() || undefined,
       images,
     });
@@ -100,7 +97,7 @@ export function EquipmentForm({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[95vw] max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>
             {equipment ? "Modifier l'équipement" : 'Ajouter un équipement'}
@@ -185,32 +182,6 @@ export function EquipmentForm({
               disabled={isLoading}
               placeholder="SN-2024-001"
             />
-          </div>
-
-          {/* Statut */}
-          <div className="space-y-2">
-            <Label>Statut *</Label>
-            <Select
-              value={formData.statut}
-              onValueChange={(value) =>
-                setFormData({
-                  ...formData,
-                  statut: value as 'EN_SERVICE' | 'EN_PANNE' | 'HORS_SERVICE',
-                })
-              }
-              disabled={isLoading}
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="EN_SERVICE">{EQUIPMENT_STATUS_LABELS['EN_SERVICE']}</SelectItem>
-                <SelectItem value="EN_PANNE">{EQUIPMENT_STATUS_LABELS['EN_PANNE']}</SelectItem>
-                <SelectItem value="HORS_SERVICE">
-                  {EQUIPMENT_STATUS_LABELS['HORS_SERVICE']}
-                </SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
           {/* Description */}

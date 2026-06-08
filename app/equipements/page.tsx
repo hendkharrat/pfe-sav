@@ -9,7 +9,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { EquipmentForm } from '@/components/forms/EquipmentForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
-import { StatusBadge } from '@/components/shared/StatusBadge';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { Button } from '@/components/ui/button';
@@ -40,8 +39,9 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal, ImageIcon } from 'lucide-react';
-import { EQUIPMENT_TYPE_LABELS, EQUIPMENT_STATUS_LABELS } from '@/lib/constants';
+import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal } from 'lucide-react';
+import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
+import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 
 export default function EquipmentsPage() {
   const router = useRouter();
@@ -52,7 +52,6 @@ export default function EquipmentsPage() {
   const [filteredEquipments, setFilteredEquipments] = useState<Equipment[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
-  const [statusFilter, setStatusFilter] = useState('all');
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | undefined>();
@@ -85,16 +84,12 @@ export default function EquipmentsPage() {
       result = result.filter((e) => e.type === typeFilter);
     }
 
-    if (statusFilter !== 'all') {
-      result = result.filter((e) => e.statut === statusFilter);
-    }
-
     setFilteredEquipments(result);
-  }, [equipments, searchTerm, typeFilter, statusFilter]);
+  }, [equipments, searchTerm, typeFilter]);
 
   useEffect(() => {
     setPage(1);
-  }, [searchTerm, typeFilter, statusFilter]);
+  }, [searchTerm, typeFilter]);
 
   const getUsageCount = useCallback(
     (equipmentId: string) =>
@@ -114,7 +109,6 @@ export default function EquipmentsPage() {
           case 'type': return eq.type;
           case 'marque': return eq.marque;
           case 'modele': return eq.modele;
-          case 'statut': return eq.statut;
           case 'utilise': return String(getUsageCount(eq.id));
           default: return '';
         }
@@ -221,7 +215,7 @@ export default function EquipmentsPage() {
               <Filter size={16} />
               <span>Filtres et recherche</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <Input
                 placeholder="Référence, marque, modèle, n° de série..."
                 value={searchTerm}
@@ -239,23 +233,6 @@ export default function EquipmentsPage() {
                   </SelectItem>
                   <SelectItem value="SYSTEME_SURPRESSION">
                     {EQUIPMENT_TYPE_LABELS['SYSTEME_SURPRESSION']}
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-              <Select value={statusFilter} onValueChange={setStatusFilter}>
-                <SelectTrigger className="h-9">
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="all">Tous les statuts</SelectItem>
-                  <SelectItem value="EN_SERVICE">
-                    {EQUIPMENT_STATUS_LABELS['EN_SERVICE']}
-                  </SelectItem>
-                  <SelectItem value="EN_PANNE">
-                    {EQUIPMENT_STATUS_LABELS['EN_PANNE']}
-                  </SelectItem>
-                  <SelectItem value="HORS_SERVICE">
-                    {EQUIPMENT_STATUS_LABELS['HORS_SERVICE']}
                   </SelectItem>
                 </SelectContent>
               </Select>
@@ -299,42 +276,24 @@ export default function EquipmentsPage() {
                       sortConfig={sortConfig}
                       onSort={handleSort}
                     />
-                    <SortableHeader
-                      label="Statut"
-                      sortKey="statut"
-                      sortConfig={sortConfig}
-                      onSort={handleSort}
-                    />
                     <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
                 </TableHeader>
                 <TableBody>
                   {filteredEquipments.length === 0 ? (
                     <TableRow>
-                      <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                         Aucun équipement trouvé
                       </TableCell>
                     </TableRow>
                   ) : (
                     pagedEquipments.map((equipment) => {
-                      const mainImg = equipment.images?.find((img) => img.isMain);
                       const usageCount = getUsageCount(equipment.id);
                       return (
                         <TableRow key={equipment.id}>
                           {/* Thumbnail */}
                           <TableCell className="p-2">
-                            {mainImg?.previewUrl ? (
-                              // eslint-disable-next-line @next/next/no-img-element
-                              <img
-                                src={mainImg.previewUrl}
-                                alt={mainImg.filename}
-                                className="w-9 h-9 rounded object-cover border border-border"
-                              />
-                            ) : (
-                              <div className="w-9 h-9 rounded bg-muted border border-border flex items-center justify-center">
-                                <ImageIcon size={14} className="text-muted-foreground" />
-                              </div>
-                            )}
+                            <EquipmentThumbnail equipment={equipment} size="sm" />
                           </TableCell>
                           <TableCell className="font-medium">{equipment.reference}</TableCell>
                           <TableCell>{EQUIPMENT_TYPE_LABELS[equipment.type]}</TableCell>
@@ -346,9 +305,6 @@ export default function EquipmentsPage() {
                             {usageCount === 0
                               ? 'Non affecté'
                               : `${usageCount} client${usageCount > 1 ? 's' : ''}`}
-                          </TableCell>
-                          <TableCell>
-                            <StatusBadge status={equipment.statut} type="equipment" />
                           </TableCell>
                           <TableCell className="text-right">
                             <DropdownMenu>

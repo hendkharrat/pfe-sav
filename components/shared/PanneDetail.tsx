@@ -18,7 +18,8 @@ import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { Badge } from '@/components/ui/badge';
 import { Calendar, File, FileText, ImageIcon, Paperclip, User, Wrench } from 'lucide-react';
 import { getTechnicianName, getClientEquipementByEquipmentAndClient } from '@/lib/interventions';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
+import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 
 function formatFileSize(bytes: number): string {
   if (bytes < 1024) return `${bytes} o`;
@@ -52,7 +53,7 @@ export function PanneDetail({ open, panne, onClose, linkedIntervention }: PanneD
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[96vw] max-w-5xl max-h-[92vh] overflow-y-auto">
         <DialogHeader className="pb-4 border-b border-border">
           <DialogTitle className="text-xl font-bold">{panne.reference}</DialogTitle>
           <DialogDescription>Détails de la déclaration de panne</DialogDescription>
@@ -83,9 +84,9 @@ export function PanneDetail({ open, panne, onClose, linkedIntervention }: PanneD
           <DetailRow label="Client">
             <p className="font-medium text-sm flex items-center gap-2">
               <User size={16} className="text-muted-foreground" />
-              {client?.societe ?? 'N/A'}
+              {client ? getClientDisplayName(client) : 'N/A'}
             </p>
-            {client?.contact && (
+            {client?.typeClient === 'SOCIETE' && client.contact && (
               <p className="text-xs text-muted-foreground ml-6">
                 Contact: {client.contact} — {client.telephone}
               </p>
@@ -93,17 +94,22 @@ export function PanneDetail({ open, panne, onClose, linkedIntervention }: PanneD
           </DetailRow>
 
           <DetailRow label="Équipement concerné">
-            <p className="font-medium text-sm flex items-center gap-2">
-              <Wrench size={16} className="text-muted-foreground" />
-              {equipment
-                ? `${equipment.reference} — ${equipment.marque} ${equipment.modele}`
-                : 'N/A'}
-            </p>
-            {clientEquipement?.localisation && (
-              <p className="text-xs text-muted-foreground ml-6">
-                Localisation : {clientEquipement.localisation}
-              </p>
-            )}
+            <div className="flex items-center gap-3">
+              <EquipmentThumbnail equipment={equipment} size="md" />
+              <div>
+                <p className="font-medium text-sm flex items-center gap-2">
+                  <Wrench size={16} className="text-muted-foreground" />
+                  {equipment
+                    ? `${equipment.reference} — ${equipment.marque} ${equipment.modele}`
+                    : 'N/A'}
+                </p>
+                {clientEquipement?.localisation && (
+                  <p className="text-xs text-muted-foreground ml-6">
+                    Localisation : {clientEquipement.localisation}
+                  </p>
+                )}
+              </div>
+            </div>
           </DetailRow>
 
           <DetailRow label="Description de la panne">

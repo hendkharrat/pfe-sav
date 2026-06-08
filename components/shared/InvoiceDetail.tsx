@@ -22,6 +22,7 @@ import { StatusBadge } from '@/components/shared/StatusBadge';
 import { mockClients } from '@/data/mock-clients';
 import { Download, CheckCircle, Building2 } from 'lucide-react';
 import { toast } from 'sonner';
+import { getClientDisplayName } from '@/lib/utils';
 
 function formatTND(amount: number): string {
   return `${amount.toFixed(2)} TND`;
@@ -66,7 +67,7 @@ export function InvoiceDetail({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="max-h-[92vh] overflow-y-auto sm:max-w-2xl">
+      <DialogContent className="w-[96vw] max-w-5xl max-h-[92vh] overflow-y-auto">
         <DialogHeader className="sr-only">
           <DialogTitle>Détail facture {invoice.numero}</DialogTitle>
           <DialogDescription>Vue complète de la facture</DialogDescription>
@@ -107,11 +108,11 @@ export function InvoiceDetail({
               </p>
               {client ? (
                 <>
-                  <p className="font-bold text-foreground">{client.societe}</p>
-                  <p className="text-sm text-muted-foreground">{client.contact}</p>
+                  <p className="font-bold text-foreground">{getClientDisplayName(client)}</p>
+                  {client.contact && <p className="text-sm text-muted-foreground">{client.contact}</p>}
                   <p className="text-sm text-muted-foreground">{client.adresse}</p>
                   <p className="text-sm text-muted-foreground">
-                    {client.codePostal} {client.ville}
+                    {client.ville}, Tunisie
                   </p>
                   <p className="text-sm text-muted-foreground">{client.email}</p>
                 </>

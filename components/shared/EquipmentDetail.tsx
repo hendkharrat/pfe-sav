@@ -11,11 +11,10 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { StatusBadge } from '@/components/shared/StatusBadge';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockClients } from '@/data/mock-clients';
-import { EQUIPMENT_TYPE_LABELS, EQUIPMENT_STATUS_LABELS } from '@/lib/constants';
-import { formatDate } from '@/lib/utils';
+import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 import { ImageIcon, MapPin, Calendar, Building2, UserPlus } from 'lucide-react';
 import { toast } from 'sonner';
 
@@ -40,7 +39,7 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
 
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[96vw] max-w-4xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Fiche équipement</DialogTitle>
           <DialogDescription>Informations détaillées de l&apos;équipement catalogue</DialogDescription>
@@ -101,17 +100,9 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
               </div>
             </div>
 
-            <div className="grid grid-cols-2 gap-4">
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">Numéro de série</p>
-                <p className="font-medium mt-0.5">{equipment.numeroSerie || 'N/A'}</p>
-              </div>
-              <div>
-                <p className="text-xs text-muted-foreground uppercase tracking-wide">Statut catalogue</p>
-                <div className="mt-1">
-                  <StatusBadge status={equipment.statut} type="equipment" />
-                </div>
-              </div>
+            <div>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Numéro de série</p>
+              <p className="font-medium mt-0.5">{equipment.numeroSerie || 'N/A'}</p>
             </div>
 
             {equipment.description && (
@@ -178,28 +169,17 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
                           Installation
                         </span>
                       </th>
-                      <th className="text-left px-3 py-2 font-medium text-muted-foreground text-xs">
-                        Statut
-                      </th>
                     </tr>
                   </thead>
                   <tbody>
                     {affectations.map(({ ce, client }) => (
                       <tr key={ce.id} className="border-b border-border last:border-0 hover:bg-muted/30">
                         <td className="px-3 py-2 font-medium">
-                          {client?.societe ?? 'Client inconnu'}
+                          {client ? getClientDisplayName(client) : 'Client inconnu'}
                         </td>
                         <td className="px-3 py-2 text-muted-foreground">{ce.localisation}</td>
                         <td className="px-3 py-2 text-muted-foreground">
                           {formatDate(ce.dateInstallation)}
-                        </td>
-                        <td className="px-3 py-2">
-                          <Badge
-                            variant="outline"
-                            className="text-[10px] h-5"
-                          >
-                            {EQUIPMENT_STATUS_LABELS[ce.statut]}
-                          </Badge>
                         </td>
                       </tr>
                     ))}

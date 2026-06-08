@@ -17,7 +17,7 @@ import {
 } from 'lucide-react';
 import { SortableHeader } from '@/components/shared/SortableHeader';
 import { TablePagination } from '@/components/shared/TablePagination';
-import { type SortConfig, sortData, paginateData, toggleSort, PRIORITY_SORT_ORDER } from '@/lib/table';
+import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 import { Intervention, InterventionStatut, User } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
@@ -29,7 +29,6 @@ import { CloseInterventionDialog, CloseInterventionData } from '@/components/sha
 import { ChangeStatusDialog } from '@/components/shared/ChangeStatusDialog';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { mockInterventions } from '@/data/mock-interventions';
 import { mockClients } from '@/data/mock-clients';
@@ -59,7 +58,6 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import {
-  INTERVENTION_PRIORITY_LABELS,
   INTERVENTION_STATUS_LABELS,
   INTERVENTION_TYPE_LABELS,
   ROLES,
@@ -74,7 +72,7 @@ import {
   TECHNICIAN_UNAVAILABLE_MESSAGE,
 } from '@/lib/interventions';
 import { Badge } from '@/components/ui/badge';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 
 export default function InterventionsPage() {
   const router = useRouter();
@@ -85,7 +83,6 @@ export default function InterventionsPage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statutFilter, setStatutFilter] = useState('all');
-  const [prioriteFilter, setPrioriteFilter] = useState('all');
   const [clientFilter, setClientFilter] = useState('all');
   const [technicianFilter, setTechnicianFilter] = useState('all');
   const [dateStart, setDateStart] = useState('');
@@ -122,8 +119,8 @@ export default function InterventionsPage() {
     if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase();
       result = result.filter((intervention) => {
-        const clientName =
-          mockClients.find((c) => c.id === intervention.clientId)?.societe ?? '';
+        const cl = mockClients.find((c) => c.id === intervention.clientId);
+        const clientName = cl ? getClientDisplayName(cl) : '';
         const equipmentLabel = (() => {
           const eq = mockEquipments.find((e) => e.id === intervention.equipementId);
           return eq ? `${eq.reference} ${eq.marque} ${eq.modele}` : '';
@@ -146,9 +143,6 @@ export default function InterventionsPage() {
     if (statutFilter !== 'all') {
       result = result.filter((i) => i.statut === statutFilter);
     }
-    if (prioriteFilter !== 'all') {
-      result = result.filter((i) => i.priorite === prioriteFilter);
-    }
     if (clientFilter !== 'all') {
       result = result.filter((i) => i.clientId === clientFilter);
     }
@@ -165,7 +159,6 @@ export default function InterventionsPage() {
     searchTerm,
     typeFilter,
     statutFilter,
-    prioriteFilter,
     clientFilter,
     technicianFilter,
     dateStart,
@@ -173,7 +166,7 @@ export default function InterventionsPage() {
   ]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
-  useEffect(() => { setPage(1); }, [searchTerm, typeFilter, statutFilter, prioriteFilter, clientFilter, technicianFilter, dateStart, dateEnd]);
+  useEffect(() => { setPage(1); }, [searchTerm, typeFilter, statutFilter, clientFilter, technicianFilter, dateStart, dateEnd]);
 
   const handleSort = useCallback((key: string) => {
     setSortConfig((prev) => toggleSort(prev, key));
@@ -185,11 +178,10 @@ export default function InterventionsPage() {
         switch (key) {
           case 'reference': return i.reference;
           case 'type': return i.type;
-          case 'client': return mockClients.find((c) => c.id === i.clientId)?.societe ?? '';
+          case 'client': { const cl = mockClients.find((c) => c.id === i.clientId); return cl ? getClientDisplayName(cl) : ''; }
           case 'equipment': return mockEquipments.find((e) => e.id === i.equipementId)?.reference ?? '';
           case 'technicien': return getTechnicianName(i.technicienId);
           case 'datePrevue': return i.datePrevue;
-          case 'priorite': return PRIORITY_SORT_ORDER[i.priorite] ?? 0;
           case 'statut': return i.statut;
           default: return '';
         }
@@ -204,9 +196,12 @@ export default function InterventionsPage() {
 
   const isAdmin = user?.role === ROLES.ADMIN;
   const isTechnician = user?.role === ROLES.TECHNICIAN;
+  const isClient = user?.role === ROLES.CLIENT;
 
-  const getClientName = (clientId: string) =>
-    mockClients.find((c) => c.id === clientId)?.societe ?? 'N/A';
+  const getClientName = (clientId: string) => {
+    const c = mockClients.find((cl) => cl.id === clientId);
+    return c ? getClientDisplayName(c) : 'N/A';
+  };
 
   const getEquipmentLabel = (equipementId: string) => {
     const eq = mockEquipments.find((e) => e.id === equipementId);
@@ -410,20 +405,7 @@ export default function InterventionsPage() {
           </Select>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-3">
-          <Select value={prioriteFilter} onValueChange={setPrioriteFilter}>
-            <SelectTrigger className="h-9">
-              <SelectValue placeholder="Priorité" />
-            </SelectTrigger>
-            <SelectContent>
-              <SelectItem value="all">Toutes les priorités</SelectItem>
-              {Object.entries(INTERVENTION_PRIORITY_LABELS).map(([key, label]) => (
-                <SelectItem key={key} value={key}>
-                  {label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {(isAdmin || isTechnician) && (
             <Select value={clientFilter} onValueChange={setClientFilter}>
               <SelectTrigger className="h-9">
@@ -433,13 +415,13 @@ export default function InterventionsPage() {
                 <SelectItem value="all">Tous les clients</SelectItem>
                 {mockClients.map((client) => (
                   <SelectItem key={client.id} value={client.id}>
-                    {client.societe}
+                    {getClientDisplayName(client)}
                   </SelectItem>
                 ))}
               </SelectContent>
             </Select>
           )}
-          {(isAdmin || isTechnician) && (
+          {isAdmin && (
             <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
               <SelectTrigger className="h-9">
                 <SelectValue placeholder="Technicien" />
@@ -483,11 +465,10 @@ export default function InterventionsPage() {
                   <TableRow>
                     <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} />
                     <SortableHeader label="Type" sortKey="type" sortConfig={sortConfig} onSort={handleSort} />
-                    <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
+                    {!isClient && <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />}
                     <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
                     {isAdmin && <SortableHeader label="Technicien" sortKey="technicien" sortConfig={sortConfig} onSort={handleSort} />}
                     <SortableHeader label="Date prévue" sortKey="datePrevue" sortConfig={sortConfig} onSort={handleSort} />
-                    <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="hidden sm:table-cell" />
                     <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
                     <TableHead className="hidden lg:table-cell">Couverture</TableHead>
                     <TableHead className="text-right">Actions</TableHead>
@@ -614,6 +595,7 @@ function InterventionTableRow({
 }: InterventionTableRowProps) {
   const isAdmin = user.role === ROLES.ADMIN;
   const isTechnician = user.role === ROLES.TECHNICIAN;
+  const isClient = user.role === ROLES.CLIENT;
 
   return (
     <TableRow>
@@ -623,7 +605,9 @@ function InterventionTableRow({
           {INTERVENTION_TYPE_LABELS[intervention.type]}
         </Badge>
       </TableCell>
-      <TableCell className="max-w-[120px] truncate">{getClientName(intervention.clientId)}</TableCell>
+      {!isClient && (
+        <TableCell className="max-w-[120px] truncate">{getClientName(intervention.clientId)}</TableCell>
+      )}
       <TableCell>{getEquipmentLabel(intervention.equipementId)}</TableCell>
       {isAdmin && (
         <TableCell className="text-sm">
@@ -631,9 +615,6 @@ function InterventionTableRow({
         </TableCell>
       )}
       <TableCell className="whitespace-nowrap text-sm">{formatDate(intervention.datePrevue)}</TableCell>
-      <TableCell className="hidden sm:table-cell">
-        <PriorityBadge priority={intervention.priorite} />
-      </TableCell>
       <TableCell>
         <StatusBadge status={intervention.statut} type="intervention" />
       </TableCell>

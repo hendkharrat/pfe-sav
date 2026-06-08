@@ -20,7 +20,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Switch } from '@/components/ui/switch';
-import { ROLE_LABELS } from '@/lib/constants';
+import { ROLE_LABELS, ROLES } from '@/lib/constants';
 
 interface UserFormProps {
   open: boolean;
@@ -31,6 +31,8 @@ interface UserFormProps {
 }
 
 export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: UserFormProps) {
+  const isEditing = !!user;
+
   const [formData, setFormData] = useState({
     prenom: user?.prenom || '',
     nom: user?.nom || '',
@@ -82,7 +84,7 @@ export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: U
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-lg">
+      <DialogContent className="w-[95vw] max-w-xl max-h-[85vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{user ? 'Modifier l\'utilisateur' : 'Ajouter un utilisateur'}</DialogTitle>
           <DialogDescription>
@@ -146,23 +148,22 @@ export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: U
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {(Object.keys(ROLE_LABELS) as UserRole[]).map((role) => (
-                    <SelectItem key={role} value={role}>
-                      {ROLE_LABELS[role]}
-                    </SelectItem>
-                  ))}
+                  <SelectItem value={ROLES.ADMIN}>{ROLE_LABELS.admin}</SelectItem>
+                  <SelectItem value={ROLES.TECHNICIAN}>{ROLE_LABELS.technician}</SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <div className="flex items-center gap-3 pt-8">
-              <Switch
-                id="actif"
-                checked={formData.actif}
-                onCheckedChange={(actif) => setFormData({ ...formData, actif })}
-                disabled={isLoading}
-              />
-              <Label htmlFor="actif">Compte actif</Label>
-            </div>
+            {isEditing && (
+              <div className="flex items-center gap-3 pt-8">
+                <Switch
+                  id="actif"
+                  checked={formData.actif}
+                  onCheckedChange={(actif) => setFormData({ ...formData, actif })}
+                  disabled={isLoading}
+                />
+                <Label htmlFor="actif">Compte actif</Label>
+              </div>
+            )}
           </div>
 
           {!user && (

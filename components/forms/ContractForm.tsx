@@ -28,6 +28,7 @@ import { Checkbox } from '@/components/ui/checkbox';
 import { mockClients } from '@/data/mock-clients';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { CONTRACT_FREQUENCY_LABELS } from '@/lib/constants';
+import { getClientDisplayName } from '@/lib/utils';
 import {
   generatePreventiveInterventionPreviews,
   getClientEquipementLabel,
@@ -185,7 +186,7 @@ export function ContractForm({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{contract ? 'Modifier le contrat' : 'Créer un contrat'}</DialogTitle>
           <DialogDescription>
@@ -225,7 +226,7 @@ export function ContractForm({
               <SelectContent>
                 {mockClients.map((client) => (
                   <SelectItem key={client.id} value={client.id}>
-                    {client.societe}
+                    {getClientDisplayName(client)}
                   </SelectItem>
                 ))}
               </SelectContent>

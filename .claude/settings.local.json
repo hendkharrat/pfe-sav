@@ -40,7 +40,10 @@
       "Bash(npx --yes next lint --dir .)",
       "Bash(node_modules/.bin/next lint *)",
       "Bash(node_modules/.bin/eslint \"app/**/*.tsx\" \"components/**/*.tsx\" --ext .tsx)",
-      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\(list\\(p.get\\('scripts',{}\\).items\\(\\)\\)\\)\")"
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\(list\\(p.get\\('scripts',{}\\).items\\(\\)\\)\\)\")",
+      "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\('next-themes:', p.dependencies['next-themes'] || p.devDependencies?.['next-themes'] || 'NOT FOUND'\\)\")",
+      "Bash(Select-String -Path \"app\\\\globals.css\" -Pattern \"\\\\.dark\")",
+      "Bash(Select-Object -First 5)"
     ]
   }
 }

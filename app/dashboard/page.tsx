@@ -10,11 +10,10 @@ import { mockInterventions } from '@/data/mock-interventions';
 import { mockContracts } from '@/data/mock-contracts';
 import { mockClients } from '@/data/mock-clients';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { ROLES } from '@/lib/constants';
 import { getClientIdForUser } from '@/lib/interventions';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 
 export default function DashboardPage() {
   const { user } = useAuth();
@@ -28,8 +27,10 @@ export default function DashboardPage() {
   }[user.role];
 
   // Helpers
-  const getClientName = (clientId: string): string =>
-    mockClients.find((c) => c.id === clientId)?.societe ?? clientId;
+  const getClientName = (clientId: string): string => {
+    const c = mockClients.find((cl) => cl.id === clientId);
+    return c ? getClientDisplayName(c) : clientId;
+  };
 
   // Technician: only own interventions
   const techInterventions = user.role === 'technician'
@@ -94,34 +95,44 @@ export default function DashboardPage() {
               <Card>
                 <CardHeader>
                   <CardTitle className="flex items-center gap-2">
-                    <AlertCircle size={20} className="text-red-500" />
-                    Interventions urgentes
+                    <AlertCircle size={20} className="text-amber-500" />
+                    Interventions en cours / en retard
                   </CardTitle>
                   <CardDescription>
-                    {stats.urgentInterventions} à traiter en priorité
+                    En cours ou planifiées et dépassées
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
-                  {stats.urgentInterventions > 0 ? (
-                    <div className="space-y-2">
-                      {mockInterventions
-                        .filter((i) => i.priorite === 'URGENTE' && i.statut !== 'REALISEE' && i.statut !== 'ANNULEE')
-                        .slice(0, 3)
-                        .map((intervention) => (
-                          <div key={intervention.id} className="flex items-center justify-between p-2 bg-red-50 rounded-lg">
+                  {(() => {
+                    const today = new Date().toISOString().split('T')[0];
+                    const activeList = mockInterventions
+                      .filter(
+                        (i) =>
+                          i.statut === 'EN_COURS' ||
+                          (i.statut === 'PLANIFIEE' && i.datePrevue < today)
+                      )
+                      .slice(0, 3);
+                    return activeList.length > 0 ? (
+                      <div className="space-y-2">
+                        {activeList.map((intervention) => (
+                          <div key={intervention.id} className="flex items-center justify-between p-2 bg-amber-50 rounded-lg">
                             <div>
                               <p className="font-medium text-sm">{intervention.reference}</p>
                               <p className="text-xs text-muted-foreground">
                                 {getClientName(intervention.clientId)}
                               </p>
+                              <p className="text-xs text-muted-foreground">
+                                {formatDate(intervention.datePrevue)}
+                              </p>
                             </div>
-                            <PriorityBadge priority={intervention.priorite} />
+                            <StatusBadge status={intervention.statut} type="intervention" />
                           </div>
                         ))}
-                    </div>
-                  ) : (
-                    <EmptyState title="Aucune intervention urgente" />
-                  )}
+                      </div>
+                    ) : (
+                      <EmptyState title="Aucune intervention en retard" />
+                    );
+                  })()}
                 </CardContent>
               </Card>
 
@@ -231,7 +242,6 @@ export default function DashboardPage() {
                         </div>
                         <div className="flex flex-col gap-1.5 items-end shrink-0">
                           <StatusBadge status={intervention.statut} type="intervention" />
-                          <PriorityBadge priority={intervention.priorite} />
                         </div>
                       </div>
                     ))}

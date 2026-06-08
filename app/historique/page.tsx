@@ -6,7 +6,6 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
 import { HistoryInterventionDetail } from '@/components/shared/HistoryInterventionDetail';
 import { StatCard } from '@/components/dashboard/StatCard';
@@ -15,10 +14,9 @@ import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockUsers } from '@/data/mock-users';
 import { getClientIdForUser, getTechnicianName, isDateInRange } from '@/lib/interventions';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
 import {
   INTERVENTION_TYPE_LABELS,
-  INTERVENTION_PRIORITY_LABELS,
   INTERVENTION_STATUS_LABELS,
 } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
@@ -53,7 +51,7 @@ import {
 } from 'lucide-react';
 import { SortableHeader } from '@/components/shared/SortableHeader';
 import { TablePagination } from '@/components/shared/TablePagination';
-import { type SortConfig, sortData, paginateData, toggleSort, PRIORITY_SORT_ORDER } from '@/lib/table';
+import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 
 // ─── helpers ────────────────────────────────────────────────────────────────
 
@@ -75,7 +73,6 @@ export default function HistoriquePage() {
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statutFilter, setStatutFilter] = useState('all');
-  const [prioriteFilter, setPrioriteFilter] = useState('all');
   const [clientFilter, setClientFilter] = useState('all');
   const [techFilter, setTechFilter] = useState('all');
   const [equipFilter, setEquipFilter] = useState('all');
@@ -96,7 +93,10 @@ export default function HistoriquePage() {
 
   // Helper lookups (stable references — mock data never changes)
   const getClientName = useCallback(
-    (id: string): string => mockClients.find((c) => c.id === id)?.societe ?? 'N/A',
+    (id: string): string => {
+      const c = mockClients.find((cl) => cl.id === id);
+      return c ? getClientDisplayName(c) : 'N/A';
+    },
     []
   );
 
@@ -183,7 +183,6 @@ export default function HistoriquePage() {
 
     if (typeFilter !== 'all') list = list.filter((i) => i.type === typeFilter);
     if (statutFilter !== 'all') list = list.filter((i) => i.statut === statutFilter);
-    if (prioriteFilter !== 'all') list = list.filter((i) => i.priorite === prioriteFilter);
     if (clientFilter !== 'all') list = list.filter((i) => i.clientId === clientFilter);
     if (techFilter !== 'all') list = list.filter((i) => i.technicienId === techFilter);
     if (equipFilter !== 'all') list = list.filter((i) => i.equipementId === equipFilter);
@@ -205,7 +204,6 @@ export default function HistoriquePage() {
     searchTerm,
     typeFilter,
     statutFilter,
-    prioriteFilter,
     clientFilter,
     techFilter,
     equipFilter,
@@ -215,7 +213,7 @@ export default function HistoriquePage() {
     getEquipmentLabel,
   ]);
 
-  useEffect(() => { setPage(1); }, [searchTerm, typeFilter, statutFilter, prioriteFilter, clientFilter, techFilter, equipFilter, dateDebut, dateFin]);
+  useEffect(() => { setPage(1); }, [searchTerm, typeFilter, statutFilter, clientFilter, techFilter, equipFilter, dateDebut, dateFin]);
 
   const handleSort = useCallback((key: string) => {
     setSortConfig((prev) => toggleSort(prev, key));
@@ -232,7 +230,6 @@ export default function HistoriquePage() {
         case 'technicien': return getTechnicianName(i.technicienId);
         case 'datePrevue': return i.datePrevue;
         case 'dateRealisation': return i.dateRealisation ?? '';
-        case 'priorite': return PRIORITY_SORT_ORDER[i.priorite] ?? 0;
         case 'statut': return i.statut;
         default: return '';
       }
@@ -260,7 +257,6 @@ export default function HistoriquePage() {
       'Technicien',
       'Date prévue',
       'Date réalisation',
-      'Priorité',
       'Statut',
       'Couverture contrat',
       'Durée (min)',
@@ -275,7 +271,6 @@ export default function HistoriquePage() {
       getTechnicianName(i.technicienId),
       i.datePrevue,
       i.dateRealisation ?? '',
-      INTERVENTION_PRIORITY_LABELS[i.priorite] ?? i.priorite,
       INTERVENTION_STATUS_LABELS[i.statut] ?? i.statut,
       i.couvertureContrat ? 'Oui' : 'Non',
       i.dureeMinutes != null ? String(i.dureeMinutes) : '',
@@ -384,8 +379,8 @@ export default function HistoriquePage() {
             Filtres &amp; Recherche
           </div>
 
-          {/* Row 1: search + type + statut + priorité */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+          {/* Row 1: search + type + statut */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
             <div className="relative md:col-span-1">
               <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -418,18 +413,6 @@ export default function HistoriquePage() {
               </SelectContent>
             </Select>
 
-            <Select value={prioriteFilter} onValueChange={setPrioriteFilter}>
-              <SelectTrigger className="h-9 text-xs">
-                <SelectValue placeholder="Priorité" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Toutes priorités</SelectItem>
-                <SelectItem value="FAIBLE">Faible</SelectItem>
-                <SelectItem value="MOYENNE">Moyenne</SelectItem>
-                <SelectItem value="ELEVEE">Élevée</SelectItem>
-                <SelectItem value="URGENTE">Urgente</SelectItem>
-              </SelectContent>
-            </Select>
           </div>
 
           {/* Row 2: admin filters + equipment + dates */}
@@ -443,7 +426,7 @@ export default function HistoriquePage() {
                   <SelectItem value="all">Tous les clients</SelectItem>
                   {availableClients.map((c) => (
                     <SelectItem key={c.id} value={c.id}>
-                      {c.societe}
+                      {getClientDisplayName(c)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -524,7 +507,6 @@ export default function HistoriquePage() {
                     {isAdmin && <SortableHeader label="Technicien" sortKey="technicien" sortConfig={sortConfig} onSort={handleSort} className="min-w-[130px]" />}
                     <SortableHeader label="Date prévue" sortKey="datePrevue" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                     <SortableHeader label="Date réalisation" sortKey="dateRealisation" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
-                    <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[90px]" />
                     <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                     <TableHead className="font-semibold w-[100px] text-center">Couverture</TableHead>
                     <TableHead className="font-semibold text-right w-[80px]">Actions</TableHead>
@@ -562,9 +544,6 @@ export default function HistoriquePage() {
                       </TableCell>
                       <TableCell className="text-xs text-muted-foreground">
                         {intervention.dateRealisation ? formatDate(intervention.dateRealisation) : '—'}
-                      </TableCell>
-                      <TableCell className="text-center">
-                        <PriorityBadge priority={intervention.priorite} />
                       </TableCell>
                       <TableCell className="text-center">
                         <StatusBadge status={intervention.statut} type="intervention" />

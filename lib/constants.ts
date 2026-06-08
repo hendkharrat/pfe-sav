@@ -51,12 +51,6 @@ export const CONTRACT_STATUS = {
   COMING_SOON: 'BIENTOT_EXPIRE',
 };
 
-export const EQUIPMENT_STATUS_LABELS: Record<string, string> = {
-  EN_SERVICE: 'En service',
-  EN_PANNE: 'En panne',
-  HORS_SERVICE: 'Hors service',
-};
-
 export const CONTRACT_STATUS_LABELS: Record<string, string> = {
   ACTIF: 'Actif',
   EXPIRE: 'Expiré',
@@ -94,4 +88,39 @@ export const PANNE_STATUS_LABELS: Record<string, string> = {
   CONVERTIE: 'Convertie',
   ANNULEE: 'Annulée',
 };
+
+export const TUNISIAN_CITIES = [
+  'Tunis',
+  'Ariana',
+  'Ben Arous',
+  'La Marsa',
+  'Carthage',
+  'Sidi Bou Said',
+  'La Goulette',
+  'Le Bardo',
+  'Manouba',
+  'Nabeul',
+  'Hammamet',
+  'Sousse',
+  'Monastir',
+  'Mahdia',
+  'Sfax',
+  'Gabès',
+  'Médenine',
+  'Djerba Midoun',
+  'Houmt Souk',
+  'Tataouine',
+  'Kairouan',
+  'Kasserine',
+  'Sidi Bouzid',
+  'Gafsa',
+  'Tozeur',
+  'Kébili',
+  'Béja',
+  'Jendouba',
+  'Le Kef',
+  'Siliana',
+  'Bizerte',
+  'Zaghouan',
+] as const;
 

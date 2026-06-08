@@ -13,8 +13,11 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockEquipments } from '@/data/mock-equipments';
-import { EQUIPMENT_TYPE_LABELS, EQUIPMENT_STATUS_LABELS } from '@/lib/constants';
-import { formatDate } from '@/lib/utils';
+import { mockContracts } from '@/data/mock-contracts';
+import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
+import { formatDate, getClientDisplayName, getClientTypeLabel } from '@/lib/utils';
+import { findActiveContractForClientEquipement } from '@/lib/interventions';
+import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 import { toast } from 'sonner';
 import { PackageOpen, MapPin, Calendar, UserPlus, FileText, CalendarClock, Edit2 } from 'lucide-react';
 
@@ -46,7 +49,7 @@ export function ClientDetail({
 
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Fiche client</DialogTitle>
           <DialogDescription>Informations détaillées du client</DialogDescription>
@@ -56,13 +59,18 @@ export function ClientDetail({
           {/* Informations générales */}
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">Société</p>
-              <p className="font-semibold text-lg mt-0.5">{client.societe}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">
+                {client.typeClient === 'PERSONNE_PHYSIQUE' ? 'Nom complet' : 'Société'}
+              </p>
+              <p className="font-semibold text-lg mt-0.5">{getClientDisplayName(client)}</p>
+              <p className="text-xs text-muted-foreground mt-0.5">{getClientTypeLabel(client.typeClient)}</p>
             </div>
-            <div>
-              <p className="text-xs text-muted-foreground uppercase tracking-wide">Contact</p>
-              <p className="font-medium mt-0.5">{client.contact}</p>
-            </div>
+            {client.typeClient === 'SOCIETE' && client.contact && (
+              <div>
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Contact</p>
+                <p className="font-medium mt-0.5">{client.contact}</p>
+              </div>
+            )}
             <div>
               <p className="text-xs text-muted-foreground uppercase tracking-wide">Email</p>
               <p className="font-medium text-sm mt-0.5">{client.email}</p>
@@ -77,7 +85,7 @@ export function ClientDetail({
           <div className="border-t border-border pt-4 space-y-2">
             <p className="text-xs text-muted-foreground uppercase tracking-wide">Adresse</p>
             <p className="text-sm">
-              {[client.adresse, client.ville, client.codePostal].filter(Boolean).join(', ') || '—'}
+              {[client.adresse, client.ville, 'Tunisie'].filter(Boolean).join(', ') || '—'}
             </p>
           </div>
 
@@ -152,6 +160,7 @@ export function ClientDetail({
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-muted/50 border-b border-border">
+                      <th className="px-2 py-2" />
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground text-xs">
                         Équipement
                       </th>
@@ -171,33 +180,54 @@ export function ClientDetail({
                         </span>
                       </th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground text-xs">
-                        Statut
+                        Contrat
                       </th>
                     </tr>
                   </thead>
                   <tbody>
-                    {affectations.map(({ ce, eq }) => (
-                      <tr
-                        key={ce.id}
-                        className="border-b border-border last:border-0 hover:bg-muted/30"
-                      >
-                        <td className="px-3 py-2 font-medium">
-                          {eq ? `${eq.reference} — ${eq.modele}` : ce.equipementId}
-                        </td>
-                        <td className="px-3 py-2 text-muted-foreground text-xs">
-                          {eq ? EQUIPMENT_TYPE_LABELS[eq.type] : '—'}
-                        </td>
-                        <td className="px-3 py-2 text-muted-foreground">{ce.localisation}</td>
-                        <td className="px-3 py-2 text-muted-foreground">
-                          {formatDate(ce.dateInstallation)}
-                        </td>
-                        <td className="px-3 py-2">
-                          <Badge variant="outline" className="text-[10px] h-5">
-                            {EQUIPMENT_STATUS_LABELS[ce.statut]}
-                          </Badge>
-                        </td>
-                      </tr>
-                    ))}
+                    {affectations.map(({ ce, eq }) => {
+                      const activeContract = findActiveContractForClientEquipement(
+                        ce.id,
+                        client.id,
+                        mockContracts
+                      );
+                      return (
+                        <tr
+                          key={ce.id}
+                          className="border-b border-border last:border-0 hover:bg-muted/30"
+                        >
+                          <td className="px-2 py-1.5">
+                            <EquipmentThumbnail equipment={eq} size="sm" />
+                          </td>
+                          <td className="px-3 py-2 font-medium">
+                            {eq ? `${eq.reference} — ${eq.modele}` : ce.equipementId}
+                          </td>
+                          <td className="px-3 py-2 text-muted-foreground text-xs">
+                            {eq ? EQUIPMENT_TYPE_LABELS[eq.type] : '—'}
+                          </td>
+                          <td className="px-3 py-2 text-muted-foreground">{ce.localisation}</td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {formatDate(ce.dateInstallation)}
+                          </td>
+                          <td className="px-3 py-2">
+                            {activeContract ? (
+                              <div className="space-y-0.5">
+                                <Badge className="bg-green-100 text-green-800 border-green-200 text-[10px] h-5 font-medium">
+                                  Sous contrat
+                                </Badge>
+                                <p className="text-[10px] text-muted-foreground leading-none">
+                                  {activeContract.reference}
+                                </p>
+                              </div>
+                            ) : (
+                              <Badge variant="outline" className="text-muted-foreground text-[10px] h-5">
+                                Hors contrat
+                              </Badge>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

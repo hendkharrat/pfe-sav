@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { Badge } from '@/components/ui/badge';
 import { Separator } from '@/components/ui/separator';
 import { mockClients } from '@/data/mock-clients';
@@ -21,7 +20,8 @@ import { mockInvoices } from '@/data/mock-invoices';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { getTechnicianName, getClientEquipementByEquipmentAndClient } from '@/lib/interventions';
 import { INTERVENTION_TYPE_LABELS } from '@/lib/constants';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
+import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 import { FileText } from 'lucide-react';
 
 interface Props {
@@ -46,14 +46,14 @@ export function HistoryInterventionDetail({ open, intervention, onClose }: Props
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[96vw] max-w-5xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle className="font-mono">{intervention.reference}</DialogTitle>
           <DialogDescription>Historique — fiche détaillée de l&apos;intervention</DialogDescription>
         </DialogHeader>
 
         <div className="space-y-5 mt-6">
-          {/* Status trio */}
+          {/* Status duo */}
           <div className="flex gap-3 flex-wrap">
             <div className="space-y-1">
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Type</p>
@@ -65,31 +65,32 @@ export function HistoryInterventionDetail({ open, intervention, onClose }: Props
               <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Statut</p>
               <StatusBadge status={intervention.statut} type="intervention" />
             </div>
-            <div className="space-y-1">
-              <p className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Priorité</p>
-              <PriorityBadge priority={intervention.priorite} />
-            </div>
           </div>
 
           <Separator />
 
           {/* Parties */}
           <DetailRow label="Client">
-            <p className="font-medium">{client?.societe ?? 'N/A'}</p>
-            {client?.contact && (
+            <p className="font-medium">{client ? getClientDisplayName(client) : 'N/A'}</p>
+            {client?.typeClient === 'SOCIETE' && client.contact && (
               <p className="text-sm text-muted-foreground">{client.contact}</p>
             )}
           </DetailRow>
 
           <DetailRow label="Équipement">
-            <p className="font-medium">
-              {equipment
-                ? `${equipment.reference} — ${equipment.marque} ${equipment.modele}`
-                : 'N/A'}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {clientEquipement?.localisation ?? 'Localisation non renseignée'}
-            </p>
+            <div className="flex items-center gap-3">
+              <EquipmentThumbnail equipment={equipment} size="md" />
+              <div>
+                <p className="font-medium">
+                  {equipment
+                    ? `${equipment.reference} — ${equipment.marque} ${equipment.modele}`
+                    : 'N/A'}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {clientEquipement?.localisation ?? 'Localisation non renseignée'}
+                </p>
+              </div>
+            </div>
           </DetailRow>
 
           <DetailRow label="Technicien">

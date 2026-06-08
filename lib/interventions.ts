@@ -286,7 +286,6 @@ export function preventivePreviewToIntervention(
     technicienId: preview.technicienId,
     contractId,
     datePrevue: preview.datePrevue,
-    priorite: 'MOYENNE',
     statut: 'PLANIFIEE',
     couvertureContrat: true,
     description: preview.description,

@@ -4,21 +4,19 @@ import { Badge } from '@/components/ui/badge';
 import {
   INTERVENTION_STATUS_LABELS,
   CONTRACT_STATUS_LABELS,
-  EQUIPMENT_STATUS_LABELS,
   INVOICE_STATUS_LABELS,
   PANNE_STATUS_LABELS,
 } from '@/lib/constants';
 
 interface StatusBadgeProps {
   status: string;
-  type?: 'intervention' | 'contract' | 'equipment' | 'invoice' | 'panne';
+  type?: 'intervention' | 'contract' | 'invoice' | 'panne';
 }
 
 export function StatusBadge({ status, type = 'intervention' }: StatusBadgeProps) {
   const statusLabels = {
     intervention: INTERVENTION_STATUS_LABELS,
     contract: CONTRACT_STATUS_LABELS,
-    equipment: EQUIPMENT_STATUS_LABELS,
     invoice: INVOICE_STATUS_LABELS,
     panne: PANNE_STATUS_LABELS,
   };

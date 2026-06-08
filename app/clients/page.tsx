@@ -40,6 +40,8 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal } from 'lucide-react';
+import { getClientDisplayName } from '@/lib/utils';
+import { TUNISIAN_CITIES } from '@/lib/constants';
 
 export default function ClientsPage() {
   const router = useRouter();
@@ -51,7 +53,6 @@ export default function ClientsPage() {
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [cityFilter, setCityFilter] = useState('all');
-  const [cities, setCities] = useState<string[]>([]);
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [page, setPage] = useState(1);
 
@@ -65,8 +66,6 @@ export default function ClientsPage() {
   useEffect(() => {
     setClients(mockClients);
     setClientEquipements(mockClientEquipements);
-    const uniqueCities = Array.from(new Set(mockClients.map((c) => c.ville))).sort();
-    setCities(uniqueCities);
   }, []);
 
   useEffect(() => {
@@ -75,8 +74,10 @@ export default function ClientsPage() {
       const term = searchTerm.toLowerCase();
       result = result.filter(
         (c) =>
-          c.societe.toLowerCase().includes(term) ||
-          c.contact.toLowerCase().includes(term) ||
+          (c.societe?.toLowerCase().includes(term) ?? false) ||
+          (c.contact?.toLowerCase().includes(term) ?? false) ||
+          (c.prenom?.toLowerCase().includes(term) ?? false) ||
+          (c.nom?.toLowerCase().includes(term) ?? false) ||
           c.email.toLowerCase().includes(term)
       );
     }
@@ -101,7 +102,7 @@ export default function ClientsPage() {
     () =>
       sortData(filteredClients, sortConfig, (client, key) => {
         switch (key) {
-          case 'societe': return client.societe;
+          case 'societe': return getClientDisplayName(client);
           case 'contact': return client.contact;
           case 'email': return client.email;
           case 'ville': return client.ville;
@@ -250,7 +251,7 @@ export default function ClientsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Toutes les villes</SelectItem>
-                  {cities.map((city) => (
+                  {TUNISIAN_CITIES.map((city) => (
                     <SelectItem key={city} value={city}>
                       {city}
                     </SelectItem>
@@ -266,7 +267,7 @@ export default function ClientsPage() {
               <Table>
                 <TableHeader>
                   <TableRow>
-                    <SortableHeader label="Société" sortKey="societe" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Client" sortKey="societe" sortConfig={sortConfig} onSort={handleSort} />
                     <SortableHeader label="Contact" sortKey="contact" sortConfig={sortConfig} onSort={handleSort} />
                     <SortableHeader label="Email" sortKey="email" sortConfig={sortConfig} onSort={handleSort} />
                     <TableHead>Téléphone</TableHead>
@@ -287,7 +288,7 @@ export default function ClientsPage() {
                       const eqCount = getEquipementCount(client.id);
                       return (
                         <TableRow key={client.id}>
-                          <TableCell className="font-medium">{client.societe}</TableCell>
+                          <TableCell className="font-medium">{getClientDisplayName(client)}</TableCell>
                           <TableCell>{client.contact}</TableCell>
                           <TableCell className="text-muted-foreground text-sm">{client.email}</TableCell>
                           <TableCell className="text-muted-foreground text-sm">{client.telephone}</TableCell>
@@ -362,7 +363,7 @@ export default function ClientsPage() {
         <ConfirmDialog
           open={isConfirmOpen}
           title="Supprimer le client"
-          description={`Êtes-vous sûr de vouloir supprimer ${clientToDelete?.societe} ? Cette suppression est simulée et concerne uniquement l'interface.`}
+          description={`Êtes-vous sûr de vouloir supprimer ${clientToDelete ? getClientDisplayName(clientToDelete) : ''} ? Cette suppression est simulée et concerne uniquement l'interface.`}
           actionLabel="Supprimer"
           actionVariant="destructive"
           onConfirm={handleDeleteClient}

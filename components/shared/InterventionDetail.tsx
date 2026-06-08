@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { Badge } from '@/components/ui/badge';
 import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
@@ -19,7 +18,8 @@ import { mockContracts } from '@/data/mock-contracts';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { INTERVENTION_TYPE_LABELS } from '@/lib/constants';
 import { getTechnicianName, getClientEquipementByEquipmentAndClient } from '@/lib/interventions';
-import { formatDate } from '@/lib/utils';
+import { formatDate, getClientDisplayName } from '@/lib/utils';
+import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 
 interface InterventionDetailProps {
   open: boolean;
@@ -47,7 +47,7 @@ export function InterventionDetail({
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
-      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[96vw] max-w-5xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{intervention.reference}</DialogTitle>
           <DialogDescription>Fiche détaillée de l&apos;intervention</DialogDescription>
@@ -64,23 +64,24 @@ export function InterventionDetail({
             <StatusBadge status={intervention.statut} type="intervention" />
           </DetailRow>
 
-          <DetailRow label="Priorité">
-            <PriorityBadge priority={intervention.priorite} />
-          </DetailRow>
-
           <DetailRow label="Client">
-            <p className="font-medium">{client?.societe ?? 'N/A'}</p>
+            <p className="font-medium">{client ? getClientDisplayName(client) : 'N/A'}</p>
           </DetailRow>
 
           <DetailRow label="Équipement">
-            <p className="font-medium">
-              {equipment
-                ? `${equipment.reference} — ${equipment.marque} ${equipment.modele}`
-                : 'N/A'}
-            </p>
-            <p className="text-sm text-muted-foreground">
-              {clientEquipement?.localisation ?? 'Localisation non renseignée'}
-            </p>
+            <div className="flex items-center gap-3">
+              <EquipmentThumbnail equipment={equipment} size="md" />
+              <div>
+                <p className="font-medium">
+                  {equipment
+                    ? `${equipment.reference} — ${equipment.marque} ${equipment.modele}`
+                    : 'N/A'}
+                </p>
+                <p className="text-sm text-muted-foreground">
+                  {clientEquipement?.localisation ?? 'Localisation non renseignée'}
+                </p>
+              </div>
+            </div>
           </DetailRow>
 
           <DetailRow label="Technicien">

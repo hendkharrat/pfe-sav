@@ -25,6 +25,7 @@ import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
 import { getActiveTechnicians, getContractCoverage } from '@/lib/interventions';
+import { getClientDisplayName } from '@/lib/utils';
 import { ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface CreateCurativeFromPanneDialogProps {
@@ -129,7 +130,7 @@ export function CreateCurativeFromPanneDialog({
               </div>
               <div>
                 <span className="font-medium text-muted-foreground">Client :</span>{' '}
-                <span className="font-semibold text-foreground">{client?.societe ?? 'N/A'}</span>
+                <span className="font-semibold text-foreground">{client ? getClientDisplayName(client) : 'N/A'}</span>
               </div>
               <div>
                 <span className="font-medium text-muted-foreground">Équipement :</span>{' '}

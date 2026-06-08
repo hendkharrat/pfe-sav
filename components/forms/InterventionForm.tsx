@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Intervention, InterventionPriorite, InterventionType } from '@/types';
+import { Intervention, InterventionType } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,11 +21,9 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { mockClients } from '@/data/mock-clients';
+import { getClientDisplayName } from '@/lib/utils';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
-import {
-  INTERVENTION_PRIORITY_LABELS,
-  INTERVENTION_TYPE_LABELS,
-} from '@/lib/constants';
+import { INTERVENTION_TYPE_LABELS } from '@/lib/constants';
 import {
   getActiveTechnicians,
   getClientEquipements,
@@ -44,7 +42,6 @@ export interface InterventionFormData {
   technicienId?: string;
   contractId?: string;
   datePrevue: string;
-  priorite: InterventionPriorite;
   description: string;
   couvertureContrat: boolean;
 }
@@ -92,7 +89,6 @@ export function InterventionForm({
     technicienId: intervention?.technicienId,
     contractId: intervention?.contractId,
     datePrevue: intervention?.datePrevue ?? '',
-    priorite: intervention?.priorite ?? ('MOYENNE' as InterventionPriorite),
     description: intervention?.description ?? '',
     couvertureContrat: intervention?.couvertureContrat ?? false,
   });
@@ -117,7 +113,6 @@ export function InterventionForm({
         technicienId: intervention?.technicienId,
         contractId: intervention?.contractId,
         datePrevue: intervention?.datePrevue ?? '',
-        priorite: intervention?.priorite ?? 'MOYENNE',
         description: intervention?.description ?? '',
         couvertureContrat: intervention?.couvertureContrat ?? false,
       });
@@ -152,7 +147,6 @@ export function InterventionForm({
     if (!formData.datePrevue) {
       newErrors.datePrevue = 'La date prévue est obligatoire';
     }
-    if (!formData.priorite) newErrors.priorite = 'La priorité est obligatoire';
     if (!formData.description.trim()) {
       newErrors.description = 'La description est obligatoire';
     }
@@ -185,7 +179,6 @@ export function InterventionForm({
       technicienId: formData.technicienId,
       contractId: formData.contractId,
       datePrevue: formData.datePrevue,
-      priorite: formData.priorite,
       description: formData.description,
       couvertureContrat: formData.couvertureContrat,
     });
@@ -246,7 +239,7 @@ export function InterventionForm({
               <SelectContent>
                 {mockClients.map((client) => (
                   <SelectItem key={client.id} value={client.id}>
-                    {client.societe}
+                    {getClientDisplayName(client)}
                   </SelectItem>
                 ))}
               </SelectContent>
@@ -314,9 +307,20 @@ export function InterventionForm({
             </p>
           </div>
 
+          <FormField label="Date prévue *" error={errors.datePrevue}>
+            <Input
+              type="date"
+              value={formData.datePrevue}
+              onChange={(e) =>
+                setFormData({ ...formData, datePrevue: e.target.value })
+              }
+            />
+          </FormField>
+
           <FormField label="Technicien" error={errors.technicienId}>
             <Select
               value={formData.technicienId ?? 'none'}
+              disabled={!formData.datePrevue}
               onValueChange={(value) =>
                 setFormData({
                   ...formData,
@@ -329,43 +333,23 @@ export function InterventionForm({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="none">Non affecté</SelectItem>
-                {technicians.map((tech) => (
-                  <SelectItem key={tech.id} value={tech.id}>
-                    {tech.prenom} {tech.nom}
-                  </SelectItem>
-                ))}
+                {technicians.map((tech) => {
+                  const available = formData.datePrevue
+                    ? isTechnicianAvailable(tech.id, formData.datePrevue, interventions, intervention?.id)
+                    : true;
+                  return (
+                    <SelectItem key={tech.id} value={tech.id} disabled={!available}>
+                      {tech.prenom} {tech.nom} — {available ? 'Disponible' : 'Occupé ce jour'}
+                    </SelectItem>
+                  );
+                })}
               </SelectContent>
             </Select>
-          </FormField>
-
-          <FormField label="Date prévue *" error={errors.datePrevue}>
-            <Input
-              type="date"
-              value={formData.datePrevue}
-              onChange={(e) =>
-                setFormData({ ...formData, datePrevue: e.target.value })
-              }
-            />
-          </FormField>
-
-          <FormField label="Priorité *" error={errors.priorite}>
-            <Select
-              value={formData.priorite}
-              onValueChange={(value: InterventionPriorite) =>
-                setFormData({ ...formData, priorite: value })
-              }
-            >
-              <SelectTrigger>
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                {Object.entries(INTERVENTION_PRIORITY_LABELS).map(([key, label]) => (
-                  <SelectItem key={key} value={key}>
-                    {label}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
+            {!formData.datePrevue && (
+              <p className="text-xs text-muted-foreground mt-1">
+                Sélectionnez d&apos;abord une date pour vérifier la disponibilité des techniciens.
+              </p>
+            )}
           </FormField>
 
           <FormField label="Description *" error={errors.description}>
