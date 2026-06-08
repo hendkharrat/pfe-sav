@@ -7,14 +7,12 @@ import {
   ClientEquipement,
   PieceJointe,
   Intervention,
-  InterventionPriorite,
   PanneStatut,
 } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { mockPannes } from '@/data/mock-pannes';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockClients } from '@/data/mock-clients';
@@ -70,7 +68,7 @@ import { CreateCurativeFromPanneDialog } from '@/components/shared/CreateCurativ
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { SortableHeader } from '@/components/shared/SortableHeader';
 import { TablePagination } from '@/components/shared/TablePagination';
-import { type SortConfig, sortData, paginateData, toggleSort, PRIORITY_SORT_ORDER } from '@/lib/table';
+import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 
 export default function PannesPage() {
   const router = useRouter();
@@ -82,7 +80,6 @@ export default function PannesPage() {
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [priorityFilter, setPriorityFilter] = useState('all');
   const [clientFilter, setClientFilter] = useState('all');
 
   const [selectedPanne, setSelectedPanne] = useState<Panne | null>(null);
@@ -159,7 +156,6 @@ export default function PannesPage() {
     }
 
     if (statusFilter !== 'all') list = list.filter((p) => p.statut === statusFilter);
-    if (priorityFilter !== 'all') list = list.filter((p) => p.priorite === priorityFilter);
     if (currentUser.role === 'admin' && clientFilter !== 'all') {
       list = list.filter((p) => p.clientId === clientFilter);
     }
@@ -167,9 +163,9 @@ export default function PannesPage() {
     return [...list].sort(
       (a, b) => new Date(b.dateDeclaration).getTime() - new Date(a.dateDeclaration).getTime()
     );
-  }, [pannes, currentUser, clientInfo.clientId, searchTerm, statusFilter, priorityFilter, clientFilter, getClientName, getEquipmentName]);
+  }, [pannes, currentUser, clientInfo.clientId, searchTerm, statusFilter, clientFilter, getClientName, getEquipmentName]);
 
-  useEffect(() => { setPage(1); }, [searchTerm, statusFilter, priorityFilter, clientFilter]);
+  useEffect(() => { setPage(1); }, [searchTerm, statusFilter, clientFilter]);
 
   const handleSort = useCallback((key: string) => {
     setSortConfig((prev) => toggleSort(prev, key));
@@ -183,7 +179,6 @@ export default function PannesPage() {
         case 'date': return panne.dateDeclaration;
         case 'client': { const cl = mockClients.find((c) => c.id === panne.clientId); return cl ? getClientDisplayName(cl) : ''; }
         case 'equipment': return mockEquipments.find((e) => e.id === panne.equipementId)?.reference ?? '';
-        case 'priorite': return PRIORITY_SORT_ORDER[panne.priorite] ?? 0;
         case 'statut': return panne.statut;
         default: return '';
       }
@@ -201,7 +196,6 @@ export default function PannesPage() {
       clientEquipementId: string;
       equipementId: string;
       description: string;
-      priorite: InterventionPriorite;
       piecesJointes: PieceJointe[];
     }) => {
       const clientId = clientInfo.clientId;
@@ -221,7 +215,6 @@ export default function PannesPage() {
         equipementId: formData.equipementId,
         dateDeclaration: new Date().toISOString().split('T')[0],
         description: formData.description,
-        priorite: formData.priorite,
         statut: 'EN_ATTENTE',
         piecesJointes: formData.piecesJointes,
       };
@@ -442,7 +435,6 @@ export default function PannesPage() {
                           <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
                           <SortableHeader label="Date" sortKey="date" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                           <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
-                          <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                           <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} className="w-[120px]" />
                           <TableHead className="text-right font-semibold">Actions</TableHead>
                         </TableRow>
@@ -450,7 +442,7 @@ export default function PannesPage() {
                       <TableBody>
                         {filteredPannes.length === 0 ? (
                           <TableRow>
-                            <TableCell colSpan={6} className="text-center py-12 text-muted-foreground text-sm font-medium">
+                            <TableCell colSpan={5} className="text-center py-12 text-muted-foreground text-sm font-medium">
                               Aucun signalement ne correspond aux critères de recherche.
                             </TableCell>
                           </TableRow>
@@ -462,7 +454,6 @@ export default function PannesPage() {
                               <TableCell className="text-xs font-semibold">
                                 {getEquipmentName(panne.equipementId)}
                               </TableCell>
-                              <TableCell><PriorityBadge priority={panne.priorite} /></TableCell>
                               <TableCell><StatusBadge status={panne.statut} type="panne" /></TableCell>
                               <TableCell className="text-right">
                                 <Button
@@ -502,7 +493,7 @@ export default function PannesPage() {
                 <Filter size={16} className="text-primary" />
                 Filtres & Recherche
               </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div className="relative">
                   <Search className="absolute left-2.5 top-2.5 h-4 w-4 text-muted-foreground" />
                   <Input
@@ -537,18 +528,6 @@ export default function PannesPage() {
                     <SelectItem value="ANNULEE">Annulée</SelectItem>
                   </SelectContent>
                 </Select>
-                <Select value={priorityFilter} onValueChange={setPriorityFilter}>
-                  <SelectTrigger className="h-9 text-xs">
-                    <SelectValue placeholder="Toutes priorités" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all">Toutes priorités</SelectItem>
-                    <SelectItem value="FAIBLE">Faible</SelectItem>
-                    <SelectItem value="MOYENNE">Moyenne</SelectItem>
-                    <SelectItem value="ELEVEE">Élevée</SelectItem>
-                    <SelectItem value="URGENTE">Urgente</SelectItem>
-                  </SelectContent>
-                </Select>
               </div>
             </div>
 
@@ -561,7 +540,6 @@ export default function PannesPage() {
                       <SortableHeader label="Déclaré le" sortKey="date" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                       <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
                       <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
-                      <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                       <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
                       <TableHead className="text-right font-semibold">Actions</TableHead>
                     </TableRow>
@@ -569,7 +547,7 @@ export default function PannesPage() {
                   <TableBody>
                     {filteredPannes.length === 0 ? (
                       <TableRow>
-                        <TableCell colSpan={7} className="text-center py-12 text-muted-foreground text-sm font-medium">
+                        <TableCell colSpan={6} className="text-center py-12 text-muted-foreground text-sm font-medium">
                           Aucun signalement ne correspond aux critères de recherche.
                         </TableCell>
                       </TableRow>
@@ -581,9 +559,6 @@ export default function PannesPage() {
                           <TableCell className="text-xs font-semibold">{getClientName(panne.clientId)}</TableCell>
                           <TableCell className="text-xs text-muted-foreground">
                             {getEquipmentName(panne.equipementId)}
-                          </TableCell>
-                          <TableCell className="text-center">
-                            <PriorityBadge priority={panne.priorite} />
                           </TableCell>
                           <TableCell className="text-center">
                             <StatusBadge status={panne.statut} type="panne" />

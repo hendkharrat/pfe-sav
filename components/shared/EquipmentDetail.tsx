@@ -15,8 +15,7 @@ import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockClients } from '@/data/mock-clients';
 import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
-import { ImageIcon, MapPin, Calendar, Building2, UserPlus } from 'lucide-react';
-import { toast } from 'sonner';
+import { ImageIcon, MapPin, Calendar, Building2 } from 'lucide-react';
 
 interface EquipmentDetailProps {
   open: boolean;
@@ -117,32 +116,16 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
 
           {/* Affectations clients */}
           <div className="border-t border-border pt-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <Building2 size={16} className="text-muted-foreground" />
-                <h3 className="font-medium text-sm">
-                  Affectations clients
-                  {affectations.length > 0 && (
-                    <Badge variant="secondary" className="ml-2 text-xs">
-                      {affectations.length}
-                    </Badge>
-                  )}
-                </h3>
-              </div>
-              <Button
-                type="button"
-                variant="outline"
-                size="sm"
-                className="gap-1.5 text-xs h-7"
-                onClick={() =>
-                  toast.info(
-                    "Ouvrez la fiche d'un client, cliquez sur Modifier, puis ajoutez cet équipement dans la section Équipements affectés."
-                  )
-                }
-              >
-                <UserPlus size={12} />
-                Affecter à un client
-              </Button>
+            <div className="flex items-center gap-2">
+              <Building2 size={16} className="text-muted-foreground" />
+              <h3 className="font-medium text-sm">
+                Affectations clients
+                {affectations.length > 0 && (
+                  <Badge variant="secondary" className="ml-2 text-xs">
+                    {affectations.length}
+                  </Badge>
+                )}
+              </h3>
             </div>
 
             {affectations.length === 0 ? (

@@ -8,7 +8,6 @@ export const mockPannes: Panne[] = [
     equipementId: 'eq-1',
     dateDeclaration: '2026-05-10',
     description: "Baisse de pression flagrante et fuite d'eau au niveau du split du deuxième étage dans nos bureaux à La Marsa.",
-    priorite: 'ELEVEE',
     statut: 'CONVERTIE',
     interventionId: 'int-2',
     piecesJointes: [
@@ -27,7 +26,6 @@ export const mockPannes: Panne[] = [
     equipementId: 'eq-3',
     dateDeclaration: '2026-05-24',
     description: "Le climatiseur principal du hall de l'immeuble ne s'allume plus du tout. Affichage d'une erreur E6 sur le boîtier de contrôle mural.",
-    priorite: 'URGENTE',
     statut: 'EN_ATTENTE',
     piecesJointes: [],
   },
@@ -38,7 +36,6 @@ export const mockPannes: Panne[] = [
     equipementId: 'eq-4',
     dateDeclaration: '2026-05-23',
     description: "Sifflement aigu constant extrêmement dérangeant dès le démarrage du compresseur dans la chambre principale à El Menzah 9.",
-    priorite: 'MOYENNE',
     statut: 'PRISE_EN_CHARGE',
     piecesJointes: [
       {
@@ -56,7 +53,6 @@ export const mockPannes: Panne[] = [
     equipementId: 'eq-4',
     dateDeclaration: '2026-05-21',
     description: "La télécommande ne répond plus du tout et l'unité souffle uniquement de l'air chaud malgré le réglage sur 18°C.",
-    priorite: 'URGENTE',
     statut: 'CONVERTIE',
     interventionId: 'int-5',
     piecesJointes: [],
@@ -68,7 +64,6 @@ export const mockPannes: Panne[] = [
     equipementId: 'eq-2',
     dateDeclaration: '2026-05-18',
     description: 'Perte de pression intermittente sur le surpresseur du local technique de sécurité.',
-    priorite: 'FAIBLE',
     statut: 'ANNULEE',
     piecesJointes: [],
   },

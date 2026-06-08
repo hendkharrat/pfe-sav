@@ -54,14 +54,12 @@ export function ContractDetail({
   const foundClient = mockClients.find((c) => c.id === contract.clientId);
   const clientName = foundClient ? getClientDisplayName(foundClient) : 'N/A';
 
-  // Resolve CE → Equipment for each covered installation
   const coveredInstallations = contract.clientEquipementIds.map((ceId) => {
     const ce = clientEquipements.find((c) => c.id === ceId);
     const eq = ce ? equipments.find((e) => e.id === ce.equipementId) : undefined;
     return { ceId, ce, eq };
   });
 
-  // Preventive interventions linked to this contract
   const preventiveInterventions = interventions.filter(
     (i) => i.contractId === contract.id && i.type === 'PREVENTIVE'
   );
@@ -78,65 +76,56 @@ export function ContractDetail({
 
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
-      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-7xl sm:max-w-7xl h-[92vh] max-h-[92vh] p-0 gap-0 overflow-hidden flex flex-col">
+        <DialogHeader className="shrink-0 px-6 pt-6 pb-4 border-b border-border">
           <DialogTitle>Fiche contrat</DialogTitle>
           <DialogDescription>Informations détaillées du contrat</DialogDescription>
         </DialogHeader>
 
-        <div className="space-y-6 mt-6">
-          {/* Référence + client */}
-          <div className="space-y-4">
+        {/* Top info grid — always visible, never scrolls */}
+        <div className="shrink-0 min-w-0 px-6 py-4 border-b border-border">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
             <div>
-              <p className="text-sm text-muted-foreground">Référence</p>
-              <p className="font-medium text-lg">{contract.reference}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Référence</p>
+              <p className="font-semibold text-base mt-0.5">{contract.reference}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Client</p>
-              <p className="font-medium">{clientName}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Client</p>
+              <p className="font-medium mt-0.5">{clientName}</p>
             </div>
-          </div>
-
-          {/* Statut */}
-          <div className="space-y-4 border-t border-border pt-4">
             <div>
-              <p className="text-sm text-muted-foreground">Statut</p>
-              <div className="mt-2">
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Statut</p>
+              <div className="mt-1.5">
                 <StatusBadge status={calculateStatus(contract)} type="contract" />
               </div>
             </div>
-          </div>
-
-          {/* Dates + périodicité */}
-          <div className="space-y-4 border-t border-border pt-4">
             <div>
-              <p className="text-sm text-muted-foreground">Date de début</p>
-              <p className="font-medium">{formatDate(contract.dateDebut)}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Date de début</p>
+              <p className="font-medium mt-0.5">{formatDate(contract.dateDebut)}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Date de fin</p>
-              <p className="font-medium">{formatDate(contract.dateFin)}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Date de fin</p>
+              <p className="font-medium mt-0.5">{formatDate(contract.dateFin)}</p>
             </div>
             <div>
-              <p className="text-sm text-muted-foreground">Périodicité</p>
-              <p className="font-medium">{CONTRACT_FREQUENCY_LABELS[contract.periodicite]}</p>
+              <p className="text-xs text-muted-foreground uppercase tracking-wide">Périodicité</p>
+              <p className="font-medium mt-0.5">{CONTRACT_FREQUENCY_LABELS[contract.periodicite]}</p>
             </div>
-          </div>
-
-          {/* Description */}
-          {contract.description && (
-            <div className="space-y-4 border-t border-border pt-4">
-              <div>
-                <p className="text-sm text-muted-foreground">Description</p>
-                <p className="font-medium text-sm">{contract.description}</p>
+            {contract.description && (
+              <div className="md:col-span-2 lg:col-span-3">
+                <p className="text-xs text-muted-foreground uppercase tracking-wide">Description</p>
+                <p className="text-sm mt-0.5">{contract.description}</p>
               </div>
-            </div>
-          )}
+            )}
+          </div>
+        </div>
 
+        {/* Scrollable main content */}
+        <div className="flex-1 min-h-0 min-w-0 overflow-y-auto px-6 py-4 space-y-6">
           {/* Installations couvertes */}
-          <div className="space-y-4 border-t border-border pt-4">
+          <div className="space-y-3">
             <div className="flex items-center gap-2">
-              <p className="text-sm text-muted-foreground font-semibold">Installations couvertes</p>
+              <p className="text-sm font-semibold text-foreground">Installations couvertes</p>
               {coveredInstallations.length > 0 && (
                 <Badge variant="secondary" className="text-xs">
                   {coveredInstallations.length}
@@ -148,15 +137,16 @@ export function ContractDetail({
             ) : (
               <div className="space-y-2">
                 {coveredInstallations.map(({ ceId, ce, eq }) => (
-                  <div key={ceId} className="text-sm bg-muted/50 rounded p-2 flex items-center gap-3">
+                  <div
+                    key={ceId}
+                    className="text-sm bg-muted/50 rounded p-2 flex items-center gap-3"
+                  >
                     <EquipmentThumbnail equipment={eq} size="sm" />
                     <div>
                       <p className="font-medium">
                         {eq?.reference || 'N/A'} — {eq?.marque} {eq?.modele}
                       </p>
-                      <p className="text-muted-foreground text-xs">
-                        {ce?.localisation || 'N/A'}
-                      </p>
+                      <p className="text-muted-foreground text-xs">{ce?.localisation || 'N/A'}</p>
                     </div>
                   </div>
                 ))}
@@ -165,12 +155,10 @@ export function ContractDetail({
           </div>
 
           {/* Interventions préventives */}
-          <div className="space-y-4 border-t border-border pt-4">
+          <div className="space-y-3 border-t border-border pt-4">
             <div className="flex items-center gap-2">
               <CalendarCheck2 size={15} className="text-muted-foreground" />
-              <p className="text-sm text-muted-foreground font-semibold">
-                Interventions préventives
-              </p>
+              <p className="text-sm font-semibold text-foreground">Interventions préventives</p>
               {preventiveInterventions.length > 0 && (
                 <Badge variant="secondary" className="text-xs">
                   {preventiveInterventions.length}
@@ -182,8 +170,8 @@ export function ContractDetail({
                 Aucune intervention préventive liée à ce contrat.
               </p>
             ) : (
-              <div className="rounded-lg border border-border overflow-hidden">
-                <table className="w-full text-xs">
+              <div className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full min-w-[600px] text-xs">
                   <thead>
                     <tr className="bg-muted/50 border-b border-border">
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">
@@ -208,7 +196,9 @@ export function ContractDetail({
                       const ce = i.clientEquipementId
                         ? clientEquipements.find((c) => c.id === i.clientEquipementId)
                         : clientEquipements.find(
-                            (c) => c.equipementId === i.equipementId && c.clientId === contract.clientId
+                            (c) =>
+                              c.equipementId === i.equipementId &&
+                              c.clientId === contract.clientId
                           );
                       const eq = equipments.find((e) => e.id === i.equipementId);
                       const eqLabel = eq ? `${eq.reference} — ${eq.modele}` : '—';
@@ -222,7 +212,9 @@ export function ContractDetail({
                           <td className="px-3 py-2">
                             <p className="font-medium">{eqLabel}</p>
                             {ce?.localisation && (
-                              <p className="text-muted-foreground text-[10px]">{ce.localisation}</p>
+                              <p className="text-muted-foreground text-[10px]">
+                                {ce.localisation}
+                              </p>
                             )}
                           </td>
                           <td className="px-3 py-2 text-muted-foreground">
@@ -246,7 +238,7 @@ export function ContractDetail({
           </div>
         </div>
 
-        <DialogFooter className="border-t pt-4 mt-2">
+        <DialogFooter className="shrink-0 border-t border-border px-6 py-4">
           <Button variant="outline" onClick={onClose}>
             Fermer
           </Button>

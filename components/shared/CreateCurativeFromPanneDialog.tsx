@@ -21,7 +21,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
 import { getActiveTechnicians, getContractCoverage } from '@/lib/interventions';
@@ -123,10 +122,6 @@ export function CreateCurativeFromPanneDialog({
               <div>
                 <span className="font-medium text-muted-foreground">Panne :</span>{' '}
                 <span className="font-semibold text-foreground">{panne.reference}</span>
-              </div>
-              <div className="flex items-center gap-1">
-                <span className="font-medium text-muted-foreground">Priorité :</span>{' '}
-                <PriorityBadge priority={panne.priorite} />
               </div>
               <div>
                 <span className="font-medium text-muted-foreground">Client :</span>{' '}

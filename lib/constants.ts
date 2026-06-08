@@ -31,20 +31,6 @@ export const INTERVENTION_STATUS_LABELS: Record<string, string> = {
   ANNULEE: 'Annulée',
 };
 
-export const INTERVENTION_PRIORITY = {
-  FAIBLE: 'FAIBLE',
-  MOYENNE: 'MOYENNE',
-  ELEVEE: 'ELEVEE',
-  URGENTE: 'URGENTE',
-};
-
-export const INTERVENTION_PRIORITY_LABELS: Record<string, string> = {
-  FAIBLE: 'Faible',
-  MOYENNE: 'Moyenne',
-  ELEVEE: 'Élevée',
-  URGENTE: 'Urgente',
-};
-
 export const CONTRACT_STATUS = {
   ACTIVE: 'ACTIF',
   EXPIRED: 'EXPIRE',

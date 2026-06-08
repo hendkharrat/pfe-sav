@@ -11,7 +11,6 @@ import {
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { PriorityBadge } from '@/components/shared/PriorityBadge';
 import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
@@ -60,19 +59,12 @@ export function PanneDetail({ open, panne, onClose, linkedIntervention }: PanneD
         </DialogHeader>
 
         <div className="space-y-6 mt-6">
-          {/* Status + Priority */}
-          <div className="grid grid-cols-2 gap-4">
-            <DetailRow label="Statut">
-              <div className="pt-1">
-                <StatusBadge status={panne.statut} type="panne" />
-              </div>
-            </DetailRow>
-            <DetailRow label="Priorité">
-              <div className="pt-1">
-                <PriorityBadge priority={panne.priorite} />
-              </div>
-            </DetailRow>
-          </div>
+          {/* Status */}
+          <DetailRow label="Statut">
+            <div className="pt-1">
+              <StatusBadge status={panne.statut} type="panne" />
+            </div>
+          </DetailRow>
 
           <DetailRow label="Date de déclaration">
             <p className="font-medium flex items-center gap-2 text-sm text-foreground">

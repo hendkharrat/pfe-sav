@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ClientEquipement, PieceJointe, InterventionPriorite } from '@/types';
+import { ClientEquipement, PieceJointe } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -13,7 +13,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { INTERVENTION_PRIORITY_LABELS } from '@/lib/constants';
 import { AlertCircle, File, ImageIcon, Paperclip, Send, X } from 'lucide-react';
 import { mockEquipments } from '@/data/mock-equipments';
 
@@ -42,7 +41,6 @@ interface PanneFormProps {
     clientEquipementId: string;
     equipementId: string;
     description: string;
-    priorite: InterventionPriorite;
     piecesJointes: PieceJointe[];
   }) => void;
   isLoading?: boolean;
@@ -58,7 +56,6 @@ export function PanneForm({
   const [formData, setFormData] = useState({
     clientEquipementId: '',
     description: '',
-    priorite: 'MOYENNE' as InterventionPriorite,
   });
 
   const [files, setFiles] = useState<PieceJointe[]>([]);
@@ -107,10 +104,9 @@ export function PanneForm({
       clientEquipementId: formData.clientEquipementId,
       equipementId: ce.equipementId,
       description: formData.description.trim(),
-      priorite: formData.priorite,
       piecesJointes: files,
     });
-    setFormData({ clientEquipementId: '', description: '', priorite: 'MOYENNE' });
+    setFormData({ clientEquipementId: '', description: '' });
     setFiles([]);
     setErrors({});
   };
@@ -158,30 +154,6 @@ export function PanneForm({
             {errors.clientEquipementId}
           </p>
         )}
-      </div>
-
-      {/* Priority */}
-      <div className="space-y-2">
-        <Label htmlFor="priorite" className="text-sm font-semibold">
-          Priorité *
-        </Label>
-        <Select
-          value={formData.priorite}
-          onValueChange={(value) =>
-            setFormData({ ...formData, priorite: value as InterventionPriorite })
-          }
-          disabled={isLoading}
-        >
-          <SelectTrigger id="priorite" className="h-10">
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="FAIBLE">{INTERVENTION_PRIORITY_LABELS['FAIBLE']}</SelectItem>
-            <SelectItem value="MOYENNE">{INTERVENTION_PRIORITY_LABELS['MOYENNE']}</SelectItem>
-            <SelectItem value="ELEVEE">{INTERVENTION_PRIORITY_LABELS['ELEVEE']}</SelectItem>
-            <SelectItem value="URGENTE">{INTERVENTION_PRIORITY_LABELS['URGENTE']}</SelectItem>
-          </SelectContent>
-        </Select>
       </div>
 
       {/* Description */}

@@ -48,10 +48,3 @@ export function toggleSort(current: SortConfig | null, key: string): SortConfig 
   if (current.direction === 'asc') return { key, direction: 'desc' };
   return null;
 }
-
-export const PRIORITY_SORT_ORDER: Record<string, number> = {
-  FAIBLE: 1,
-  MOYENNE: 2,
-  ELEVEE: 3,
-  URGENTE: 4,
-};

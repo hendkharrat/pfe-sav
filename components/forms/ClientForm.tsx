@@ -68,6 +68,8 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
   const [isAssignFormOpen, setIsAssignFormOpen] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<ClientEquipement | undefined>();
 
+  const isCreating = !client?.id;
+
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
     if (formData.typeClient === 'SOCIETE') {
@@ -145,7 +147,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-7xl sm:max-w-7xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{client ? 'Modifier le client' : 'Ajouter un client'}</DialogTitle>
           <DialogDescription>
@@ -295,7 +297,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
           </div>
 
           {/* ── Équipements affectés ── */}
-          <div className="border-t border-border pt-4 space-y-3">
+          <div className="border-t border-border pt-4 space-y-3 min-w-0">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-2">
                 <PackageOpen size={15} className="text-muted-foreground" />
@@ -326,8 +328,8 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
                 Aucun équipement affecté. Cliquez sur « Ajouter un équipement » pour en assigner.
               </p>
             ) : (
-              <div className="rounded-lg border border-border overflow-hidden">
-                <table className="w-full text-xs">
+              <div className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full min-w-[720px] text-xs">
                   <thead>
                     <tr className="bg-muted/40 border-b border-border">
                       <th className="px-2 py-2" />
@@ -335,7 +337,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Type</th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Localisation</th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Installation</th>
-                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Contrat</th>
+                      {!isCreating && <th className="text-left px-3 py-2 font-medium text-muted-foreground">Contrat</th>}
                       <th className="text-right px-3 py-2 font-medium text-muted-foreground">Actions</th>
                     </tr>
                   </thead>
@@ -360,22 +362,24 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
                           <td className="px-3 py-2 text-muted-foreground">
                             {formatDate(ce.dateInstallation)}
                           </td>
-                          <td className="px-3 py-2">
-                            {activeContract ? (
-                              <div className="space-y-0.5">
-                                <Badge className="bg-green-100 text-green-800 border-green-200 text-[10px] h-5 font-medium">
-                                  Sous contrat
+                          {!isCreating && (
+                            <td className="px-3 py-2">
+                              {activeContract ? (
+                                <div className="space-y-0.5">
+                                  <Badge className="bg-green-100 text-green-800 border-green-200 text-[10px] h-5 font-medium">
+                                    Sous contrat
+                                  </Badge>
+                                  <p className="text-[10px] text-muted-foreground leading-none">
+                                    {activeContract.reference}
+                                  </p>
+                                </div>
+                              ) : (
+                                <Badge variant="outline" className="text-muted-foreground text-[10px] h-5">
+                                  Hors contrat
                                 </Badge>
-                                <p className="text-[10px] text-muted-foreground leading-none">
-                                  {activeContract.reference}
-                                </p>
-                              </div>
-                            ) : (
-                              <Badge variant="outline" className="text-muted-foreground text-[10px] h-5">
-                                {client?.id ? 'Hors contrat' : 'Contrat à créer'}
-                              </Badge>
-                            )}
-                          </td>
+                              )}
+                            </td>
+                          )}
                           <td className="px-3 py-2 text-right">
                             <div className="flex items-center justify-end gap-1">
                               <Button

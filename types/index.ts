@@ -5,7 +5,6 @@ export type ClientType = 'SOCIETE' | 'PERSONNE_PHYSIQUE';
 
 export type InterventionType = 'PREVENTIVE' | 'CURATIVE';
 export type InterventionStatut = 'PLANIFIEE' | 'EN_COURS' | 'REALISEE' | 'ANNULEE';
-export type InterventionPriorite = 'FAIBLE' | 'MOYENNE' | 'ELEVEE' | 'URGENTE';
 export type ContractStatut = 'ACTIF' | 'EXPIRE' | 'BIENTOT_EXPIRE';
 export type EquipmentType = 'CLIMATISEUR' | 'SYSTEME_SURPRESSION';
 export type InvoiceStatut = 'PAYEE' | 'IMPAYEE' | 'EN_ATTENTE';
@@ -170,7 +169,6 @@ export interface Panne {
   clientEquipementId?: string;
   dateDeclaration: string;
   description: string;
-  priorite: InterventionPriorite;
   statut: PanneStatut;
   interventionId?: string;
   /** @deprecated Use piecesJointes instead. */

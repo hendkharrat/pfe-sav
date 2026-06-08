@@ -27,7 +27,7 @@ import {
 } from '@/components/ui/table';
 import { Separator } from '@/components/ui/separator';
 import { mockClients } from '@/data/mock-clients';
-import { FileText, AlertCircle } from 'lucide-react';
+import { FileText, AlertCircle, Sparkles } from 'lucide-react';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
 
 const TAUX_HORAIRE_TND = 50;
@@ -207,6 +207,18 @@ export function GenerateInvoiceDialog({
                     })}
                   </SelectContent>
                 </Select>
+                {!selectedId && (
+                  <Button
+                    type="button"
+                    variant="ghost"
+                    size="sm"
+                    className="text-xs gap-1.5 text-muted-foreground h-7"
+                    onClick={() => setSelectedId(eligibleInterventions[0].id)}
+                  >
+                    <Sparkles size={12} />
+                    Charger un exemple
+                  </Button>
+                )}
               </div>
 
               {selectedIntervention && (

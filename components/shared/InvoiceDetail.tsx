@@ -20,8 +20,7 @@ import {
 } from '@/components/ui/table';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { mockClients } from '@/data/mock-clients';
-import { Download, CheckCircle, Building2 } from 'lucide-react';
-import { toast } from 'sonner';
+import { CheckCircle, Building2 } from 'lucide-react';
 import { getClientDisplayName } from '@/lib/utils';
 
 function formatTND(amount: number): string {
@@ -60,10 +59,6 @@ export function InvoiceDetail({
   if (!invoice) return null;
 
   const client = mockClients.find((c) => c.id === invoice.clientId);
-
-  function handleExportPDF() {
-    toast.info(`Export PDF de la facture ${invoice!.numero} — fonctionnalité simulée.`);
-  }
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -212,30 +207,19 @@ export function InvoiceDetail({
           <Separator />
 
           {/* Action buttons */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3">
-            <Button
-              variant="outline"
-              className="gap-2 w-full sm:w-auto"
-              onClick={handleExportPDF}
-            >
-              <Download size={16} />
-              Exporter PDF
+          <div className="flex gap-2 justify-end">
+            <Button variant="outline" onClick={onClose}>
+              Fermer
             </Button>
-
-            <div className="flex gap-2 w-full sm:w-auto justify-end">
-              <Button variant="outline" onClick={onClose} className="flex-1 sm:flex-none">
-                Fermer
+            {isAdmin && invoice.statut !== 'PAYEE' && onMarkPaid && (
+              <Button
+                className="gap-2 bg-green-600 hover:bg-green-700 text-white"
+                onClick={() => onMarkPaid(invoice.id)}
+              >
+                <CheckCircle size={16} />
+                Marquer payée
               </Button>
-              {isAdmin && invoice.statut !== 'PAYEE' && onMarkPaid && (
-                <Button
-                  className="flex-1 sm:flex-none gap-2 bg-green-600 hover:bg-green-700 text-white"
-                  onClick={() => onMarkPaid(invoice.id)}
-                >
-                  <CheckCircle size={16} />
-                  Marquer payée
-                </Button>
-              )}
-            </div>
+            )}
           </div>
         </div>
       </DialogContent>

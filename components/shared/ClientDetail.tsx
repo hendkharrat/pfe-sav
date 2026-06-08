@@ -18,8 +18,7 @@ import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
 import { formatDate, getClientDisplayName, getClientTypeLabel } from '@/lib/utils';
 import { findActiveContractForClientEquipement } from '@/lib/interventions';
 import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
-import { toast } from 'sonner';
-import { PackageOpen, MapPin, Calendar, UserPlus, FileText, CalendarClock, Edit2 } from 'lucide-react';
+import { PackageOpen, MapPin, Calendar, Edit2 } from 'lucide-react';
 
 interface ClientDetailProps {
   open: boolean;
@@ -49,7 +48,7 @@ export function ClientDetail({
 
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
-      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-7xl sm:max-w-7xl max-h-[92vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>Fiche client</DialogTitle>
           <DialogDescription>Informations détaillées du client</DialogDescription>
@@ -96,59 +95,18 @@ export function ClientDetail({
           </div>
 
           {/* Équipements affectés */}
-          <div className="border-t border-border pt-4 space-y-3">
+          <div className="border-t border-border pt-4 space-y-3 min-w-0">
             {/* Section header with quick actions */}
-            <div className="flex flex-wrap items-center justify-between gap-2">
-              <div className="flex items-center gap-2">
-                <PackageOpen size={15} className="text-muted-foreground" />
-                <span className="font-semibold text-sm">
-                  Équipements affectés
-                  {affectations.length > 0 && (
-                    <Badge variant="secondary" className="ml-2 text-xs">
-                      {affectations.length}
-                    </Badge>
-                  )}
-                </span>
-              </div>
-              <div className="flex items-center gap-2">
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5 text-xs h-7"
-                  onClick={() => {
-                    if (onEdit) {
-                      onClose();
-                      onEdit();
-                    } else {
-                      toast.info('Cliquez sur "Modifier" dans la liste pour affecter des équipements.');
-                    }
-                  }}
-                >
-                  <UserPlus size={12} />
-                  Affecter équipement
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5 text-xs h-7"
-                  onClick={() => toast.info('Créez un contrat depuis le module Contrats en sélectionnant ce client.')}
-                >
-                  <FileText size={12} />
-                  Créer contrat
-                </Button>
-                <Button
-                  type="button"
-                  variant="outline"
-                  size="sm"
-                  className="gap-1.5 text-xs h-7"
-                  onClick={() => toast.info('Planifiez une intervention depuis le module Interventions en sélectionnant ce client.')}
-                >
-                  <CalendarClock size={12} />
-                  Planifier
-                </Button>
-              </div>
+            <div className="flex items-center gap-2">
+              <PackageOpen size={15} className="text-muted-foreground" />
+              <span className="font-semibold text-sm">
+                Équipements affectés
+                {affectations.length > 0 && (
+                  <Badge variant="secondary" className="ml-2 text-xs">
+                    {affectations.length}
+                  </Badge>
+                )}
+              </span>
             </div>
 
             {affectations.length === 0 ? (
@@ -156,8 +114,8 @@ export function ClientDetail({
                 Aucun équipement affecté à ce client.
               </p>
             ) : (
-              <div className="rounded-lg border border-border overflow-hidden">
-                <table className="w-full text-sm">
+              <div className="overflow-x-auto rounded-lg border border-border">
+                <table className="w-full min-w-[720px] text-sm">
                   <thead>
                     <tr className="bg-muted/50 border-b border-border">
                       <th className="px-2 py-2" />

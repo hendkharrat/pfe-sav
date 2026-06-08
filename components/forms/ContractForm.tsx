@@ -186,8 +186,8 @@ export function ContractForm({
 
   return (
     <Dialog open={open} onOpenChange={onClose}>
-      <DialogContent className="w-[96vw] max-w-6xl max-h-[92vh] overflow-y-auto">
-        <DialogHeader>
+      <DialogContent className="w-[calc(100vw-2rem)] max-w-7xl sm:max-w-7xl h-[92vh] max-h-[92vh] p-0 gap-0 overflow-hidden flex flex-col">
+        <DialogHeader className="shrink-0 px-6 pt-6 pb-4 border-b border-border">
           <DialogTitle>{contract ? 'Modifier le contrat' : 'Créer un contrat'}</DialogTitle>
           <DialogDescription>
             {contract
@@ -196,7 +196,8 @@ export function ContractForm({
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="flex-1 min-h-0 min-w-0 overflow-y-auto px-6 py-4 space-y-6">
           {/* Référence */}
           <div className="space-y-2">
             <Label htmlFor="reference">Référence *</Label>
@@ -355,16 +356,20 @@ export function ContractForm({
                   L'affectation des techniciens est optionnelle.
                 </p>
               </div>
-              <PreventiveInterventionPreviewTable
-                previews={previewRows}
-                onChange={setPreviewRows}
-                interventions={interventions}
-              />
+              <div className="overflow-x-auto">
+                <PreventiveInterventionPreviewTable
+                  previews={previewRows}
+                  onChange={setPreviewRows}
+                  interventions={interventions}
+                />
+              </div>
             </div>
           )}
 
+          </div>
+
           {/* Actions */}
-          <div className="flex gap-2 justify-end pt-4">
+          <div className="shrink-0 border-t border-border px-6 py-4 flex gap-2 justify-end">
             <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
               Annuler
             </Button>
