@@ -99,7 +99,7 @@ export function CloseInterventionDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="flex flex-col max-h-[90vh] sm:max-w-lg">
+      <DialogContent className="flex flex-col max-h-[90vh]">
         <DialogHeader>
           <DialogTitle>Clôturer l&apos;intervention</DialogTitle>
           <DialogDescription>
