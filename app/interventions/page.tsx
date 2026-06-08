@@ -485,7 +485,7 @@ export default function InterventionsPage() {
                     <SortableHeader label="Type" sortKey="type" sortConfig={sortConfig} onSort={handleSort} />
                     <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
                     <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
-                    <SortableHeader label="Technicien" sortKey="technicien" sortConfig={sortConfig} onSort={handleSort} className="hidden md:table-cell" />
+                    {isAdmin && <SortableHeader label="Technicien" sortKey="technicien" sortConfig={sortConfig} onSort={handleSort} />}
                     <SortableHeader label="Date prévue" sortKey="datePrevue" sortConfig={sortConfig} onSort={handleSort} />
                     <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="hidden sm:table-cell" />
                     <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
@@ -625,9 +625,11 @@ function InterventionTableRow({
       </TableCell>
       <TableCell className="max-w-[120px] truncate">{getClientName(intervention.clientId)}</TableCell>
       <TableCell>{getEquipmentLabel(intervention.equipementId)}</TableCell>
-      <TableCell className="hidden md:table-cell text-sm">
-        {getTechnicianName(intervention.technicienId)}
-      </TableCell>
+      {isAdmin && (
+        <TableCell className="text-sm">
+          {getTechnicianName(intervention.technicienId)}
+        </TableCell>
+      )}
       <TableCell className="whitespace-nowrap text-sm">{formatDate(intervention.datePrevue)}</TableCell>
       <TableCell className="hidden sm:table-cell">
         <PriorityBadge priority={intervention.priorite} />

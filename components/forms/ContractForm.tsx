@@ -1,7 +1,12 @@
 'use client';
 
-import { useState } from 'react';
-import { Contract } from '@/types';
+import { useState, useEffect, useMemo } from 'react';
+import {
+  Contract,
+  ClientEquipement,
+  Intervention,
+  PreventiveInterventionPreview,
+} from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -19,17 +24,29 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { mockClients } from '@/data/mock-clients';
-import { mockEquipments } from '@/data/mock-equipments';
-import { CONTRACT_FREQUENCY_LABELS } from '@/lib/constants';
 import { Checkbox } from '@/components/ui/checkbox';
+import { mockClients } from '@/data/mock-clients';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
+import { CONTRACT_FREQUENCY_LABELS } from '@/lib/constants';
+import {
+  generatePreventiveInterventionPreviews,
+  getClientEquipementLabel,
+} from '@/lib/interventions';
+import { PreventiveInterventionPreviewTable } from '@/components/shared/PreventiveInterventionPreviewTable';
+
+export type ContractFormSubmitPayload = {
+  contract: Omit<Contract, 'id'>;
+  preventiveInterventions: PreventiveInterventionPreview[];
+};
 
 interface ContractFormProps {
   open: boolean;
   contract?: Contract;
   onClose: () => void;
-  onSubmit: (data: Omit<Contract, 'id'>) => void;
+  onSubmit: (payload: ContractFormSubmitPayload) => void;
   isLoading?: boolean;
+  clientEquipements?: ClientEquipement[];
+  interventions?: Intervention[];
 }
 
 export function ContractForm({
@@ -38,25 +55,71 @@ export function ContractForm({
   onClose,
   onSubmit,
   isLoading = false,
+  clientEquipements = mockClientEquipements,
+  interventions,
 }: ContractFormProps) {
   const [formData, setFormData] = useState({
-    reference: contract?.reference || '',
-    clientId: contract?.clientId || '',
-    equipementIds: contract?.equipementIds || [],
-    dateDebut: contract?.dateDebut || '',
-    dateFin: contract?.dateFin || '',
-    periodicite: contract?.periodicite || ('MENSUELLE' as const),
-    description: contract?.description || '',
+    reference: contract?.reference ?? '',
+    clientId: contract?.clientId ?? '',
+    clientEquipementIds: contract?.clientEquipementIds ?? [],
+    dateDebut: contract?.dateDebut ?? '',
+    dateFin: contract?.dateFin ?? '',
+    periodicite: contract?.periodicite ?? ('MENSUELLE' as const),
+    description: contract?.description ?? '',
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [previewRows, setPreviewRows] = useState<PreventiveInterventionPreview[]>([]);
 
-  const selectedClient = mockClients.find((c) => c.id === formData.clientId);
-  const availableEquipments = mockEquipments.filter((e) => e.clientId === formData.clientId);
+  const availableCEs = useMemo(
+    () => clientEquipements.filter((ce) => ce.clientId === formData.clientId),
+    [clientEquipements, formData.clientId]
+  );
+
+  // Stable string key capturing all preview-relevant fields
+  const previewTrigger = useMemo(
+    () =>
+      [
+        formData.clientId,
+        formData.dateDebut,
+        formData.dateFin,
+        formData.periodicite,
+        [...formData.clientEquipementIds].sort().join(','),
+      ].join('|'),
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    [formData.clientId, formData.dateDebut, formData.dateFin, formData.periodicite, formData.clientEquipementIds]
+  );
+
+  // Regenerate previews (create mode only) when key fields change
+  useEffect(() => {
+    if (contract) {
+      setPreviewRows([]);
+      return;
+    }
+    const { clientId, dateDebut, dateFin, periodicite, clientEquipementIds } = formData;
+    if (
+      !clientId ||
+      !dateDebut ||
+      !dateFin ||
+      dateFin <= dateDebut ||
+      clientEquipementIds.length === 0
+    ) {
+      setPreviewRows([]);
+      return;
+    }
+    const generated = generatePreventiveInterventionPreviews({
+      clientId,
+      clientEquipementIds,
+      dateDebut,
+      dateFin,
+      periodicite,
+    });
+    setPreviewRows(generated);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [previewTrigger, !!contract]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.reference.trim()) newErrors.reference = 'La référence est obligatoire';
     if (!formData.clientId) newErrors.clientId = 'Le client est obligatoire';
     if (!formData.dateDebut) newErrors.dateDebut = 'La date de début est obligatoire';
@@ -65,10 +128,9 @@ export function ContractForm({
       newErrors.dateFin = 'La date de fin doit être après la date de début';
     }
     if (!formData.periodicite) newErrors.periodicite = 'La périodicité est obligatoire';
-    if (formData.equipementIds.length === 0) {
-      newErrors.equipementIds = 'Au moins un équipement est obligatoire';
+    if (formData.clientEquipementIds.length === 0) {
+      newErrors.clientEquipementIds = 'Au moins une installation est obligatoire';
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -77,47 +139,47 @@ export function ContractForm({
     e.preventDefault();
     if (!validateForm()) return;
 
-    // Calculer le statut basé sur la date de fin
     const today = new Date();
     const dateFin = new Date(formData.dateFin);
     const thirtyDaysFromNow = new Date();
     thirtyDaysFromNow.setDate(thirtyDaysFromNow.getDate() + 30);
 
     let statut: 'ACTIF' | 'EXPIRE' | 'BIENTOT_EXPIRE' = 'ACTIF';
-    if (dateFin < today) {
-      statut = 'EXPIRE';
-    } else if (dateFin < thirtyDaysFromNow) {
-      statut = 'BIENTOT_EXPIRE';
-    }
+    if (dateFin < today) statut = 'EXPIRE';
+    else if (dateFin < thirtyDaysFromNow) statut = 'BIENTOT_EXPIRE';
 
     onSubmit({
-      reference: formData.reference,
-      clientId: formData.clientId,
-      equipementIds: formData.equipementIds,
-      dateDebut: formData.dateDebut,
-      dateFin: formData.dateFin,
-      periodicite: formData.periodicite,
-      statut: statut,
-      description: formData.description || undefined,
+      contract: {
+        reference: formData.reference,
+        clientId: formData.clientId,
+        clientEquipementIds: formData.clientEquipementIds,
+        dateDebut: formData.dateDebut,
+        dateFin: formData.dateFin,
+        periodicite: formData.periodicite,
+        statut,
+        description: formData.description || undefined,
+      },
+      preventiveInterventions: previewRows,
     });
 
     setFormData({
       reference: '',
       clientId: '',
-      equipementIds: [],
+      clientEquipementIds: [],
       dateDebut: '',
       dateFin: '',
       periodicite: 'MENSUELLE',
       description: '',
     });
+    setPreviewRows([]);
   };
 
-  const toggleEquipment = (equipmentId: string) => {
+  const toggleCE = (ceId: string) => {
     setFormData((prev) => ({
       ...prev,
-      equipementIds: prev.equipementIds.includes(equipmentId)
-        ? prev.equipementIds.filter((id) => id !== equipmentId)
-        : [...prev.equipementIds, equipmentId],
+      clientEquipementIds: prev.clientEquipementIds.includes(ceId)
+        ? prev.clientEquipementIds.filter((id) => id !== ceId)
+        : [...prev.clientEquipementIds, ceId],
     }));
   };
 
@@ -153,7 +215,7 @@ export function ContractForm({
             <Select
               value={formData.clientId}
               onValueChange={(value) =>
-                setFormData({ ...formData, clientId: value, equipementIds: [] })
+                setFormData({ ...formData, clientId: value, clientEquipementIds: [] })
               }
               disabled={isLoading}
             >
@@ -215,7 +277,9 @@ export function ContractForm({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="MENSUELLE">{CONTRACT_FREQUENCY_LABELS['MENSUELLE']}</SelectItem>
-                <SelectItem value="TRIMESTRIELLE">{CONTRACT_FREQUENCY_LABELS['TRIMESTRIELLE']}</SelectItem>
+                <SelectItem value="TRIMESTRIELLE">
+                  {CONTRACT_FREQUENCY_LABELS['TRIMESTRIELLE']}
+                </SelectItem>
                 <SelectItem value="SEMESTRIELLE">
                   {CONTRACT_FREQUENCY_LABELS['SEMESTRIELLE']}
                 </SelectItem>
@@ -225,40 +289,45 @@ export function ContractForm({
             {errors.periodicite && <p className="text-xs text-red-500">{errors.periodicite}</p>}
           </div>
 
-          {/* Équipements couverts */}
+          {/* Installations couvertes (via ClientEquipement) */}
           <div className="space-y-3 border border-border rounded-lg p-4">
-            <Label className="text-sm font-semibold">Équipements couverts *</Label>
+            <Label className="text-sm font-semibold">Installations couvertes *</Label>
 
             {!formData.clientId ? (
               <p className="text-sm text-muted-foreground italic">
                 Veuillez sélectionner un client d'abord
               </p>
-            ) : availableEquipments.length === 0 ? (
+            ) : availableCEs.length === 0 ? (
               <p className="text-sm text-muted-foreground italic">
-                Aucun équipement disponible pour ce client
+                Aucune installation affectée à ce client — ajoutez des équipements depuis la fiche client
               </p>
             ) : (
               <div className="space-y-2 max-h-48 overflow-y-auto">
-                {availableEquipments.map((equipment) => (
-                  <div key={equipment.id} className="flex items-center gap-2">
-                    <Checkbox
-                      id={equipment.id}
-                      checked={formData.equipementIds.includes(equipment.id)}
-                      onCheckedChange={() => toggleEquipment(equipment.id)}
-                      disabled={isLoading}
-                    />
-                    <Label
-                      htmlFor={equipment.id}
-                      className="text-sm font-normal cursor-pointer flex-1"
-                    >
-                      {equipment.reference} - {equipment.marque} {equipment.modele}
-                    </Label>
-                  </div>
-                ))}
+                {availableCEs.map((ce) => {
+                  const label = getClientEquipementLabel(ce.id, clientEquipements);
+                  return (
+                    <div key={ce.id} className="flex items-center gap-2">
+                      <Checkbox
+                        id={ce.id}
+                        checked={formData.clientEquipementIds.includes(ce.id)}
+                        onCheckedChange={() => toggleCE(ce.id)}
+                        disabled={isLoading}
+                      />
+                      <Label
+                        htmlFor={ce.id}
+                        className="text-sm font-normal cursor-pointer flex-1"
+                      >
+                        {label}
+                      </Label>
+                    </div>
+                  );
+                })}
               </div>
             )}
 
-            {errors.equipementIds && <p className="text-xs text-red-500">{errors.equipementIds}</p>}
+            {errors.clientEquipementIds && (
+              <p className="text-xs text-red-500">{errors.clientEquipementIds}</p>
+            )}
           </div>
 
           {/* Description */}
@@ -275,13 +344,35 @@ export function ContractForm({
             />
           </div>
 
+          {/* Preventive planning (create mode only, shown when previews are ready) */}
+          {!contract && previewRows.length > 0 && (
+            <div className="space-y-3 border border-border rounded-lg p-4 bg-muted/20">
+              <div className="space-y-1">
+                <Label className="text-sm font-semibold">Planification préventive</Label>
+                <p className="text-xs text-muted-foreground">
+                  Ces interventions seront créées automatiquement à la validation du contrat.
+                  L'affectation des techniciens est optionnelle.
+                </p>
+              </div>
+              <PreventiveInterventionPreviewTable
+                previews={previewRows}
+                onChange={setPreviewRows}
+                interventions={interventions}
+              />
+            </div>
+          )}
+
           {/* Actions */}
           <div className="flex gap-2 justify-end pt-4">
             <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
               Annuler
             </Button>
             <Button type="submit" disabled={isLoading}>
-              {contract ? 'Modifier' : 'Créer'}
+              {contract
+                ? 'Modifier'
+                : previewRows.length > 0
+                  ? `Créer (${previewRows.length} intervention${previewRows.length > 1 ? 's' : ''})`
+                  : 'Créer'}
             </Button>
           </div>
         </form>

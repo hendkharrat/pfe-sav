@@ -18,7 +18,8 @@ import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockContracts } from '@/data/mock-contracts';
 import { mockInvoices } from '@/data/mock-invoices';
-import { getTechnicianName } from '@/lib/interventions';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
+import { getTechnicianName, getClientEquipementByEquipmentAndClient } from '@/lib/interventions';
 import { INTERVENTION_TYPE_LABELS } from '@/lib/constants';
 import { formatDate } from '@/lib/utils';
 import { FileText } from 'lucide-react';
@@ -38,6 +39,10 @@ export function HistoryInterventionDetail({ open, intervention, onClose }: Props
     ? mockContracts.find((c) => c.id === intervention.contractId)
     : undefined;
   const invoice = mockInvoices.find((inv) => inv.interventionId === intervention.id);
+
+  const clientEquipement = intervention.clientEquipementId
+    ? mockClientEquipements.find((ce) => ce.id === intervention.clientEquipementId)
+    : getClientEquipementByEquipmentAndClient(intervention.clientId, intervention.equipementId);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -82,9 +87,9 @@ export function HistoryInterventionDetail({ open, intervention, onClose }: Props
                 ? `${equipment.reference} — ${equipment.marque} ${equipment.modele}`
                 : 'N/A'}
             </p>
-            {equipment?.localisation && (
-              <p className="text-sm text-muted-foreground">{equipment.localisation}</p>
-            )}
+            <p className="text-sm text-muted-foreground">
+              {clientEquipement?.localisation ?? 'Localisation non renseignée'}
+            </p>
           </DetailRow>
 
           <DetailRow label="Technicien">

@@ -34,7 +34,13 @@
       "Bash(echo \"EXIT_CODE: $?\")",
       "Bash(grep -v \"//\")",
       "Bash(npm run *)",
-      "Bash(Test-Path *)"
+      "Bash(Test-Path *)",
+      "Bash(exist \"C:\\\\Users\\\\medam\\\\Desktop\\\\PFE Hend\\\\sav-manager-frontend-setup\\\\components\\\\forms\\\\ContractForm.tsx\" echo yes)",
+      "Bash(npx next *)",
+      "Bash(npx --yes next lint --dir .)",
+      "Bash(node_modules/.bin/next lint *)",
+      "Bash(node_modules/.bin/eslint \"app/**/*.tsx\" \"components/**/*.tsx\" --ext .tsx)",
+      "Bash(python3 -c \"import json,sys; p=json.load\\(sys.stdin\\); print\\(list\\(p.get\\('scripts',{}\\).items\\(\\)\\)\\)\")"
     ]
   }
 }

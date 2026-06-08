@@ -2,7 +2,14 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Panne, Equipment, Intervention, InterventionPriorite, PanneStatut } from '@/types';
+import {
+  Panne,
+  ClientEquipement,
+  PieceJointe,
+  Intervention,
+  InterventionPriorite,
+  PanneStatut,
+} from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
@@ -12,6 +19,7 @@ import { mockPannes } from '@/data/mock-pannes';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockClients } from '@/data/mock-clients';
 import { mockInterventions } from '@/data/mock-interventions';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -49,7 +57,12 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { getClientIdForUser, getContractCoverage, generateInterventionReference } from '@/lib/interventions';
+import {
+  getClientIdForUser,
+  getContractCoverage,
+  findActiveContractForClientEquipement,
+  generateInterventionReference,
+} from '@/lib/interventions';
 import { formatDate } from '@/lib/utils';
 import { PanneForm } from '@/components/forms/PanneForm';
 import { PanneDetail } from '@/components/shared/PanneDetail';
@@ -64,46 +77,41 @@ export default function PannesPage() {
   const { user: currentUser, isLoading } = useAuth();
   const { showSuccess, showError } = useToast();
 
-  // Core local states
   const [pannes, setPannes] = useState<Panne[]>([]);
   const [interventions, setInterventions] = useState<Intervention[]>([]);
 
-  // Search & Filter state
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
   const [priorityFilter, setPriorityFilter] = useState('all');
   const [clientFilter, setClientFilter] = useState('all');
 
-  // Detail sheet state
   const [selectedPanne, setSelectedPanne] = useState<Panne | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
 
-  // Conversion dialog state
   const [panneToConvert, setPanneToConvert] = useState<Panne | null>(null);
   const [isConvertOpen, setIsConvertOpen] = useState(false);
 
-  // Cancellation confirm state
   const [panneToCancel, setPanneToCancel] = useState<Panne | null>(null);
   const [isCancelConfirmOpen, setIsCancelConfirmOpen] = useState(false);
 
-  // Client declaration dialog state
   const [isCreateOpen, setIsCreateOpen] = useState(false);
 
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [page, setPage] = useState(1);
 
-  // Initialization
   useEffect(() => {
     setPannes(mockPannes);
     setInterventions(mockInterventions);
   }, []);
 
-  // Helpers
-  const clientInfo = useMemo(() => {
-    if (!currentUser || currentUser.role !== 'client') return { clientId: null, equipments: [] };
+  // Client context: resolve clientId + their CE records
+  const clientInfo = useMemo((): { clientId: string | null; clientEquipements: ClientEquipement[] } => {
+    if (!currentUser || currentUser.role !== 'client') {
+      return { clientId: null, clientEquipements: [] };
+    }
     const clientId = getClientIdForUser(currentUser);
-    const clientEqs = mockEquipments.filter((e) => e.clientId === clientId);
-    return { clientId, equipments: clientEqs };
+    const clientCEs = mockClientEquipements.filter((ce) => ce.clientId === clientId);
+    return { clientId, clientEquipements: clientCEs };
   }, [currentUser]);
 
   const clientHasPannes = useMemo(() => {
@@ -113,29 +121,27 @@ export default function PannesPage() {
     return pannes.some((p) => p.clientId === cid);
   }, [pannes, currentUser, clientInfo.clientId]);
 
-  const getClientName = useCallback((clientId: string): string => {
-    return mockClients.find((c) => c.id === clientId)?.societe || 'N/A';
-  }, []);
+  const getClientName = useCallback(
+    (clientId: string): string =>
+      mockClients.find((c) => c.id === clientId)?.societe || 'N/A',
+    []
+  );
 
   const getEquipmentName = useCallback((equipementId: string): string => {
     const eq = mockEquipments.find((e) => e.id === equipementId);
     return eq ? `${eq.reference} (${eq.marque} ${eq.modele})` : 'N/A';
   }, []);
 
-  // Filtered lists
   const filteredPannes = useMemo(() => {
     if (!currentUser) return [];
-
     let list = pannes;
 
-    // 1. Role boundary filtering
     if (currentUser.role === 'client') {
       const clientId = clientInfo.clientId;
       if (!clientId) return [];
       list = list.filter((p) => p.clientId === clientId);
     }
 
-    // 2. Search term filtering (reference, description, client societe, equipment reference/marque/modele)
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
       list = list.filter((p) => {
@@ -150,17 +156,8 @@ export default function PannesPage() {
       });
     }
 
-    // 3. Status filter
-    if (statusFilter !== 'all') {
-      list = list.filter((p) => p.statut === statusFilter);
-    }
-
-    // 4. Priority filter
-    if (priorityFilter !== 'all') {
-      list = list.filter((p) => p.priorite === priorityFilter);
-    }
-
-    // 5. Client filter (Admin view only)
+    if (statusFilter !== 'all') list = list.filter((p) => p.statut === statusFilter);
+    if (priorityFilter !== 'all') list = list.filter((p) => p.priorite === priorityFilter);
     if (currentUser.role === 'admin' && clientFilter !== 'all') {
       list = list.filter((p) => p.clientId === clientFilter);
     }
@@ -196,20 +193,20 @@ export default function PannesPage() {
     [sortedPannes, page]
   );
 
-  // Client Action: submit panne
+  // Client: submit new panne declaration
   const handleClientSubmit = useCallback(
     (formData: {
+      clientEquipementId: string;
       equipementId: string;
       description: string;
       priorite: InterventionPriorite;
-      pieceJointeNom?: string;
+      piecesJointes: PieceJointe[];
     }) => {
       const clientId = clientInfo.clientId;
       if (!clientId) {
         showError("Impossible d'associer la panne à un client valide.");
         return;
       }
-
       const year = new Date().getFullYear();
       const nextNum = pannes.length + 1;
       const refStr = `PAN-${year}-${String(nextNum).padStart(3, '0')}`;
@@ -218,12 +215,13 @@ export default function PannesPage() {
         id: `pan-${Date.now()}`,
         reference: refStr,
         clientId,
+        clientEquipementId: formData.clientEquipementId,
         equipementId: formData.equipementId,
         dateDeclaration: new Date().toISOString().split('T')[0],
         description: formData.description,
         priorite: formData.priorite,
         statut: 'EN_ATTENTE',
-        pieceJointeNom: formData.pieceJointeNom,
+        piecesJointes: formData.piecesJointes,
       };
 
       setPannes((prev) => [newPanne, ...prev]);
@@ -233,37 +231,51 @@ export default function PannesPage() {
     [clientInfo.clientId, pannes.length, showError, showSuccess]
   );
 
-  // Admin Action: Prendre en charge
+  // Admin: mark panne as "prise en charge"
   const handlePrendreEnCharge = useCallback(
     (panneId: string) => {
       setPannes((prev) =>
-        prev.map((p) => (p.id === panneId ? { ...p, statut: 'PRISE_EN_CHARGE' } : p))
+        prev.map((p) => (p.id === panneId ? { ...p, statut: 'PRISE_EN_CHARGE' as PanneStatut } : p))
       );
       showSuccess('La panne a été prise en charge avec succès.');
     },
     [showSuccess]
   );
 
-  // Admin Action: Confirm Cancellation
+  // Admin: confirm cancellation
   const handleCancelPanne = useCallback(() => {
     if (!panneToCancel) return;
     setPannes((prev) =>
-      prev.map((p) => (p.id === panneToCancel.id ? { ...p, statut: 'ANNULEE' } : p))
+      prev.map((p) =>
+        p.id === panneToCancel.id ? { ...p, statut: 'ANNULEE' as PanneStatut } : p
+      )
     );
     setIsCancelConfirmOpen(false);
     setPanneToCancel(null);
     showSuccess('La déclaration de panne a été annulée.');
   }, [panneToCancel, showSuccess]);
 
-  // Admin Action: Convert Panne to Curative Intervention
+  // Admin: convert panne to curative intervention
   const handleConvertConfirm = useCallback(
     (formData: { technicienId?: string; datePrevue: string; description: string }) => {
       if (!panneToConvert) return;
 
-      const { couvertureContrat, contractId } = getContractCoverage(
-        panneToConvert.equipementId,
-        panneToConvert.clientId
-      );
+      // Resolve contract coverage: prefer CE-based lookup, fall back to legacy
+      let couvertureContrat = false;
+      let contractId: string | undefined;
+
+      if (panneToConvert.clientEquipementId) {
+        const contract = findActiveContractForClientEquipement(
+          panneToConvert.clientEquipementId,
+          panneToConvert.clientId
+        );
+        couvertureContrat = contract !== undefined;
+        contractId = contract?.id;
+      } else {
+        const coverage = getContractCoverage(panneToConvert.equipementId, panneToConvert.clientId);
+        couvertureContrat = coverage.couvertureContrat;
+        contractId = coverage.contractId;
+      }
 
       const nextRef = generateInterventionReference(interventions);
       const newInterventionId = `int-${Date.now()}`;
@@ -274,8 +286,9 @@ export default function PannesPage() {
         type: 'CURATIVE',
         clientId: panneToConvert.clientId,
         equipementId: panneToConvert.equipementId,
+        clientEquipementId: panneToConvert.clientEquipementId,
         technicienId: formData.technicienId,
-        contractId: contractId,
+        contractId,
         datePrevue: formData.datePrevue,
         priorite: panneToConvert.priorite,
         statut: 'PLANIFIEE',
@@ -283,12 +296,11 @@ export default function PannesPage() {
         description: formData.description,
       };
 
-      // Add intervention to local list & convert panne status
       setInterventions((prev) => [newIntervention, ...prev]);
       setPannes((prev) =>
         prev.map((p) =>
           p.id === panneToConvert.id
-            ? { ...p, statut: 'CONVERTIE', interventionId: newInterventionId }
+            ? { ...p, statut: 'CONVERTIE' as PanneStatut, interventionId: newInterventionId }
             : p
         )
       );
@@ -307,13 +319,12 @@ export default function PannesPage() {
 
   const getLinkedIntervention = useCallback(
     (panne: Panne | null): Intervention | null => {
-      if (!panne || !panne.interventionId) return null;
-      return interventions.find((i) => i.id === panne.interventionId) || null;
+      if (!panne?.interventionId) return null;
+      return interventions.find((i) => i.id === panne.interventionId) ?? null;
     },
     [interventions]
   );
 
-  // loading view
   if (isLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
@@ -327,7 +338,6 @@ export default function PannesPage() {
     );
   }
 
-  // 1. TECHNICIAN ACCESS REDIRECT CARD
   if (currentUser && currentUser.role === 'technician') {
     return (
       <AppLayout>
@@ -381,7 +391,6 @@ export default function PannesPage() {
         {/* CLIENT INTERFACE */}
         {currentUser?.role === 'client' && (
           <div className="space-y-6">
-            {/* Search & Filter bar */}
             <div className="p-4 bg-muted/30 border border-border rounded-xl shadow-sm">
               <div className="flex flex-col sm:flex-row items-start sm:items-center gap-3">
                 <div className="relative flex-1 w-full sm:max-w-72">
@@ -408,7 +417,6 @@ export default function PannesPage() {
               </div>
             </div>
 
-            {/* Empty state (no pannes at all) */}
             {!clientHasPannes ? (
               <div className="flex flex-col items-center justify-center py-20 text-center border border-dashed border-border rounded-xl bg-muted/10">
                 <div className="inline-flex items-center justify-center w-16 h-16 rounded-full bg-muted mb-4">
@@ -425,7 +433,6 @@ export default function PannesPage() {
               </div>
             ) : (
               <>
-                {/* Mes pannes déclarées table */}
                 <div className="border border-border rounded-xl overflow-hidden shadow-sm bg-card">
                   <div className="overflow-x-auto">
                     <Table>
@@ -443,7 +450,7 @@ export default function PannesPage() {
                         {filteredPannes.length === 0 ? (
                           <TableRow>
                             <TableCell colSpan={6} className="text-center py-12 text-muted-foreground text-sm font-medium">
-                              Aucun signalement de panne ne correspond aux critères de recherche.
+                              Aucun signalement ne correspond aux critères de recherche.
                             </TableCell>
                           </TableRow>
                         ) : (
@@ -454,12 +461,8 @@ export default function PannesPage() {
                               <TableCell className="text-xs font-semibold">
                                 {getEquipmentName(panne.equipementId)}
                               </TableCell>
-                              <TableCell>
-                                <PriorityBadge priority={panne.priorite} />
-                              </TableCell>
-                              <TableCell>
-                                <StatusBadge status={panne.statut} type="panne" />
-                              </TableCell>
+                              <TableCell><PriorityBadge priority={panne.priorite} /></TableCell>
+                              <TableCell><StatusBadge status={panne.statut} type="panne" /></TableCell>
                               <TableCell className="text-right">
                                 <Button
                                   size="sm"
@@ -493,7 +496,6 @@ export default function PannesPage() {
         {/* ADMIN INTERFACE */}
         {currentUser?.role === 'admin' && (
           <div className="space-y-6">
-            {/* Filters bar */}
             <div className="p-4 bg-muted/30 border border-border rounded-xl space-y-4 shadow-sm">
               <div className="flex items-center gap-2 text-sm font-semibold text-foreground">
                 <Filter size={16} className="text-primary" />
@@ -509,9 +511,7 @@ export default function PannesPage() {
                     className="pl-9 h-9 text-xs"
                   />
                 </div>
-
-                {/* Filter Client */}
-                <Select value={clientFilter} onValueChange={clientFilter => setClientFilter(clientFilter)}>
+                <Select value={clientFilter} onValueChange={setClientFilter}>
                   <SelectTrigger className="h-9 text-xs">
                     <SelectValue placeholder="Tous les clients" />
                   </SelectTrigger>
@@ -524,9 +524,7 @@ export default function PannesPage() {
                     ))}
                   </SelectContent>
                 </Select>
-
-                {/* Filter Statut */}
-                <Select value={statusFilter} onValueChange={statusFilter => setStatusFilter(statusFilter)}>
+                <Select value={statusFilter} onValueChange={setStatusFilter}>
                   <SelectTrigger className="h-9 text-xs">
                     <SelectValue placeholder="Tous les statuts" />
                   </SelectTrigger>
@@ -538,9 +536,7 @@ export default function PannesPage() {
                     <SelectItem value="ANNULEE">Annulée</SelectItem>
                   </SelectContent>
                 </Select>
-
-                {/* Filter Priorité */}
-                <Select value={priorityFilter} onValueChange={priorityFilter => setPriorityFilter(priorityFilter)}>
+                <Select value={priorityFilter} onValueChange={setPriorityFilter}>
                   <SelectTrigger className="h-9 text-xs">
                     <SelectValue placeholder="Toutes priorités" />
                   </SelectTrigger>
@@ -555,108 +551,98 @@ export default function PannesPage() {
               </div>
             </div>
 
-            {/* Admin Table */}
             <div className="border border-border rounded-xl overflow-hidden shadow-sm bg-card">
               <div className="overflow-x-auto">
-              <Table>
-                <TableHeader>
-                  <TableRow className="bg-muted/40">
-                    <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
-                    <SortableHeader label="Déclaré le" sortKey="date" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
-                    <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
-                    <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
-                    <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
-                    <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
-                    <TableHead className="text-right font-semibold">Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredPannes.length === 0 ? (
-                    <TableRow>
-                      <TableCell colSpan={7} className="text-center py-12 text-muted-foreground text-sm font-medium">
-                        Aucun signalement de panne ne correspond aux critères de recherche.
-                      </TableCell>
+                <Table>
+                  <TableHeader>
+                    <TableRow className="bg-muted/40">
+                      <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                      <SortableHeader label="Déclaré le" sortKey="date" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                      <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
+                      <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} />
+                      <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
+                      <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
+                      <TableHead className="text-right font-semibold">Actions</TableHead>
                     </TableRow>
-                  ) : (
-                    pagedPannes.map((panne) => (
-                      <TableRow key={panne.id} className="hover:bg-muted/30 transition-colors">
-                        <TableCell className="font-bold text-xs text-primary">{panne.reference}</TableCell>
-                        <TableCell className="text-xs text-muted-foreground text-center">{formatDate(panne.dateDeclaration)}</TableCell>
-                        <TableCell className="text-xs font-semibold">{getClientName(panne.clientId)}</TableCell>
-                        <TableCell className="text-xs text-muted-foreground">
-                          {getEquipmentName(panne.equipementId)}
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <PriorityBadge priority={panne.priorite} />
-                        </TableCell>
-                        <TableCell className="text-center">
-                          <StatusBadge status={panne.statut} type="panne" />
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <div className="flex gap-1 justify-end items-center">
-                            <Button
-                              size="sm"
-                              variant="outline"
-                              className="h-8 w-8 p-0"
-                              title="Voir détail"
-                              onClick={() => handleViewDetail(panne)}
-                            >
-                              <Eye size={14} />
-                            </Button>
-
-                            {/* Action: Prendre en charge */}
-                            {panne.statut === 'EN_ATTENTE' && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-8 gap-1 border-blue-200 hover:bg-blue-50 hover:text-blue-800 text-blue-600 font-medium text-xs px-2"
-                                title="Prendre en charge"
-                                onClick={() => handlePrendreEnCharge(panne.id)}
-                              >
-                                <Check size={14} />
-                                <span className="hidden sm:inline">Prendre en charge</span>
-                              </Button>
-                            )}
-
-                            {/* Action: Créer intervention */}
-                            {(panne.statut === 'EN_ATTENTE' || panne.statut === 'PRISE_EN_CHARGE') && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-8 gap-1 border-green-200 hover:bg-green-50 hover:text-green-800 text-green-600 font-medium text-xs px-2"
-                                title="Créer intervention"
-                                onClick={() => {
-                                  setPanneToConvert(panne);
-                                  setIsConvertOpen(true);
-                                }}
-                              >
-                                <ClipboardCheck size={14} />
-                                <span className="hidden sm:inline">Convertir</span>
-                              </Button>
-                            )}
-
-                            {/* Action: Annuler */}
-                            {(panne.statut === 'EN_ATTENTE' || panne.statut === 'PRISE_EN_CHARGE') && (
-                              <Button
-                                size="sm"
-                                variant="outline"
-                                className="h-8 w-8 p-0 border-red-200 hover:bg-red-50 hover:text-red-800 text-red-600"
-                                title="Annuler déclaration"
-                                onClick={() => {
-                                  setPanneToCancel(panne);
-                                  setIsCancelConfirmOpen(true);
-                                }}
-                              >
-                                <XCircle size={14} />
-                              </Button>
-                            )}
-                          </div>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredPannes.length === 0 ? (
+                      <TableRow>
+                        <TableCell colSpan={7} className="text-center py-12 text-muted-foreground text-sm font-medium">
+                          Aucun signalement ne correspond aux critères de recherche.
                         </TableCell>
                       </TableRow>
-                    ))
-                  )}
-                </TableBody>
-              </Table>
+                    ) : (
+                      pagedPannes.map((panne) => (
+                        <TableRow key={panne.id} className="hover:bg-muted/30 transition-colors">
+                          <TableCell className="font-bold text-xs text-primary">{panne.reference}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground text-center">{formatDate(panne.dateDeclaration)}</TableCell>
+                          <TableCell className="text-xs font-semibold">{getClientName(panne.clientId)}</TableCell>
+                          <TableCell className="text-xs text-muted-foreground">
+                            {getEquipmentName(panne.equipementId)}
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <PriorityBadge priority={panne.priorite} />
+                          </TableCell>
+                          <TableCell className="text-center">
+                            <StatusBadge status={panne.statut} type="panne" />
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <div className="flex gap-1 justify-end items-center">
+                              <Button
+                                size="sm"
+                                variant="outline"
+                                className="h-8 w-8 p-0"
+                                title="Voir détail"
+                                onClick={() => handleViewDetail(panne)}
+                              >
+                                <Eye size={14} />
+                              </Button>
+                              {panne.statut === 'EN_ATTENTE' && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-8 gap-1 border-blue-200 hover:bg-blue-50 hover:text-blue-800 text-blue-600 font-medium text-xs px-2"
+                                  onClick={() => handlePrendreEnCharge(panne.id)}
+                                >
+                                  <Check size={14} />
+                                  <span className="hidden sm:inline">Prendre en charge</span>
+                                </Button>
+                              )}
+                              {(panne.statut === 'EN_ATTENTE' || panne.statut === 'PRISE_EN_CHARGE') && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-8 gap-1 border-green-200 hover:bg-green-50 hover:text-green-800 text-green-600 font-medium text-xs px-2"
+                                  onClick={() => {
+                                    setPanneToConvert(panne);
+                                    setIsConvertOpen(true);
+                                  }}
+                                >
+                                  <ClipboardCheck size={14} />
+                                  <span className="hidden sm:inline">Convertir</span>
+                                </Button>
+                              )}
+                              {(panne.statut === 'EN_ATTENTE' || panne.statut === 'PRISE_EN_CHARGE') && (
+                                <Button
+                                  size="sm"
+                                  variant="outline"
+                                  className="h-8 w-8 p-0 border-red-200 hover:bg-red-50 hover:text-red-800 text-red-600"
+                                  onClick={() => {
+                                    setPanneToCancel(panne);
+                                    setIsCancelConfirmOpen(true);
+                                  }}
+                                >
+                                  <XCircle size={14} />
+                                </Button>
+                              )}
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    )}
+                  </TableBody>
+                </Table>
               </div>
             </div>
             <TablePagination
@@ -670,8 +656,6 @@ export default function PannesPage() {
         )}
       </div>
 
-      {/* Reusable Sheets / Modals */}
-
       {/* Client: Declaration Dialog */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
         <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
@@ -683,14 +667,13 @@ export default function PannesPage() {
           </DialogHeader>
           <PanneForm
             clientId={clientInfo.clientId || ''}
-            equipments={clientInfo.equipments}
+            clientEquipements={clientInfo.clientEquipements}
             onSubmit={handleClientSubmit}
             noCard
           />
         </DialogContent>
       </Dialog>
 
-      {/* Panne Detail view */}
       <PanneDetail
         open={isDetailOpen}
         panne={selectedPanne}
@@ -701,7 +684,6 @@ export default function PannesPage() {
         linkedIntervention={getLinkedIntervention(selectedPanne)}
       />
 
-      {/* Conversion to curative intervention modal */}
       <CreateCurativeFromPanneDialog
         open={isConvertOpen}
         panne={panneToConvert}
@@ -712,7 +694,6 @@ export default function PannesPage() {
         onConfirm={handleConvertConfirm}
       />
 
-      {/* Cancellation confirmation dialog */}
       <ConfirmDialog
         open={isCancelConfirmOpen}
         title="Annuler la déclaration de panne"

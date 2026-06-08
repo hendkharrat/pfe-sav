@@ -521,7 +521,7 @@ export default function HistoriquePage() {
                       <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} className="min-w-[140px]" />
                     )}
                     <SortableHeader label="Équipement" sortKey="equipment" sortConfig={sortConfig} onSort={handleSort} className="min-w-[140px]" />
-                    <SortableHeader label="Technicien" sortKey="technicien" sortConfig={sortConfig} onSort={handleSort} className="min-w-[130px]" />
+                    {isAdmin && <SortableHeader label="Technicien" sortKey="technicien" sortConfig={sortConfig} onSort={handleSort} className="min-w-[130px]" />}
                     <SortableHeader label="Date prévue" sortKey="datePrevue" sortConfig={sortConfig} onSort={handleSort} className="w-[100px]" />
                     <SortableHeader label="Date réalisation" sortKey="dateRealisation" sortConfig={sortConfig} onSort={handleSort} className="w-[110px]" />
                     <SortableHeader label="Priorité" sortKey="priorite" sortConfig={sortConfig} onSort={handleSort} className="w-[90px]" />
@@ -552,9 +552,11 @@ export default function HistoriquePage() {
                       <TableCell className="text-xs text-muted-foreground">
                         {getEquipmentLabel(intervention.equipementId)}
                       </TableCell>
-                      <TableCell className="text-xs">
-                        {getTechnicianName(intervention.technicienId)}
-                      </TableCell>
+                      {isAdmin && (
+                        <TableCell className="text-xs">
+                          {getTechnicianName(intervention.technicienId)}
+                        </TableCell>
+                      )}
                       <TableCell className="text-xs text-muted-foreground">
                         {formatDate(intervention.datePrevue)}
                       </TableCell>

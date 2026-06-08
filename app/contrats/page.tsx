@@ -2,15 +2,16 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Contract } from '@/types';
+import { Contract, Intervention } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AdminOnly } from '@/components/shared/AdminOnly';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
-import { ContractForm } from '@/components/forms/ContractForm';
+import { ContractForm, type ContractFormSubmitPayload } from '@/components/forms/ContractForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { mockContracts } from '@/data/mock-contracts';
+import { mockInterventions } from '@/data/mock-interventions';
 import { mockClients } from '@/data/mock-clients';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,6 +44,7 @@ import {
 import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal } from 'lucide-react';
 import { CONTRACT_FREQUENCY_LABELS } from '@/lib/constants';
 import { formatDate } from '@/lib/utils';
+import { preventivePreviewToIntervention } from '@/lib/interventions';
 
 export default function ContratsPage() {
   const router = useRouter();
@@ -50,6 +52,7 @@ export default function ContratsPage() {
   const { showSuccess, showError } = useToast();
 
   const [contracts, setContracts] = useState<Contract[]>([]);
+  const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [filteredContracts, setFilteredContracts] = useState<Contract[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [clientFilter, setClientFilter] = useState('all');
@@ -67,6 +70,7 @@ export default function ContratsPage() {
 
   useEffect(() => {
     setContracts(mockContracts);
+    setInterventions(mockInterventions);
   }, []);
 
   // Calculate contract status based on dates
@@ -127,7 +131,7 @@ export default function ContratsPage() {
           case 'dateDebut': return contract.dateDebut;
           case 'dateFin': return contract.dateFin;
           case 'periodicite': return contract.periodicite;
-          case 'equipements': return contract.equipementIds.length;
+          case 'equipements': return contract.clientEquipementIds.length;
           case 'statut': return contract.statut;
           default: return '';
         }
@@ -141,41 +145,50 @@ export default function ContratsPage() {
   );
 
   const handleAddContract = useCallback(
-    (formData: Omit<Contract, 'id'>) => {
-      const newContract: Contract = {
-        ...formData,
-        id: `contract-${Date.now()}`,
-      };
-      setContracts([...contracts, newContract]);
+    ({ contract: contractData, preventiveInterventions }: ContractFormSubmitPayload) => {
+      const contractId = `contract-${Date.now()}`;
+      const newContract: Contract = { ...contractData, id: contractId };
+      const newInterventions = preventiveInterventions.map((preview, index) =>
+        preventivePreviewToIntervention(preview, { contractId, index })
+      );
+      setContracts((prev) => [...prev, newContract]);
+      if (newInterventions.length > 0) {
+        setInterventions((prev) => [...prev, ...newInterventions]);
+      }
       setIsFormOpen(false);
       setSelectedContract(undefined);
-      showSuccess('Contrat créé avec succès');
+      const count = newInterventions.length;
+      showSuccess(
+        count > 0
+          ? `Contrat créé avec ${count} intervention${count > 1 ? 's' : ''} préventive${count > 1 ? 's' : ''} planifiée${count > 1 ? 's' : ''}`
+          : 'Contrat créé avec succès'
+      );
     },
-    [contracts, showSuccess]
+    [showSuccess]
   );
 
   const handleUpdateContract = useCallback(
-    (formData: Omit<Contract, 'id'>) => {
+    ({ contract: contractData }: ContractFormSubmitPayload) => {
       if (!selectedContract) return;
-      const updated = contracts.map((c) =>
-        c.id === selectedContract.id ? { ...c, ...formData } : c
+      setContracts((prev) =>
+        prev.map((c) =>
+          c.id === selectedContract.id ? { ...c, ...contractData } : c
+        )
       );
-      setContracts(updated);
       setIsFormOpen(false);
       setSelectedContract(undefined);
       showSuccess('Contrat modifié avec succès');
     },
-    [contracts, selectedContract, showSuccess]
+    [selectedContract, showSuccess]
   );
 
   const handleDeleteContract = useCallback(() => {
     if (!contractToDelete) return;
-    const updated = contracts.filter((c) => c.id !== contractToDelete.id);
-    setContracts(updated);
+    setContracts((prev) => prev.filter((c) => c.id !== contractToDelete.id));
     setIsConfirmOpen(false);
     setContractToDelete(null);
     showSuccess('Contrat supprimé');
-  }, [contracts, contractToDelete, showSuccess]);
+  }, [contractToDelete, showSuccess]);
 
   const handleEditClick = (contract: Contract) => {
     setSelectedContract(contract);
@@ -196,13 +209,9 @@ export default function ContratsPage() {
     return mockClients.find((c) => c.id === clientId)?.societe || 'N/A';
   };
 
-  const getEquipmentCount = (equipmentIds: string[]): number => {
-    return equipmentIds.length;
-  };
+  const getEquipmentCount = (ids: string[]): number => ids.length;
 
-  const getContractStatus = (contract: Contract) => {
-    return calculateStatus(contract);
-  };
+  const getContractStatus = (contract: Contract) => calculateStatus(contract);
 
   if (isLoading) {
     return (
@@ -306,7 +315,7 @@ export default function ContratsPage() {
                   <SortableHeader label="Date début" sortKey="dateDebut" sortConfig={sortConfig} onSort={handleSort} />
                   <SortableHeader label="Date fin" sortKey="dateFin" sortConfig={sortConfig} onSort={handleSort} />
                   <SortableHeader label="Périodicité" sortKey="periodicite" sortConfig={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Équipements" sortKey="equipements" sortConfig={sortConfig} onSort={handleSort} />
+                  <SortableHeader label="Installations" sortKey="equipements" sortConfig={sortConfig} onSort={handleSort} />
                   <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
                   <TableHead className="text-right">Actions</TableHead>
                 </TableRow>
@@ -329,7 +338,7 @@ export default function ContratsPage() {
                         {CONTRACT_FREQUENCY_LABELS[contract.periodicite]}
                       </TableCell>
                       <TableCell className="text-sm">
-                        {getEquipmentCount(contract.equipementIds)}
+                        {getEquipmentCount(contract.clientEquipementIds)}
                       </TableCell>
                       <TableCell>
                         <StatusBadge status={getContractStatus(contract)} type="contract" />
@@ -387,12 +396,14 @@ export default function ContratsPage() {
             setSelectedContract(undefined);
           }}
           onSubmit={selectedContract ? handleUpdateContract : handleAddContract}
+          interventions={interventions}
         />
 
         <ContractDetail
           open={isDetailOpen}
           contract={detailContract}
           onClose={() => setIsDetailOpen(false)}
+          interventions={interventions}
         />
 
         {/* Delete Confirmation */}

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Client } from '@/types';
+import { Client, ClientEquipement } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -12,80 +12,119 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import { Badge } from '@/components/ui/badge';
+import { ClientEquipementAssignForm } from '@/components/forms/ClientEquipementAssignForm';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
+import { mockEquipments } from '@/data/mock-equipments';
+import { EQUIPMENT_TYPE_LABELS, EQUIPMENT_STATUS_LABELS } from '@/lib/constants';
+import { formatDate } from '@/lib/utils';
+import { Plus, Edit2, Trash2, PackageOpen } from 'lucide-react';
+
+export type ClientFormPayload = {
+  clientData: Omit<Client, 'id' | 'dateCreation' | 'nombreEquipements' | 'userId'>;
+  assignments: ClientEquipement[];
+};
 
 interface ClientFormProps {
   open: boolean;
   client?: Client;
   onClose: () => void;
-  onSubmit: (data: Omit<Client, 'id' | 'dateCreation' | 'nombreEquipements' | 'userId'>) => void;
+  onSubmit: (payload: ClientFormPayload) => void;
   isLoading?: boolean;
+  clientEquipements?: ClientEquipement[];
 }
 
-export function ClientForm({ open, client, onClose, onSubmit, isLoading = false }: ClientFormProps) {
+export function ClientForm({ open, client, onClose, onSubmit, isLoading = false, clientEquipements = mockClientEquipements }: ClientFormProps) {
   const [formData, setFormData] = useState({
-    societe: client?.societe || '',
-    contact: client?.contact || '',
-    email: client?.email || '',
-    telephone: client?.telephone || '',
-    adresse: client?.adresse || '',
-    ville: client?.ville || '',
-    codePostal: client?.codePostal || '',
+    societe: client?.societe ?? '',
+    contact: client?.contact ?? '',
+    email: client?.email ?? '',
+    telephone: client?.telephone ?? '',
+    adresse: client?.adresse ?? '',
+    ville: client?.ville ?? '',
+    codePostal: client?.codePostal ?? '',
   });
 
+  // Initialize assignments from live session state for edit mode
+  const [assignments, setAssignments] = useState<ClientEquipement[]>(() =>
+    client
+      ? clientEquipements.filter((ce) => ce.clientId === client.id)
+      : []
+  );
+
   const [errors, setErrors] = useState<Record<string, string>>({});
+  const [isAssignFormOpen, setIsAssignFormOpen] = useState(false);
+  const [editingAssignment, setEditingAssignment] = useState<ClientEquipement | undefined>();
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.societe.trim()) newErrors.societe = 'La société/nom est obligatoire';
     if (!formData.contact.trim()) newErrors.contact = 'Le contact est obligatoire';
-    if (!formData.email.trim()) newErrors.email = 'L\'email est obligatoire';
-    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
+    if (!formData.email.trim()) {
+      newErrors.email = "L'email est obligatoire";
+    } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Email invalide';
     }
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = () => {
-    if (!validateForm()) return;
-    onSubmit(formData);
+  const reset = () => {
+    setFormData({ societe: '', contact: '', email: '', telephone: '', adresse: '', ville: '', codePostal: '' });
+    setAssignments([]);
+    setErrors({});
+    setIsAssignFormOpen(false);
+    setEditingAssignment(undefined);
   };
 
-  const handleOpenChange = (newOpen: boolean) => {
-    if (!newOpen) {
-      onClose();
-      setFormData({
-        societe: '',
-        contact: '',
-        email: '',
-        telephone: '',
-        adresse: '',
-        ville: '',
-        codePostal: '',
-      });
-      setErrors({});
-    }
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!validateForm()) return;
+    onSubmit({ clientData: formData, assignments });
+    if (!client) reset();
+  };
+
+  const handleClose = () => {
+    reset();
+    onClose();
+  };
+
+  const handleAssignmentSubmit = (ce: ClientEquipement) => {
+    setAssignments((prev) => {
+      const exists = prev.find((a) => a.id === ce.id);
+      return exists ? prev.map((a) => (a.id === ce.id ? ce : a)) : [...prev, ce];
+    });
+  };
+
+  const handleRemoveAssignment = (id: string) => {
+    if (!window.confirm('Retirer cet équipement de l\'affectation client ?')) return;
+    setAssignments((prev) => prev.filter((a) => a.id !== id));
+  };
+
+  const handleEditAssignment = (ce: ClientEquipement) => {
+    setEditingAssignment(ce);
+    setIsAssignFormOpen(true);
+  };
+
+  const openAddAssignment = () => {
+    setEditingAssignment(undefined);
+    setIsAssignFormOpen(true);
   };
 
   return (
-    <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-w-2xl">
+    <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
+      <DialogContent className="max-w-3xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
           <DialogTitle>{client ? 'Modifier le client' : 'Ajouter un client'}</DialogTitle>
           <DialogDescription>
-            {client ? 'Modifiez les informations du client' : 'Remplissez le formulaire pour créer un nouveau client'}
+            {client
+              ? 'Modifiez les informations du client et ses équipements affectés'
+              : 'Renseignez les informations du client et affectez des équipements si nécessaire'}
           </DialogDescription>
         </DialogHeader>
 
-        <form
-          onSubmit={(e) => {
-            e.preventDefault();
-            handleSubmit();
-          }}
-          className="space-y-4"
-        >
+        <form onSubmit={handleSubmit} className="space-y-4 mt-2">
+          {/* Société */}
           <div className="space-y-2">
             <Label htmlFor="societe">Société/Nom *</Label>
             <Input
@@ -98,6 +137,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false 
             {errors.societe && <p className="text-xs text-red-500">{errors.societe}</p>}
           </div>
 
+          {/* Contact */}
           <div className="space-y-2">
             <Label htmlFor="contact">Contact *</Label>
             <Input
@@ -110,6 +150,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false 
             {errors.contact && <p className="text-xs text-red-500">{errors.contact}</p>}
           </div>
 
+          {/* Email / Téléphone */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="email">Email *</Label>
@@ -135,6 +176,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false 
             </div>
           </div>
 
+          {/* Adresse */}
           <div className="space-y-2">
             <Label htmlFor="adresse">Adresse</Label>
             <Input
@@ -146,6 +188,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false 
             />
           </div>
 
+          {/* Ville / Code postal */}
           <div className="grid grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label htmlFor="ville">Ville</Label>
@@ -169,8 +212,104 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false 
             </div>
           </div>
 
-          <div className="flex gap-3 justify-end pt-4">
-            <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
+          {/* ── Équipements affectés ── */}
+          <div className="border-t border-border pt-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <PackageOpen size={15} className="text-muted-foreground" />
+                <span className="font-medium text-sm">
+                  Équipements affectés
+                  {assignments.length > 0 && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {assignments.length}
+                    </Badge>
+                  )}
+                </span>
+              </div>
+              <Button
+                type="button"
+                variant="outline"
+                size="sm"
+                className="gap-1.5 h-7 text-xs"
+                onClick={openAddAssignment}
+                disabled={isLoading}
+              >
+                <Plus size={12} />
+                Ajouter un équipement
+              </Button>
+            </div>
+
+            {assignments.length === 0 ? (
+              <p className="text-xs text-muted-foreground py-2">
+                Aucun équipement affecté. Cliquez sur « Ajouter un équipement » pour en assigner.
+              </p>
+            ) : (
+              <div className="rounded-lg border border-border overflow-hidden">
+                <table className="w-full text-xs">
+                  <thead>
+                    <tr className="bg-muted/40 border-b border-border">
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Équipement</th>
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Type</th>
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Localisation</th>
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Installation</th>
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Statut</th>
+                      <th className="text-right px-3 py-2 font-medium text-muted-foreground">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {assignments.map((ce) => {
+                      const eq = mockEquipments.find((e) => e.id === ce.equipementId);
+                      return (
+                        <tr key={ce.id} className="border-b border-border last:border-0">
+                          <td className="px-3 py-2 font-medium">
+                            {eq ? `${eq.reference} — ${eq.modele}` : ce.equipementId}
+                          </td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {eq ? EQUIPMENT_TYPE_LABELS[eq.type] : '—'}
+                          </td>
+                          <td className="px-3 py-2 text-muted-foreground">{ce.localisation}</td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {formatDate(ce.dateInstallation)}
+                          </td>
+                          <td className="px-3 py-2">
+                            <Badge variant="outline" className="text-[10px] h-4">
+                              {EQUIPMENT_STATUS_LABELS[ce.statut]}
+                            </Badge>
+                          </td>
+                          <td className="px-3 py-2 text-right">
+                            <div className="flex items-center justify-end gap-1">
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0"
+                                onClick={() => handleEditAssignment(ce)}
+                              >
+                                <Edit2 size={11} />
+                              </Button>
+                              <Button
+                                type="button"
+                                variant="ghost"
+                                size="sm"
+                                className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                                onClick={() => handleRemoveAssignment(ce.id)}
+                              >
+                                <Trash2 size={11} />
+                              </Button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+
+          {/* Submit */}
+          <div className="flex gap-3 justify-end pt-2 border-t border-border">
+            <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
               Annuler
             </Button>
             <Button type="submit" disabled={isLoading}>
@@ -179,6 +318,20 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false 
           </div>
         </form>
       </DialogContent>
+
+      {/* Assignment sub-form */}
+      <ClientEquipementAssignForm
+        open={isAssignFormOpen}
+        onOpenChange={(v) => {
+          setIsAssignFormOpen(v);
+          if (!v) setEditingAssignment(undefined);
+        }}
+        clientId={client?.id ?? ''}
+        existingAssignments={assignments}
+        equipments={mockEquipments}
+        editingAssignment={editingAssignment}
+        onSubmit={handleAssignmentSubmit}
+      />
     </Dialog>
   );
 }

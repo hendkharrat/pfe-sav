@@ -1,7 +1,22 @@
-import { Contract, ContractStatut, Intervention, User } from '@/types';
+import {
+  ClientEquipement,
+  Contract,
+  ContractStatut,
+  Equipment,
+  Intervention,
+  PreventiveInterventionPreview,
+  User,
+} from '@/types';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockClients } from '@/data/mock-clients';
 import { mockContracts } from '@/data/mock-contracts';
+import { mockEquipments } from '@/data/mock-equipments';
+import { mockInterventions } from '@/data/mock-interventions';
 import { mockUsers } from '@/data/mock-users';
+
+// ---------------------------------------------------------------------------
+// Auth / role helpers
+// ---------------------------------------------------------------------------
 
 const CLIENT_USER_TO_CLIENT_ID: Record<string, string> = {
   'user-client-1': 'client-3',
@@ -30,6 +45,10 @@ export function filterInterventionsByRole(
   return interventions.filter((i) => i.clientId === clientId);
 }
 
+// ---------------------------------------------------------------------------
+// Contract status
+// ---------------------------------------------------------------------------
+
 export function calculateContractStatus(contract: Contract): ContractStatut {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
@@ -43,16 +62,80 @@ export function calculateContractStatus(contract: Contract): ContractStatut {
   return 'ACTIF';
 }
 
-export function findActiveContractForEquipment(
-  equipmentId: string,
-  clientId: string
-): Contract | null {
+// ---------------------------------------------------------------------------
+// ClientEquipement helpers
+// ---------------------------------------------------------------------------
+
+/** Returns all ClientEquipement records assigned to a given client. */
+export function getClientEquipements(
+  clientId: string,
+  clientEquipements: ClientEquipement[] = mockClientEquipements
+): ClientEquipement[] {
+  return clientEquipements.filter((ce) => ce.clientId === clientId);
+}
+
+/**
+ * Resolves the Equipment catalog record for a given ClientEquipement id.
+ * Returns undefined if either the CE or the equipment is not found.
+ */
+export function getEquipementForClientEquipement(
+  clientEquipementId: string,
+  clientEquipements: ClientEquipement[] = mockClientEquipements,
+  equipments: Equipment[] = mockEquipments
+): Equipment | undefined {
+  const ce = clientEquipements.find((c) => c.id === clientEquipementId);
+  if (!ce) return undefined;
+  return equipments.find((e) => e.id === ce.equipementId);
+}
+
+/**
+ * Finds the ClientEquipement join record by client + equipment pair.
+ * Useful as a bridge when only the old (clientId, equipementId) pair is available.
+ */
+export function getClientEquipementByEquipmentAndClient(
+  clientId: string,
+  equipementId: string,
+  clientEquipements: ClientEquipement[] = mockClientEquipements
+): ClientEquipement | undefined {
+  return clientEquipements.find(
+    (ce) => ce.clientId === clientId && ce.equipementId === equipementId
+  );
+}
+
+/**
+ * Returns a human-readable French label for a ClientEquipement record.
+ * Format: "EQ-001 — CoolMax 3000 — Bureau Étage 2"
+ */
+export function getClientEquipementLabel(
+  clientEquipementId: string,
+  clientEquipements: ClientEquipement[] = mockClientEquipements,
+  equipments: Equipment[] = mockEquipments
+): string {
+  const ce = clientEquipements.find((c) => c.id === clientEquipementId);
+  if (!ce) return 'Équipement inconnu';
+  const eq = equipments.find((e) => e.id === ce.equipementId);
+  if (!eq) return 'Équipement inconnu';
+  return `${eq.reference} — ${eq.modele} — ${ce.localisation}`;
+}
+
+// ---------------------------------------------------------------------------
+// Contract coverage helpers (new CE-based API)
+// ---------------------------------------------------------------------------
+
+/**
+ * Finds an active contract that covers the given ClientEquipement for the client.
+ */
+export function findActiveContractForClientEquipement(
+  clientEquipementId: string,
+  clientId: string,
+  contracts: Contract[] = mockContracts
+): Contract | undefined {
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
-  const match = mockContracts.find((contract) => {
+  return contracts.find((contract) => {
     if (contract.clientId !== clientId) return false;
-    if (!contract.equipementIds.includes(equipmentId)) return false;
+    if (!contract.clientEquipementIds.includes(clientEquipementId)) return false;
     if (calculateContractStatus(contract) !== 'ACTIF') return false;
     const dateDebut = new Date(contract.dateDebut);
     dateDebut.setHours(0, 0, 0, 0);
@@ -60,34 +143,190 @@ export function findActiveContractForEquipment(
     dateFin.setHours(0, 0, 0, 0);
     return dateDebut <= today && dateFin >= today;
   });
-
-  return match ?? null;
 }
 
-export function getContractCoverage(equipmentId: string, clientId: string): {
-  couvertureContrat: boolean;
-  contractId?: string;
-} {
+/** Returns true when an active contract covers the given CE/client pair. */
+export function getContractCoverageForClientEquipement(
+  clientEquipementId: string,
+  clientId: string,
+  contracts: Contract[] = mockContracts
+): boolean {
+  return (
+    findActiveContractForClientEquipement(clientEquipementId, clientId, contracts) !== undefined
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Legacy contract coverage wrappers (kept for backward compatibility)
+// ---------------------------------------------------------------------------
+
+/**
+ * @deprecated Use findActiveContractForClientEquipement instead.
+ * Resolves CE internally from clientId + equipementId, then delegates.
+ */
+export function findActiveContractForEquipment(
+  equipmentId: string,
+  clientId: string,
+  contracts: Contract[] = mockContracts,
+  clientEquipements: ClientEquipement[] = mockClientEquipements
+): Contract | null {
+  const ce = getClientEquipementByEquipmentAndClient(clientId, equipmentId, clientEquipements);
+  if (!ce) return null;
+  return findActiveContractForClientEquipement(ce.id, clientId, contracts) ?? null;
+}
+
+/**
+ * @deprecated Use getContractCoverageForClientEquipement instead.
+ */
+export function getContractCoverage(
+  equipmentId: string,
+  clientId: string
+): { couvertureContrat: boolean; contractId?: string } {
   const contract = findActiveContractForEquipment(equipmentId, clientId);
-  if (!contract) {
-    return { couvertureContrat: false };
-  }
+  if (!contract) return { couvertureContrat: false };
   return { couvertureContrat: true, contractId: contract.id };
 }
 
+// ---------------------------------------------------------------------------
+// Preventive intervention planning
+// ---------------------------------------------------------------------------
+
+const PERIODICITE_MONTHS: Record<Contract['periodicite'], number> = {
+  MENSUELLE: 1,
+  TRIMESTRIELLE: 3,
+  SEMESTRIELLE: 6,
+  ANNUELLE: 12,
+};
+
+/**
+ * Generates a flat list of PreventiveInterventionPreview rows based on
+ * contract dates, periodicity, and selected ClientEquipement ids.
+ *
+ * One row is created per (date, CE) combination.
+ * Returns [] if dateDebut/dateFin are invalid or dateFin < dateDebut.
+ */
+export function generatePreventiveInterventionPreviews(params: {
+  contractId?: string;
+  clientId: string;
+  clientEquipementIds: string[];
+  dateDebut: string;
+  dateFin: string;
+  periodicite: Contract['periodicite'];
+  description?: string;
+  clientEquipements?: ClientEquipement[];
+}): PreventiveInterventionPreview[] {
+  const {
+    contractId,
+    clientId,
+    clientEquipementIds,
+    dateDebut,
+    dateFin,
+    periodicite,
+    description,
+    clientEquipements = mockClientEquipements,
+  } = params;
+
+  const start = new Date(dateDebut + 'T12:00:00');
+  const end = new Date(dateFin + 'T12:00:00');
+
+  if (isNaN(start.getTime()) || isNaN(end.getTime()) || end < start) {
+    return [];
+  }
+
+  const intervalMonths = PERIODICITE_MONTHS[periodicite];
+  const defaultDescription = 'Maintenance préventive planifiée dans le cadre du contrat';
+  const rowDescription = description?.trim() || defaultDescription;
+  const result: PreventiveInterventionPreview[] = [];
+
+  for (const ceId of clientEquipementIds) {
+    const ce = clientEquipements.find((c) => c.id === ceId);
+    if (!ce) continue;
+
+    let current = new Date(start);
+
+    while (current <= end) {
+      const dateStr = current.toISOString().split('T')[0];
+      result.push({
+        id: `preview-${ceId}-${dateStr}${contractId ? `-${contractId}` : ''}`,
+        datePrevue: dateStr,
+        clientEquipementId: ceId,
+        equipementId: ce.equipementId,
+        clientId,
+        technicienId: undefined,
+        description: rowDescription,
+      });
+
+      // Advance by interval without mutating `current` incorrectly across months
+      const next = new Date(current);
+      next.setMonth(next.getMonth() + intervalMonths);
+      current = next;
+    }
+  }
+
+  return result;
+}
+
+/**
+ * Converts a PreventiveInterventionPreview into a full Intervention record
+ * ready to be appended to local state after contract creation.
+ */
+export function preventivePreviewToIntervention(
+  preview: PreventiveInterventionPreview,
+  options: { contractId: string; index: number }
+): Intervention {
+  const { contractId, index } = options;
+  const seq = String(index + 1).padStart(3, '0');
+  return {
+    id: `int-prev-${contractId}-${index + 1}`,
+    reference: `INT-PREV-${contractId.toUpperCase()}-${seq}`,
+    type: 'PREVENTIVE',
+    clientId: preview.clientId,
+    equipementId: preview.equipementId,
+    clientEquipementId: preview.clientEquipementId,
+    technicienId: preview.technicienId,
+    contractId,
+    datePrevue: preview.datePrevue,
+    priorite: 'MOYENNE',
+    statut: 'PLANIFIEE',
+    couvertureContrat: true,
+    description: preview.description,
+  };
+}
+
+// ---------------------------------------------------------------------------
+// Technician helpers
+// ---------------------------------------------------------------------------
+
+/**
+ * Returns true when the technician has no conflicting assignments on the
+ * given date, considering both existing interventions and in-progress previews.
+ *
+ * Signature is additive: previewRows and excludeInterventionId are optional
+ * so existing 3-arg and 4-arg callers continue to work unchanged.
+ */
 export function isTechnicianAvailable(
   technicienId: string,
   datePrevue: string,
-  interventions: Intervention[],
-  excludeInterventionId?: string
+  interventions: Intervention[] = mockInterventions,
+  excludeInterventionId?: string,
+  previewRows: PreventiveInterventionPreview[] = []
 ): boolean {
-  return !interventions.some(
-    (intervention) =>
-      intervention.technicienId === technicienId &&
-      intervention.datePrevue === datePrevue &&
-      intervention.statut !== 'ANNULEE' &&
-      intervention.id !== excludeInterventionId
+  const conflictsInInterventions = interventions.some(
+    (i) =>
+      i.technicienId === technicienId &&
+      i.datePrevue === datePrevue &&
+      i.statut !== 'ANNULEE' &&
+      i.id !== excludeInterventionId
   );
+  if (conflictsInInterventions) return false;
+
+  const conflictsInPreviews = previewRows.some(
+    (p) =>
+      p.technicienId !== undefined &&
+      p.technicienId === technicienId &&
+      p.datePrevue === datePrevue
+  );
+  return !conflictsInPreviews;
 }
 
 export const TECHNICIAN_UNAVAILABLE_MESSAGE =
@@ -104,6 +343,10 @@ export function getActiveTechnicians() {
   return mockUsers.filter((u) => u.role === 'technician' && u.actif);
 }
 
+// ---------------------------------------------------------------------------
+// Intervention reference generation
+// ---------------------------------------------------------------------------
+
 export function generateInterventionReference(existing: Intervention[]): string {
   const year = new Date().getFullYear();
   const prefix = `INT-${year}-`;
@@ -116,6 +359,10 @@ export function generateInterventionReference(existing: Intervention[]): string 
   const next = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
   return `${prefix}${String(next).padStart(3, '0')}`;
 }
+
+// ---------------------------------------------------------------------------
+// Date utilities
+// ---------------------------------------------------------------------------
 
 export function formatDateFr(dateStr: string): string {
   const date = new Date(dateStr + 'T12:00:00');

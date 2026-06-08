@@ -11,7 +11,7 @@ import { EquipmentForm } from '@/components/forms/EquipmentForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { mockEquipments } from '@/data/mock-equipments';
-import { mockClients } from '@/data/mock-clients';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -40,19 +40,18 @@ import {
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal } from 'lucide-react';
+import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal, ImageIcon } from 'lucide-react';
 import { EQUIPMENT_TYPE_LABELS, EQUIPMENT_STATUS_LABELS } from '@/lib/constants';
 
 export default function EquipmentsPage() {
   const router = useRouter();
   const { user: currentUser, isLoading } = useAuth();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess } = useToast();
 
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [filteredEquipments, setFilteredEquipments] = useState<Equipment[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
-  const [clientFilter, setClientFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
 
   const [isFormOpen, setIsFormOpen] = useState(false);
@@ -72,12 +71,13 @@ export default function EquipmentsPage() {
     let result = equipments;
 
     if (searchTerm) {
+      const term = searchTerm.toLowerCase();
       result = result.filter(
         (e) =>
-          e.reference.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          e.marque.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          e.modele.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (e.numeroSerie && e.numeroSerie.toLowerCase().includes(searchTerm.toLowerCase()))
+          e.reference.toLowerCase().includes(term) ||
+          e.marque.toLowerCase().includes(term) ||
+          e.modele.toLowerCase().includes(term) ||
+          (e.numeroSerie && e.numeroSerie.toLowerCase().includes(term))
       );
     }
 
@@ -85,18 +85,22 @@ export default function EquipmentsPage() {
       result = result.filter((e) => e.type === typeFilter);
     }
 
-    if (clientFilter !== 'all') {
-      result = result.filter((e) => e.clientId === clientFilter);
-    }
-
     if (statusFilter !== 'all') {
       result = result.filter((e) => e.statut === statusFilter);
     }
 
     setFilteredEquipments(result);
-  }, [equipments, searchTerm, typeFilter, clientFilter, statusFilter]);
+  }, [equipments, searchTerm, typeFilter, statusFilter]);
 
-  useEffect(() => { setPage(1); }, [searchTerm, typeFilter, clientFilter, statusFilter]);
+  useEffect(() => {
+    setPage(1);
+  }, [searchTerm, typeFilter, statusFilter]);
+
+  const getUsageCount = useCallback(
+    (equipmentId: string) =>
+      mockClientEquipements.filter((ce) => ce.equipementId === equipmentId).length,
+    []
+  );
 
   const handleSort = useCallback((key: string) => {
     setSortConfig((prev) => toggleSort(prev, key));
@@ -110,12 +114,12 @@ export default function EquipmentsPage() {
           case 'type': return eq.type;
           case 'marque': return eq.marque;
           case 'modele': return eq.modele;
-          case 'client': return mockClients.find((c) => c.id === eq.clientId)?.societe ?? '';
           case 'statut': return eq.statut;
+          case 'utilise': return String(getUsageCount(eq.id));
           default: return '';
         }
       }),
-    [filteredEquipments, sortConfig]
+    [filteredEquipments, sortConfig, getUsageCount]
   );
 
   const pagedEquipments = useMemo(
@@ -128,37 +132,36 @@ export default function EquipmentsPage() {
       const newEquipment: Equipment = {
         ...formData,
         id: `eq-${Date.now()}`,
+        images: formData.images ?? [],
       };
-      setEquipments([...equipments, newEquipment]);
+      setEquipments((prev) => [...prev, newEquipment]);
       setIsFormOpen(false);
       setSelectedEquipment(undefined);
       showSuccess('Équipement ajouté avec succès');
     },
-    [equipments, showSuccess]
+    [showSuccess]
   );
 
   const handleUpdateEquipment = useCallback(
     (formData: Omit<Equipment, 'id'>) => {
       if (!selectedEquipment) return;
-      const updated = equipments.map((e) =>
-        e.id === selectedEquipment.id ? { ...e, ...formData } : e
+      setEquipments((prev) =>
+        prev.map((e) => (e.id === selectedEquipment.id ? { ...e, ...formData } : e))
       );
-      setEquipments(updated);
       setIsFormOpen(false);
       setSelectedEquipment(undefined);
       showSuccess('Équipement modifié avec succès');
     },
-    [equipments, selectedEquipment, showSuccess]
+    [selectedEquipment, showSuccess]
   );
 
   const handleDeleteEquipment = useCallback(() => {
     if (!equipmentToDelete) return;
-    const updated = equipments.filter((e) => e.id !== equipmentToDelete.id);
-    setEquipments(updated);
+    setEquipments((prev) => prev.filter((e) => e.id !== equipmentToDelete.id));
     setIsConfirmOpen(false);
     setEquipmentToDelete(null);
     showSuccess('Équipement supprimé');
-  }, [equipments, equipmentToDelete, showSuccess]);
+  }, [equipmentToDelete, showSuccess]);
 
   const handleEditClick = (equipment: Equipment) => {
     setSelectedEquipment(equipment);
@@ -173,10 +176,6 @@ export default function EquipmentsPage() {
   const handleDeleteClick = (equipment: Equipment) => {
     setEquipmentToDelete(equipment);
     setIsConfirmOpen(true);
-  };
-
-  const getClientName = (clientId: string): string => {
-    return mockClients.find((c) => c.id === clientId)?.societe || 'N/A';
   };
 
   if (isLoading) {
@@ -200,7 +199,9 @@ export default function EquipmentsPage() {
           <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <div>
               <h1 className="text-3xl font-bold text-foreground">Équipements</h1>
-              <p className="text-muted-foreground mt-2">Gestion des équipements en service</p>
+              <p className="text-muted-foreground mt-2">
+                Catalogue des équipements — indépendant des affectations clients
+              </p>
             </div>
             <Button
               onClick={() => {
@@ -220,12 +221,12 @@ export default function EquipmentsPage() {
               <Filter size={16} />
               <span>Filtres et recherche</span>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-4 gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <Input
-                placeholder="Rechercher par référence, marque, modèle..."
+                placeholder="Référence, marque, modèle, n° de série..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="h-9 sm:col-span-2"
+                className="h-9"
               />
               <Select value={typeFilter} onValueChange={setTypeFilter}>
                 <SelectTrigger className="h-9">
@@ -233,8 +234,12 @@ export default function EquipmentsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les types</SelectItem>
-                  <SelectItem value="CLIMATISEUR">{EQUIPMENT_TYPE_LABELS['CLIMATISEUR']}</SelectItem>
-                  <SelectItem value="SYSTEME_SURPRESSION">{EQUIPMENT_TYPE_LABELS['SYSTEME_SURPRESSION']}</SelectItem>
+                  <SelectItem value="CLIMATISEUR">
+                    {EQUIPMENT_TYPE_LABELS['CLIMATISEUR']}
+                  </SelectItem>
+                  <SelectItem value="SYSTEME_SURPRESSION">
+                    {EQUIPMENT_TYPE_LABELS['SYSTEME_SURPRESSION']}
+                  </SelectItem>
                 </SelectContent>
               </Select>
               <Select value={statusFilter} onValueChange={setStatusFilter}>
@@ -243,96 +248,141 @@ export default function EquipmentsPage() {
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les statuts</SelectItem>
-                  <SelectItem value="EN_SERVICE">{EQUIPMENT_STATUS_LABELS['EN_SERVICE']}</SelectItem>
-                  <SelectItem value="EN_PANNE">{EQUIPMENT_STATUS_LABELS['EN_PANNE']}</SelectItem>
-                  <SelectItem value="HORS_SERVICE">{EQUIPMENT_STATUS_LABELS['HORS_SERVICE']}</SelectItem>
+                  <SelectItem value="EN_SERVICE">
+                    {EQUIPMENT_STATUS_LABELS['EN_SERVICE']}
+                  </SelectItem>
+                  <SelectItem value="EN_PANNE">
+                    {EQUIPMENT_STATUS_LABELS['EN_PANNE']}
+                  </SelectItem>
+                  <SelectItem value="HORS_SERVICE">
+                    {EQUIPMENT_STATUS_LABELS['HORS_SERVICE']}
+                  </SelectItem>
                 </SelectContent>
               </Select>
             </div>
-            <Select value={clientFilter} onValueChange={setClientFilter}>
-              <SelectTrigger className="w-full sm:w-64 h-9">
-                <SelectValue />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">Tous les clients</SelectItem>
-                {mockClients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
-                    {client.societe}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
           </div>
 
           {/* Table */}
           <div className="border border-border rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <SortableHeader label="Référence" sortKey="reference" sortConfig={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Type" sortKey="type" sortConfig={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Marque" sortKey="marque" sortConfig={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Modèle" sortKey="modele" sortConfig={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Client" sortKey="client" sortConfig={sortConfig} onSort={handleSort} />
-                  <TableHead>Localisation</TableHead>
-                  <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredEquipments.length === 0 ? (
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
-                      Aucun équipement trouvé
-                    </TableCell>
+                    <TableHead className="w-12" />
+                    <SortableHeader
+                      label="Référence"
+                      sortKey="reference"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                    <SortableHeader
+                      label="Type"
+                      sortKey="type"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                    <SortableHeader
+                      label="Marque"
+                      sortKey="marque"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                    <SortableHeader
+                      label="Modèle"
+                      sortKey="modele"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                    <SortableHeader
+                      label="Utilisé par"
+                      sortKey="utilise"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                    <SortableHeader
+                      label="Statut"
+                      sortKey="statut"
+                      sortConfig={sortConfig}
+                      onSort={handleSort}
+                    />
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ) : (
-                  pagedEquipments.map((equipment) => (
-                    <TableRow key={equipment.id}>
-                      <TableCell className="font-medium">{equipment.reference}</TableCell>
-                      <TableCell>{EQUIPMENT_TYPE_LABELS[equipment.type]}</TableCell>
-                      <TableCell>{equipment.marque}</TableCell>
-                      <TableCell className="text-muted-foreground text-sm">
-                        {equipment.modele}
-                      </TableCell>
-                      <TableCell className="text-sm">{getClientName(equipment.clientId)}</TableCell>
-                      <TableCell className="text-sm">{equipment.localisation}</TableCell>
-                      <TableCell>
-                        <StatusBadge status={equipment.statut} type="equipment" />
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline" aria-label="Actions">
-                              <MoreHorizontal size={16} />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleViewClick(equipment)}>
-                              <Eye size={14} className="mr-2" />
-                              Voir
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEditClick(equipment)}>
-                              <Edit2 size={14} className="mr-2" />
-                              Modifier
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => handleDeleteClick(equipment)}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash2 size={14} className="mr-2" />
-                              Supprimer
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                </TableHeader>
+                <TableBody>
+                  {filteredEquipments.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={8} className="text-center py-8 text-muted-foreground">
+                        Aucun équipement trouvé
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    pagedEquipments.map((equipment) => {
+                      const mainImg = equipment.images?.find((img) => img.isMain);
+                      const usageCount = getUsageCount(equipment.id);
+                      return (
+                        <TableRow key={equipment.id}>
+                          {/* Thumbnail */}
+                          <TableCell className="p-2">
+                            {mainImg?.previewUrl ? (
+                              // eslint-disable-next-line @next/next/no-img-element
+                              <img
+                                src={mainImg.previewUrl}
+                                alt={mainImg.filename}
+                                className="w-9 h-9 rounded object-cover border border-border"
+                              />
+                            ) : (
+                              <div className="w-9 h-9 rounded bg-muted border border-border flex items-center justify-center">
+                                <ImageIcon size={14} className="text-muted-foreground" />
+                              </div>
+                            )}
+                          </TableCell>
+                          <TableCell className="font-medium">{equipment.reference}</TableCell>
+                          <TableCell>{EQUIPMENT_TYPE_LABELS[equipment.type]}</TableCell>
+                          <TableCell>{equipment.marque}</TableCell>
+                          <TableCell className="text-muted-foreground text-sm">
+                            {equipment.modele}
+                          </TableCell>
+                          <TableCell className="text-sm text-muted-foreground">
+                            {usageCount === 0
+                              ? 'Non affecté'
+                              : `${usageCount} client${usageCount > 1 ? 's' : ''}`}
+                          </TableCell>
+                          <TableCell>
+                            <StatusBadge status={equipment.statut} type="equipment" />
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="outline" aria-label="Actions">
+                                  <MoreHorizontal size={16} />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleViewClick(equipment)}>
+                                  <Eye size={14} className="mr-2" />
+                                  Voir
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleEditClick(equipment)}>
+                                  <Edit2 size={14} className="mr-2" />
+                                  Modifier
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => handleDeleteClick(equipment)}
+                                  className="text-destructive focus:text-destructive"
+                                >
+                                  <Trash2 size={14} className="mr-2" />
+                                  Supprimer
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
             </div>
           </div>
 
@@ -345,7 +395,6 @@ export default function EquipmentsPage() {
           />
         </div>
 
-        {/* Equipment Form */}
         <EquipmentForm
           open={isFormOpen}
           equipment={selectedEquipment}
@@ -362,11 +411,10 @@ export default function EquipmentsPage() {
           onClose={() => setIsDetailOpen(false)}
         />
 
-        {/* Delete Confirmation */}
         <ConfirmDialog
           open={isConfirmOpen}
           title="Supprimer l'équipement"
-          description={`Êtes-vous sûr de vouloir supprimer ${equipmentToDelete?.reference}? Cette suppression est simulée et concerne uniquement l'interface.`}
+          description={`Êtes-vous sûr de vouloir supprimer ${equipmentToDelete?.reference} ? Cette suppression est simulée et concerne uniquement l'interface.`}
           actionLabel="Supprimer"
           actionVariant="destructive"
           onConfirm={handleDeleteEquipment}

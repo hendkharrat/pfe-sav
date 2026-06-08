@@ -21,14 +21,17 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { mockClients } from '@/data/mock-clients';
-import { mockEquipments } from '@/data/mock-equipments';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
 import {
   INTERVENTION_PRIORITY_LABELS,
   INTERVENTION_TYPE_LABELS,
 } from '@/lib/constants';
 import {
   getActiveTechnicians,
-  getContractCoverage,
+  getClientEquipements,
+  getClientEquipementByEquipmentAndClient,
+  getEquipementForClientEquipement,
+  findActiveContractForClientEquipement,
   isTechnicianAvailable,
   TECHNICIAN_UNAVAILABLE_MESSAGE,
 } from '@/lib/interventions';
@@ -37,6 +40,7 @@ export interface InterventionFormData {
   type: InterventionType;
   clientId: string;
   equipementId: string;
+  clientEquipementId?: string;
   technicienId?: string;
   contractId?: string;
   datePrevue: string;
@@ -80,14 +84,15 @@ export function InterventionForm({
   onSubmit,
   isLoading = false,
 }: InterventionFormProps) {
-  const [formData, setFormData] = useState<InterventionFormData>({
-    type: intervention?.type ?? 'PREVENTIVE',
+  const [formData, setFormData] = useState({
+    type: intervention?.type ?? ('PREVENTIVE' as InterventionType),
     clientId: intervention?.clientId ?? '',
+    clientEquipementId: intervention?.clientEquipementId ?? '',
     equipementId: intervention?.equipementId ?? '',
     technicienId: intervention?.technicienId,
     contractId: intervention?.contractId,
     datePrevue: intervention?.datePrevue ?? '',
-    priorite: intervention?.priorite ?? 'MOYENNE',
+    priorite: intervention?.priorite ?? ('MOYENNE' as InterventionPriorite),
     description: intervention?.description ?? '',
     couvertureContrat: intervention?.couvertureContrat ?? false,
   });
@@ -95,9 +100,19 @@ export function InterventionForm({
 
   useEffect(() => {
     if (open) {
+      // Derive CE id from intervention — prefer explicit field, fall back to pair lookup
+      let ceId = intervention?.clientEquipementId ?? '';
+      if (!ceId && intervention?.clientId && intervention?.equipementId) {
+        const ce = getClientEquipementByEquipmentAndClient(
+          intervention.clientId,
+          intervention.equipementId
+        );
+        ceId = ce?.id ?? '';
+      }
       setFormData({
         type: intervention?.type ?? 'PREVENTIVE',
         clientId: intervention?.clientId ?? '',
+        clientEquipementId: ceId,
         equipementId: intervention?.equipementId ?? '',
         technicienId: intervention?.technicienId,
         contractId: intervention?.contractId,
@@ -110,25 +125,19 @@ export function InterventionForm({
     }
   }, [open, intervention]);
 
-  const availableEquipments = mockEquipments.filter(
-    (e) => e.clientId === formData.clientId
-  );
+  const availableCEs = getClientEquipements(formData.clientId);
   const technicians = getActiveTechnicians();
 
-  const updateCoverage = (equipmentId: string, clientId: string) => {
-    if (!equipmentId || !clientId) {
-      setFormData((prev) => ({
-        ...prev,
-        couvertureContrat: false,
-        contractId: undefined,
-      }));
+  const updateCoverage = (ceId: string, clientId: string) => {
+    if (!ceId || !clientId) {
+      setFormData((prev) => ({ ...prev, couvertureContrat: false, contractId: undefined }));
       return;
     }
-    const coverage = getContractCoverage(equipmentId, clientId);
+    const contract = findActiveContractForClientEquipement(ceId, clientId);
     setFormData((prev) => ({
       ...prev,
-      couvertureContrat: coverage.couvertureContrat,
-      contractId: coverage.contractId,
+      couvertureContrat: contract !== undefined,
+      contractId: contract?.id,
     }));
   };
 
@@ -168,7 +177,18 @@ export function InterventionForm({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    onSubmit(formData);
+    onSubmit({
+      type: formData.type,
+      clientId: formData.clientId,
+      equipementId: formData.equipementId,
+      clientEquipementId: formData.clientEquipementId || undefined,
+      technicienId: formData.technicienId,
+      contractId: formData.contractId,
+      datePrevue: formData.datePrevue,
+      priorite: formData.priorite,
+      description: formData.description,
+      couvertureContrat: formData.couvertureContrat,
+    });
   };
 
   return (
@@ -213,6 +233,7 @@ export function InterventionForm({
                 setFormData({
                   ...formData,
                   clientId: value,
+                  clientEquipementId: '',
                   equipementId: '',
                   couvertureContrat: false,
                   contractId: undefined,
@@ -234,11 +255,13 @@ export function InterventionForm({
 
           <FormField label="Équipement *" error={errors.equipementId}>
             <Select
-              value={formData.equipementId}
+              value={formData.clientEquipementId}
               disabled={!formData.clientId}
-              onValueChange={(value) => {
-                setFormData({ ...formData, equipementId: value });
-                updateCoverage(value, formData.clientId);
+              onValueChange={(ceId) => {
+                const ce = mockClientEquipements.find((c) => c.id === ceId);
+                const eqId = ce?.equipementId ?? '';
+                setFormData({ ...formData, clientEquipementId: ceId, equipementId: eqId });
+                updateCoverage(ceId, formData.clientId);
               }}
             >
               <SelectTrigger>
@@ -251,13 +274,30 @@ export function InterventionForm({
                 />
               </SelectTrigger>
               <SelectContent>
-                {availableEquipments.map((equipment) => (
-                  <SelectItem key={equipment.id} value={equipment.id}>
-                    {equipment.reference} — {equipment.marque} {equipment.modele}
+                {availableCEs.length === 0 ? (
+                  <SelectItem value="__none__" disabled>
+                    Aucun équipement affecté à ce client
                   </SelectItem>
-                ))}
+                ) : (
+                  availableCEs.map((ce) => {
+                    const eq = getEquipementForClientEquipement(ce.id);
+                    const label = eq
+                      ? `${eq.reference} — ${eq.marque} ${eq.modele} (${ce.localisation})`
+                      : ce.equipementId;
+                    return (
+                      <SelectItem key={ce.id} value={ce.id}>
+                        {label}
+                      </SelectItem>
+                    );
+                  })
+                )}
               </SelectContent>
             </Select>
+            {formData.clientId && availableCEs.length === 0 && (
+              <p className="text-xs text-amber-600 mt-1">
+                Ce client n&apos;a aucun équipement affecté. Rendez-vous sur la fiche client pour en affecter.
+              </p>
+            )}
           </FormField>
 
           <div className="rounded-lg border border-border p-3 bg-muted/30 space-y-1">

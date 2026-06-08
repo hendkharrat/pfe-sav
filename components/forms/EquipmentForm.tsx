@@ -1,10 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Equipment } from '@/types';
+import { Equipment, EquipmentImage } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
+import { Textarea } from '@/components/ui/textarea';
 import {
   Select,
   SelectContent,
@@ -19,7 +20,7 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
-import { mockClients } from '@/data/mock-clients';
+import { EquipmentImageUpload } from '@/components/shared/EquipmentImageUpload';
 import { EQUIPMENT_TYPE_LABELS, EQUIPMENT_STATUS_LABELS } from '@/lib/constants';
 
 interface EquipmentFormProps {
@@ -38,32 +39,40 @@ export function EquipmentForm({
   isLoading = false,
 }: EquipmentFormProps) {
   const [formData, setFormData] = useState({
-    reference: equipment?.reference || '',
-    clientId: equipment?.clientId || '',
-    type: equipment?.type || ('CLIMATISEUR' as const),
-    marque: equipment?.marque || '',
-    modele: equipment?.modele || '',
-    numeroSerie: equipment?.numeroSerie || '',
-    localisation: equipment?.localisation || '',
-    dateInstallation: equipment?.dateInstallation || '',
-    statut: equipment?.statut || ('EN_SERVICE' as const),
+    reference: equipment?.reference ?? '',
+    type: equipment?.type ?? ('CLIMATISEUR' as const),
+    marque: equipment?.marque ?? '',
+    modele: equipment?.modele ?? '',
+    numeroSerie: equipment?.numeroSerie ?? '',
+    statut: equipment?.statut ?? ('EN_SERVICE' as const),
+    description: equipment?.description ?? '',
   });
 
+  const [images, setImages] = useState<EquipmentImage[]>(equipment?.images ?? []);
   const [errors, setErrors] = useState<Record<string, string>>({});
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-
     if (!formData.reference.trim()) newErrors.reference = 'La référence est obligatoire';
-    if (!formData.clientId) newErrors.clientId = 'Le client est obligatoire';
     if (!formData.type) newErrors.type = 'Le type est obligatoire';
     if (!formData.marque.trim()) newErrors.marque = 'La marque est obligatoire';
     if (!formData.modele.trim()) newErrors.modele = 'Le modèle est obligatoire';
-    if (!formData.localisation.trim()) newErrors.localisation = 'La localisation est obligatoire';
-    if (!formData.dateInstallation) newErrors.dateInstallation = 'La date d\'installation est obligatoire';
-
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const resetForm = () => {
+    setFormData({
+      reference: '',
+      type: 'CLIMATISEUR',
+      marque: '',
+      modele: '',
+      numeroSerie: '',
+      statut: 'EN_SERVICE',
+      description: '',
+    });
+    setImages([]);
+    setErrors({});
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -71,41 +80,39 @@ export function EquipmentForm({
     if (!validateForm()) return;
 
     onSubmit({
-      reference: formData.reference,
-      clientId: formData.clientId,
+      reference: formData.reference.trim(),
       type: formData.type,
-      marque: formData.marque,
-      modele: formData.modele,
-      numeroSerie: formData.numeroSerie || '',
-      localisation: formData.localisation,
-      dateInstallation: formData.dateInstallation,
+      marque: formData.marque.trim(),
+      modele: formData.modele.trim(),
+      numeroSerie: formData.numeroSerie.trim(),
       statut: formData.statut,
+      description: formData.description.trim() || undefined,
+      images,
     });
 
-    setFormData({
-      reference: '',
-      clientId: '',
-      type: 'CLIMATISEUR',
-      marque: '',
-      modele: '',
-      numeroSerie: '',
-      localisation: '',
-      dateInstallation: '',
-      statut: 'EN_SERVICE',
-    });
+    if (!equipment) resetForm();
+  };
+
+  const handleClose = () => {
+    resetForm();
+    onClose();
   };
 
   return (
-    <Dialog open={open} onOpenChange={onClose}>
+    <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
       <DialogContent className="max-w-2xl max-h-[90vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>{equipment ? 'Modifier l\'équipement' : 'Ajouter un équipement'}</DialogTitle>
+          <DialogTitle>
+            {equipment ? "Modifier l'équipement" : 'Ajouter un équipement'}
+          </DialogTitle>
           <DialogDescription>
-            {equipment ? 'Modifiez les informations de l\'équipement' : 'Créez un nouvel équipement'}
+            {equipment
+              ? "Modifiez les informations du catalogue équipement"
+              : "Créez un nouvel équipement dans le catalogue"}
           </DialogDescription>
         </DialogHeader>
 
-        <form onSubmit={handleSubmit} className="space-y-6 mt-6">
+        <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* Référence */}
           <div className="space-y-2">
             <Label htmlFor="reference">Référence *</Label>
@@ -119,31 +126,9 @@ export function EquipmentForm({
             {errors.reference && <p className="text-xs text-red-500">{errors.reference}</p>}
           </div>
 
-          {/* Client */}
-          <div className="space-y-2">
-            <Label htmlFor="client">Client *</Label>
-            <Select
-              value={formData.clientId}
-              onValueChange={(value) => setFormData({ ...formData, clientId: value })}
-              disabled={isLoading}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Sélectionner un client" />
-              </SelectTrigger>
-              <SelectContent>
-                {mockClients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
-                    {client.societe}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            {errors.clientId && <p className="text-xs text-red-500">{errors.clientId}</p>}
-          </div>
-
           {/* Type */}
           <div className="space-y-2">
-            <Label htmlFor="type">Type *</Label>
+            <Label>Type *</Label>
             <Select
               value={formData.type}
               onValueChange={(value) =>
@@ -156,7 +141,9 @@ export function EquipmentForm({
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="CLIMATISEUR">{EQUIPMENT_TYPE_LABELS['CLIMATISEUR']}</SelectItem>
-                <SelectItem value="SYSTEME_SURPRESSION">{EQUIPMENT_TYPE_LABELS['SYSTEME_SURPRESSION']}</SelectItem>
+                <SelectItem value="SYSTEME_SURPRESSION">
+                  {EQUIPMENT_TYPE_LABELS['SYSTEME_SURPRESSION']}
+                </SelectItem>
               </SelectContent>
             </Select>
             {errors.type && <p className="text-xs text-red-500">{errors.type}</p>}
@@ -171,7 +158,7 @@ export function EquipmentForm({
                 value={formData.marque}
                 onChange={(e) => setFormData({ ...formData, marque: e.target.value })}
                 disabled={isLoading}
-                placeholder="CoolMax"
+                placeholder="Daikin"
               />
               {errors.marque && <p className="text-xs text-red-500">{errors.marque}</p>}
             </div>
@@ -182,7 +169,7 @@ export function EquipmentForm({
                 value={formData.modele}
                 onChange={(e) => setFormData({ ...formData, modele: e.target.value })}
                 disabled={isLoading}
-                placeholder="3000"
+                placeholder="FTXS50K"
               />
               {errors.modele && <p className="text-xs text-red-500">{errors.modele}</p>}
             </div>
@@ -200,41 +187,16 @@ export function EquipmentForm({
             />
           </div>
 
-          {/* Localisation */}
-          <div className="space-y-2">
-            <Label htmlFor="localisation">Localisation *</Label>
-            <Input
-              id="localisation"
-              value={formData.localisation}
-              onChange={(e) => setFormData({ ...formData, localisation: e.target.value })}
-              disabled={isLoading}
-              placeholder="Bureau Étage 2"
-            />
-            {errors.localisation && <p className="text-xs text-red-500">{errors.localisation}</p>}
-          </div>
-
-          {/* Date d'installation */}
-          <div className="space-y-2">
-            <Label htmlFor="dateInstallation">Date d'installation *</Label>
-            <Input
-              id="dateInstallation"
-              type="date"
-              value={formData.dateInstallation}
-              onChange={(e) => setFormData({ ...formData, dateInstallation: e.target.value })}
-              disabled={isLoading}
-            />
-            {errors.dateInstallation && (
-              <p className="text-xs text-red-500">{errors.dateInstallation}</p>
-            )}
-          </div>
-
           {/* Statut */}
           <div className="space-y-2">
-            <Label htmlFor="statut">Statut *</Label>
+            <Label>Statut *</Label>
             <Select
               value={formData.statut}
               onValueChange={(value) =>
-                setFormData({ ...formData, statut: value as 'EN_SERVICE' | 'EN_PANNE' | 'HORS_SERVICE' })
+                setFormData({
+                  ...formData,
+                  statut: value as 'EN_SERVICE' | 'EN_PANNE' | 'HORS_SERVICE',
+                })
               }
               disabled={isLoading}
             >
@@ -244,14 +206,39 @@ export function EquipmentForm({
               <SelectContent>
                 <SelectItem value="EN_SERVICE">{EQUIPMENT_STATUS_LABELS['EN_SERVICE']}</SelectItem>
                 <SelectItem value="EN_PANNE">{EQUIPMENT_STATUS_LABELS['EN_PANNE']}</SelectItem>
-                <SelectItem value="HORS_SERVICE">{EQUIPMENT_STATUS_LABELS['HORS_SERVICE']}</SelectItem>
+                <SelectItem value="HORS_SERVICE">
+                  {EQUIPMENT_STATUS_LABELS['HORS_SERVICE']}
+                </SelectItem>
               </SelectContent>
             </Select>
           </div>
 
+          {/* Description */}
+          <div className="space-y-2">
+            <Label htmlFor="description">Description / Spécifications</Label>
+            <Textarea
+              id="description"
+              value={formData.description}
+              onChange={(e) => setFormData({ ...formData, description: e.target.value })}
+              disabled={isLoading}
+              placeholder="Description technique, caractéristiques, puissance..."
+              rows={3}
+            />
+          </div>
+
+          {/* Images */}
+          <div className="space-y-2 border-t border-border pt-4">
+            <Label>Images de l&apos;équipement</Label>
+            <p className="text-xs text-muted-foreground">
+              Ajoutez des photos de l&apos;équipement. La première image ajoutée sera définie comme
+              image principale.
+            </p>
+            <EquipmentImageUpload images={images} onChange={setImages} />
+          </div>
+
           {/* Actions */}
-          <div className="flex gap-2 justify-end pt-4">
-            <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>
+          <div className="flex gap-2 justify-end pt-2">
+            <Button type="button" variant="outline" onClick={handleClose} disabled={isLoading}>
               Annuler
             </Button>
             <Button type="submit" disabled={isLoading}>

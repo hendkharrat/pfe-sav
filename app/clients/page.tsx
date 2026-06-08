@@ -2,14 +2,15 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Client } from '@/types';
+import { Client, ClientEquipement } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AdminOnly } from '@/components/shared/AdminOnly';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
-import { ClientForm } from '@/components/forms/ClientForm';
+import { ClientForm, type ClientFormPayload } from '@/components/forms/ClientForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { mockClients } from '@/data/mock-clients';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -39,14 +40,14 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal } from 'lucide-react';
-import { EmptyState } from '@/components/shared/EmptyState';
 
 export default function ClientsPage() {
   const router = useRouter();
   const { user: currentUser, isLoading } = useAuth();
-  const { showSuccess, showError } = useToast();
+  const { showSuccess } = useToast();
 
   const [clients, setClients] = useState<Client[]>([]);
+  const [clientEquipements, setClientEquipements] = useState<ClientEquipement[]>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [cityFilter, setCityFilter] = useState('all');
@@ -61,34 +62,36 @@ export default function ClientsPage() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
 
-  // Initialize clients from mock data
   useEffect(() => {
     setClients(mockClients);
+    setClientEquipements(mockClientEquipements);
     const uniqueCities = Array.from(new Set(mockClients.map((c) => c.ville))).sort();
     setCities(uniqueCities);
   }, []);
 
-  // Filter clients
   useEffect(() => {
     let result = clients;
-
     if (searchTerm) {
+      const term = searchTerm.toLowerCase();
       result = result.filter(
         (c) =>
-          c.societe.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          c.contact.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          c.email.toLowerCase().includes(searchTerm.toLowerCase())
+          c.societe.toLowerCase().includes(term) ||
+          c.contact.toLowerCase().includes(term) ||
+          c.email.toLowerCase().includes(term)
       );
     }
-
     if (cityFilter !== 'all') {
       result = result.filter((c) => c.ville === cityFilter);
     }
-
     setFilteredClients(result);
   }, [clients, searchTerm, cityFilter]);
 
   useEffect(() => { setPage(1); }, [searchTerm, cityFilter]);
+
+  const getEquipementCount = useCallback(
+    (clientId: string) => clientEquipements.filter((ce) => ce.clientId === clientId).length,
+    [clientEquipements]
+  );
 
   const handleSort = useCallback((key: string) => {
     setSortConfig((prev) => toggleSort(prev, key));
@@ -102,11 +105,11 @@ export default function ClientsPage() {
           case 'contact': return client.contact;
           case 'email': return client.email;
           case 'ville': return client.ville;
-          case 'nombreEquipements': return client.nombreEquipements;
+          case 'nombreEquipements': return getEquipementCount(client.id);
           default: return '';
         }
       }),
-    [filteredClients, sortConfig]
+    [filteredClients, sortConfig, getEquipementCount]
   );
 
   const pagedClients = useMemo(
@@ -115,44 +118,60 @@ export default function ClientsPage() {
   );
 
   const handleAddClient = useCallback(
-    (formData: Omit<Client, 'id' | 'dateCreation' | 'nombreEquipements' | 'userId'>) => {
+    ({ clientData, assignments }: ClientFormPayload) => {
+      const newClientId = `client-${Date.now()}`;
       const newClient: Client = {
-        ...formData,
-        id: `client-${Date.now()}`,
+        ...clientData,
+        id: newClientId,
         dateCreation: new Date().toISOString().split('T')[0],
-        nombreEquipements: 0,
+        nombreEquipements: assignments.length,
         userId: currentUser?.id ?? 'user-admin-1',
       };
-      setClients([...clients, newClient]);
+      // Bind the real clientId to every new assignment
+      const resolvedAssignments = assignments.map((ce) => ({
+        ...ce,
+        clientId: newClientId,
+      }));
+      setClients((prev) => [...prev, newClient]);
+      setClientEquipements((prev) => [...prev, ...resolvedAssignments]);
       setIsFormOpen(false);
       setSelectedClient(undefined);
       showSuccess('Client ajouté avec succès');
     },
-    [clients, currentUser, showSuccess]
+    [currentUser, showSuccess]
   );
 
   const handleUpdateClient = useCallback(
-    (formData: Omit<Client, 'id' | 'dateCreation' | 'nombreEquipements' | 'userId'>) => {
+    ({ clientData, assignments }: ClientFormPayload) => {
       if (!selectedClient) return;
-      const updated = clients.map((c) =>
-        c.id === selectedClient.id ? { ...c, ...formData } : c
+      const clientId = selectedClient.id;
+      setClients((prev) =>
+        prev.map((c) =>
+          c.id === clientId
+            ? { ...c, ...clientData, nombreEquipements: assignments.length }
+            : c
+        )
       );
-      setClients(updated);
+      // Replace all CE records for this client with the new assignment list
+      setClientEquipements((prev) => [
+        ...prev.filter((ce) => ce.clientId !== clientId),
+        ...assignments.map((ce) => ({ ...ce, clientId })),
+      ]);
       setIsFormOpen(false);
       setSelectedClient(undefined);
       showSuccess('Client modifié avec succès');
     },
-    [clients, selectedClient, showSuccess]
+    [selectedClient, showSuccess]
   );
 
   const handleDeleteClient = useCallback(() => {
     if (!clientToDelete) return;
-    const updated = clients.filter((c) => c.id !== clientToDelete.id);
-    setClients(updated);
+    setClients((prev) => prev.filter((c) => c.id !== clientToDelete.id));
+    setClientEquipements((prev) => prev.filter((ce) => ce.clientId !== clientToDelete.id));
     setIsConfirmOpen(false);
     setClientToDelete(null);
     showSuccess('Client supprimé');
-  }, [clients, clientToDelete, showSuccess]);
+  }, [clientToDelete, showSuccess]);
 
   const handleEditClick = (client: Client) => {
     setSelectedClient(client);
@@ -168,6 +187,14 @@ export default function ClientsPage() {
     setClientToDelete(client);
     setIsConfirmOpen(true);
   };
+
+  const handleDetailEdit = useCallback(() => {
+    if (detailClient) {
+      setIsDetailOpen(false);
+      setSelectedClient(detailClient);
+      setIsFormOpen(true);
+    }
+  }, [detailClient]);
 
   if (isLoading) {
     return (
@@ -236,68 +263,71 @@ export default function ClientsPage() {
           {/* Table */}
           <div className="border border-border rounded-lg overflow-hidden">
             <div className="overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <SortableHeader label="Société" sortKey="societe" sortConfig={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Contact" sortKey="contact" sortConfig={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Email" sortKey="email" sortConfig={sortConfig} onSort={handleSort} />
-                  <TableHead>Téléphone</TableHead>
-                  <SortableHeader label="Ville" sortKey="ville" sortConfig={sortConfig} onSort={handleSort} />
-                  <SortableHeader label="Équipements" sortKey="nombreEquipements" sortConfig={sortConfig} onSort={handleSort} />
-                  <TableHead className="text-right">Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredClients.length === 0 ? (
+              <Table>
+                <TableHeader>
                   <TableRow>
-                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
-                      Aucun client trouvé
-                    </TableCell>
+                    <SortableHeader label="Société" sortKey="societe" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Contact" sortKey="contact" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Email" sortKey="email" sortConfig={sortConfig} onSort={handleSort} />
+                    <TableHead>Téléphone</TableHead>
+                    <SortableHeader label="Ville" sortKey="ville" sortConfig={sortConfig} onSort={handleSort} />
+                    <SortableHeader label="Équipements" sortKey="nombreEquipements" sortConfig={sortConfig} onSort={handleSort} />
+                    <TableHead className="text-right">Actions</TableHead>
                   </TableRow>
-                ) : (
-                  pagedClients.map((client) => (
-                    <TableRow key={client.id}>
-                      <TableCell className="font-medium">{client.societe}</TableCell>
-                      <TableCell>{client.contact}</TableCell>
-                      <TableCell className="text-muted-foreground text-sm">{client.email}</TableCell>
-                      <TableCell className="text-muted-foreground text-sm">{client.telephone}</TableCell>
-                      <TableCell>{client.ville}</TableCell>
-                      <TableCell className="text-center">
-                        <span className="text-sm font-medium">{client.nombreEquipements}</span>
-                      </TableCell>
-                      <TableCell className="text-right">
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button size="sm" variant="outline" aria-label="Actions">
-                              <MoreHorizontal size={16} />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => handleViewClick(client)}>
-                              <Eye size={14} className="mr-2" />
-                              Voir
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => handleEditClick(client)}>
-                              <Edit2 size={14} className="mr-2" />
-                              Modifier
-                            </DropdownMenuItem>
-                            <DropdownMenuSeparator />
-                            <DropdownMenuItem
-                              onClick={() => handleDeleteClick(client)}
-                              className="text-destructive focus:text-destructive"
-                            >
-                              <Trash2 size={14} className="mr-2" />
-                              Supprimer
-                            </DropdownMenuItem>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
+                </TableHeader>
+                <TableBody>
+                  {filteredClients.length === 0 ? (
+                    <TableRow>
+                      <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
+                        Aucun client trouvé
                       </TableCell>
                     </TableRow>
-                  ))
-                )}
-              </TableBody>
-            </Table>
+                  ) : (
+                    pagedClients.map((client) => {
+                      const eqCount = getEquipementCount(client.id);
+                      return (
+                        <TableRow key={client.id}>
+                          <TableCell className="font-medium">{client.societe}</TableCell>
+                          <TableCell>{client.contact}</TableCell>
+                          <TableCell className="text-muted-foreground text-sm">{client.email}</TableCell>
+                          <TableCell className="text-muted-foreground text-sm">{client.telephone}</TableCell>
+                          <TableCell>{client.ville}</TableCell>
+                          <TableCell className="text-center">
+                            <span className="text-sm font-medium">{eqCount}</span>
+                          </TableCell>
+                          <TableCell className="text-right">
+                            <DropdownMenu>
+                              <DropdownMenuTrigger asChild>
+                                <Button size="sm" variant="outline" aria-label="Actions">
+                                  <MoreHorizontal size={16} />
+                                </Button>
+                              </DropdownMenuTrigger>
+                              <DropdownMenuContent align="end">
+                                <DropdownMenuItem onClick={() => handleViewClick(client)}>
+                                  <Eye size={14} className="mr-2" />
+                                  Voir
+                                </DropdownMenuItem>
+                                <DropdownMenuItem onClick={() => handleEditClick(client)}>
+                                  <Edit2 size={14} className="mr-2" />
+                                  Modifier
+                                </DropdownMenuItem>
+                                <DropdownMenuSeparator />
+                                <DropdownMenuItem
+                                  onClick={() => handleDeleteClick(client)}
+                                  className="text-destructive focus:text-destructive"
+                                >
+                                  <Trash2 size={14} className="mr-2" />
+                                  Supprimer
+                                </DropdownMenuItem>
+                              </DropdownMenuContent>
+                            </DropdownMenu>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })
+                  )}
+                </TableBody>
+              </Table>
             </div>
           </div>
 
@@ -310,10 +340,10 @@ export default function ClientsPage() {
           />
         </div>
 
-        {/* Modals */}
         <ClientForm
           open={isFormOpen}
           client={selectedClient}
+          clientEquipements={clientEquipements}
           onClose={() => {
             setIsFormOpen(false);
             setSelectedClient(undefined);
@@ -324,14 +354,15 @@ export default function ClientsPage() {
         <ClientDetail
           open={isDetailOpen}
           client={detailClient}
+          clientEquipements={clientEquipements}
           onClose={() => setIsDetailOpen(false)}
+          onEdit={handleDetailEdit}
         />
 
-        {/* Delete Confirmation */}
         <ConfirmDialog
           open={isConfirmOpen}
           title="Supprimer le client"
-          description={`Êtes-vous sûr de vouloir supprimer ${clientToDelete?.societe}? Cette suppression est simulée et concerne uniquement l'interface.`}
+          description={`Êtes-vous sûr de vouloir supprimer ${clientToDelete?.societe} ? Cette suppression est simulée et concerne uniquement l'interface.`}
           actionLabel="Supprimer"
           actionVariant="destructive"
           onConfirm={handleDeleteClient}

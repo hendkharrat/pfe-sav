@@ -33,6 +33,16 @@ export interface Client {
   userId: string;
 }
 
+// --- Equipment ---
+
+export interface EquipmentImage {
+  id: string;
+  filename: string;
+  previewUrl?: string;
+  isMain: boolean;
+}
+
+/** Generic equipment catalog record — not tied to a specific client installation. */
 export interface Equipment {
   id: string;
   reference: string;
@@ -40,11 +50,23 @@ export interface Equipment {
   marque: string;
   modele: string;
   numeroSerie: string;
+  statut: EquipmentStatut;
+  description?: string;
+  images?: EquipmentImage[];
+}
+
+/** Join record linking an Equipment model to a specific Client installation. */
+export interface ClientEquipement {
+  id: string;
   clientId: string;
+  equipementId: string;
   localisation: string;
   dateInstallation: string;
   statut: EquipmentStatut;
+  notes?: string;
 }
+
+// --- Contract ---
 
 export interface Contract {
   id: string;
@@ -54,9 +76,14 @@ export interface Contract {
   dateFin: string;
   periodicite: 'MENSUELLE' | 'TRIMESTRIELLE' | 'SEMESTRIELLE' | 'ANNUELLE';
   statut: ContractStatut;
-  equipementIds: string[];
+  /** IDs of ClientEquipement records covered by this contract. */
+  clientEquipementIds: string[];
+  /** @deprecated Use clientEquipementIds instead. */
+  equipementIds?: string[];
   description?: string;
 }
+
+// --- Intervention ---
 
 export interface Intervention {
   id: string;
@@ -64,6 +91,8 @@ export interface Intervention {
   type: InterventionType;
   clientId: string;
   equipementId: string;
+  /** Reference to the ClientEquipement join record (optional for backwards compatibility). */
+  clientEquipementId?: string;
   technicienId?: string;
   contractId?: string;
   datePrevue: string;
@@ -78,6 +107,19 @@ export interface Intervention {
   dureeMinutes?: number;
   observations?: string;
 }
+
+/** Ephemeral preview row used during contract creation before saving. */
+export interface PreventiveInterventionPreview {
+  id: string;
+  datePrevue: string;
+  clientEquipementId: string;
+  equipementId: string;
+  clientId: string;
+  technicienId?: string;
+  description: string;
+}
+
+// --- Factures ---
 
 export interface LigneFacture {
   description: string;
@@ -99,25 +141,14 @@ export interface Invoice {
   lignes: LigneFacture[];
 }
 
-// Dashboard Stats
-export interface DashboardStats {
-  totalInterventions: number;
-  pendingInterventions: number;
-  completedInterventions: number;
-  urgentInterventions: number;
-  activeContracts: number;
-  expiredContracts: number;
-  totalClients: number;
-  totalEquipment: number;
-  monthlyRevenue: number;
-  overdueInvoices: number;
-}
+// --- Pannes ---
 
-// Session
-export interface AuthSession {
-  user: User;
-  isAuthenticated: boolean;
-  loginTime: string;
+export interface PieceJointe {
+  id: string;
+  filename: string;
+  size: number;
+  type: string;
+  previewUrl?: string;
 }
 
 export type PanneStatut =
@@ -131,11 +162,37 @@ export interface Panne {
   reference: string;
   clientId: string;
   equipementId: string;
+  /** Reference to the ClientEquipement join record for richer location resolution. */
+  clientEquipementId?: string;
   dateDeclaration: string;
   description: string;
   priorite: InterventionPriorite;
   statut: PanneStatut;
   interventionId?: string;
+  /** @deprecated Use piecesJointes instead. */
   pieceJointeNom?: string;
+  piecesJointes?: PieceJointe[];
 }
 
+// --- Dashboard ---
+
+export interface DashboardStats {
+  totalInterventions: number;
+  pendingInterventions: number;
+  completedInterventions: number;
+  urgentInterventions: number;
+  activeContracts: number;
+  expiredContracts: number;
+  totalClients: number;
+  totalEquipment: number;
+  monthlyRevenue: number;
+  overdueInvoices: number;
+}
+
+// --- Session ---
+
+export interface AuthSession {
+  user: User;
+  isAuthenticated: boolean;
+  loginTime: string;
+}

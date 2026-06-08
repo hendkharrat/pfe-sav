@@ -16,8 +16,9 @@ import { Badge } from '@/components/ui/badge';
 import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockContracts } from '@/data/mock-contracts';
+import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { INTERVENTION_TYPE_LABELS } from '@/lib/constants';
-import { getTechnicianName } from '@/lib/interventions';
+import { getTechnicianName, getClientEquipementByEquipmentAndClient } from '@/lib/interventions';
 import { formatDate } from '@/lib/utils';
 
 interface InterventionDetailProps {
@@ -39,6 +40,10 @@ export function InterventionDetail({
   const contract = intervention.contractId
     ? mockContracts.find((c) => c.id === intervention.contractId)
     : undefined;
+
+  const clientEquipement = intervention.clientEquipementId
+    ? mockClientEquipements.find((ce) => ce.id === intervention.clientEquipementId)
+    : getClientEquipementByEquipmentAndClient(intervention.clientId, intervention.equipementId);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -73,9 +78,9 @@ export function InterventionDetail({
                 ? `${equipment.reference} — ${equipment.marque} ${equipment.modele}`
                 : 'N/A'}
             </p>
-            {equipment?.localisation && (
-              <p className="text-sm text-muted-foreground">{equipment.localisation}</p>
-            )}
+            <p className="text-sm text-muted-foreground">
+              {clientEquipement?.localisation ?? 'Localisation non renseignée'}
+            </p>
           </DetailRow>
 
           <DetailRow label="Technicien">

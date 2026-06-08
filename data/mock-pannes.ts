@@ -11,7 +11,14 @@ export const mockPannes: Panne[] = [
     priorite: 'ELEVEE',
     statut: 'CONVERTIE',
     interventionId: 'int-2',
-    pieceJointeNom: 'photo_fuite_split.jpg',
+    piecesJointes: [
+      {
+        id: 'pj-1',
+        filename: 'photo_fuite_split.jpg',
+        size: 245760,
+        type: 'image/jpeg',
+      },
+    ],
   },
   {
     id: 'pan-2',
@@ -22,6 +29,7 @@ export const mockPannes: Panne[] = [
     description: "Le climatiseur principal du hall de l'immeuble ne s'allume plus du tout. Affichage d'une erreur E6 sur le boîtier de contrôle mural.",
     priorite: 'URGENTE',
     statut: 'EN_ATTENTE',
+    piecesJointes: [],
   },
   {
     id: 'pan-3',
@@ -32,7 +40,14 @@ export const mockPannes: Panne[] = [
     description: "Sifflement aigu constant extrêmement dérangeant dès le démarrage du compresseur dans la chambre principale à El Menzah 9.",
     priorite: 'MOYENNE',
     statut: 'PRISE_EN_CHARGE',
-    pieceJointeNom: 'enregistrement_bruit.mp3',
+    piecesJointes: [
+      {
+        id: 'pj-3',
+        filename: 'enregistrement_bruit.mp3',
+        size: 1024000,
+        type: 'audio/mpeg',
+      },
+    ],
   },
   {
     id: 'pan-4',
@@ -44,6 +59,7 @@ export const mockPannes: Panne[] = [
     priorite: 'URGENTE',
     statut: 'CONVERTIE',
     interventionId: 'int-5',
+    piecesJointes: [],
   },
   {
     id: 'pan-5',
@@ -54,5 +70,6 @@ export const mockPannes: Panne[] = [
     description: 'Perte de pression intermittente sur le surpresseur du local technique de sécurité.',
     priorite: 'FAIBLE',
     statut: 'ANNULEE',
+    piecesJointes: [],
   },
 ];
