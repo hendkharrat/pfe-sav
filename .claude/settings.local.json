@@ -44,7 +44,11 @@
       "Bash(node -e \"const p = require\\('./package.json'\\); console.log\\('next-themes:', p.dependencies['next-themes'] || p.devDependencies?.['next-themes'] || 'NOT FOUND'\\)\")",
       "Bash(Select-String -Path \"app\\\\globals.css\" -Pattern \"\\\\.dark\")",
       "Bash(Select-Object -First 5)",
-      "Bash(Remove-Item *)"
+      "Bash(Remove-Item *)",
+      "Bash(node -e \"const fs=require\\('fs'\\); const lines=fs.readFileSync\\('components/shared/CreateCurativeFromPanneDialog.tsx','utf8'\\).split\\('\\\\n'\\); const line=lines[96]; for\\(let i=20;i<35;i++\\){console.log\\(i, line.charCodeAt\\(i\\).toString\\(16\\), line[i]\\)}\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); const content=fs.readFileSync\\('components/shared/CreateCurativeFromPanneDialog.tsx','utf8'\\); const fixed=content.replace\\(/‘/g,\\\\\"'\\\\\"\\).replace\\(/’/g,\\\\\"'\\\\\"\\); fs.writeFileSync\\('components/shared/CreateCurativeFromPanneDialog.tsx', fixed, 'utf8'\\); console.log\\('Fixed curly quotes'\\);\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); const content=fs.readFileSync\\('components/forms/ClientEquipementAssignForm.tsx','utf8'\\); const matches=[...content.matchAll\\(/[‘’“”]/g\\)]; console.log\\('Curly quotes found:', matches.length, matches.map\\(m=>\\({pos:m.index, char:m[0].codePointAt\\(0\\).toString\\(16\\)}\\)\\)\\);\")",
+      "Bash(node -e \"const fs=require\\('fs'\\); ['components/shared/EquipmentDetail.tsx','components/shared/CreateCurativeFromPanneDialog.tsx','app/equipements/page.tsx'].forEach\\(f=>{const c=fs.readFileSync\\(f,'utf8'\\); const m=[...c.matchAll\\(/[''\"\"]/g\\)]; if\\(m.length\\) console.log\\(f,'has',m.length,'curly quotes'\\); else console.log\\(f,'OK'\\);}\\);\")"
     ]
   }
 }

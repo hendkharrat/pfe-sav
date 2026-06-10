@@ -38,7 +38,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="fr" className="bg-background" suppressHydrationWarning>
-      <body className="font-sans antialiased">
+      <body className="font-sans antialiased" suppressHydrationWarning>
         <ThemeProvider>
           {children}
           <Toaster position="top-right" richColors />

@@ -10,11 +10,11 @@ import { getNavItems, isNavItemActive, ROLE_LABEL } from './navItems';
 export function AppSidebar() {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuth();
+  const { role, displayName, session, isAuthenticated } = useAuth();
 
-  if (!user) return null;
+  if (!isAuthenticated || !role) return null;
 
-  const navItems = getNavItems(user.role);
+  const navItems = getNavItems(role);
 
   const handleLogout = () => {
     logoutUser();
@@ -30,7 +30,7 @@ export function AppSidebar() {
         </div>
         <div className="min-w-0">
           <p className="font-bold text-sm text-sidebar-foreground leading-tight">SAV Manager</p>
-          <p className="text-xs text-sidebar-foreground opacity-60">{ROLE_LABEL[user.role]}</p>
+          <p className="text-xs text-sidebar-foreground opacity-60">{ROLE_LABEL[role]}</p>
         </div>
       </div>
 
@@ -64,9 +64,9 @@ export function AppSidebar() {
       <div className="border-t border-sidebar-border p-3 space-y-1">
         <div className="px-3 py-1.5">
           <p className="text-xs font-semibold text-sidebar-foreground truncate">
-            {user.prenom} {user.nom}
+            {displayName}
           </p>
-          <p className="text-xs text-sidebar-foreground opacity-60 truncate">{user.email}</p>
+          <p className="text-xs text-sidebar-foreground opacity-60 truncate">{session?.email}</p>
         </div>
         <button
           onClick={handleLogout}

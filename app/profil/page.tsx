@@ -7,9 +7,9 @@ import { useAuth } from '@/hooks/useAuth';
 import { RoleBadge } from '@/components/shared/RoleBadge';
 
 export default function ProfilePage() {
-  const { user } = useAuth();
+  const { user, role, displayName, session } = useAuth();
 
-  if (!user) return null;
+  if (!role || !session) return null;
 
   return (
     <AppLayout>
@@ -37,15 +37,15 @@ export default function ProfilePage() {
             <div className="flex items-center gap-4">
               <div className="w-16 h-16 bg-primary/10 rounded-full flex items-center justify-center">
                 <span className="text-2xl font-bold text-primary">
-                  {user.prenom[0]}{user.nom[0]}
+                  {displayName[0] ?? '?'}
                 </span>
               </div>
               <div>
                 <h2 className="text-2xl font-bold text-foreground">
-                  {user.prenom} {user.nom}
+                  {displayName}
                 </h2>
                 <div className="mt-2">
-                  <RoleBadge role={user.role} />
+                  <RoleBadge role={role} />
                 </div>
               </div>
             </div>
@@ -59,7 +59,7 @@ export default function ProfilePage() {
                   <label className="text-sm font-medium text-muted-foreground">
                     Adresse e-mail
                   </label>
-                  <p className="text-foreground mt-1">{user.email}</p>
+                  <p className="text-foreground mt-1">{session.email}</p>
                 </div>
               </div>
 
@@ -71,9 +71,9 @@ export default function ProfilePage() {
                     Rôle
                   </label>
                   <p className="text-foreground mt-1 capitalize">
-                    {user.role === 'admin'
+                    {role === 'admin'
                       ? 'Administrateur'
-                      : user.role === 'technician'
+                      : role === 'technician'
                         ? 'Technicien'
                         : 'Client'}
                   </p>
@@ -88,7 +88,7 @@ export default function ProfilePage() {
                     Membre depuis
                   </label>
                   <p className="text-foreground mt-1">
-                    {new Date(user.dateCreation).toLocaleDateString('fr-FR', {
+                    {new Date(user?.dateCreation ?? session.loginTime).toLocaleDateString('fr-FR', {
                       year: 'numeric',
                       month: 'long',
                       day: 'numeric',
@@ -106,7 +106,7 @@ export default function ProfilePage() {
             <CardTitle>À propos de votre rôle</CardTitle>
           </CardHeader>
           <CardContent>
-            {user.role === 'admin' && (
+            {role === 'admin' && (
               <div className="space-y-3">
                 <p className="text-foreground">
                   En tant qu&apos;administrateur, vous avez accès à :
@@ -131,7 +131,7 @@ export default function ProfilePage() {
                 </ul>
               </div>
             )}
-            {user.role === 'technician' && (
+            {role === 'technician' && (
               <div className="space-y-3">
                 <p className="text-foreground">
                   En tant que technicien, vous pouvez :
@@ -156,7 +156,7 @@ export default function ProfilePage() {
                 </ul>
               </div>
             )}
-            {user.role === 'client' && (
+            {role === 'client' && (
               <div className="space-y-3">
                 <p className="text-foreground">
                   En tant que client, vous pouvez :

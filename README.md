@@ -34,12 +34,12 @@ Il s'agit d'une application **frontend de démonstration** : toutes les données
 
 ## Fonctionnalités principales
 
-- Authentification simulée par rôle (administrateur, technicien, client).
+- Authentification simulée par rôle (administrateur, technicien, client), par email **ou numéro de téléphone (8 chiffres, sans indicatif)**.
 - Tableaux de bord adaptés à chaque rôle avec KPIs et graphiques.
-- Gestion des utilisateurs internes (administrateur et technicien uniquement).
+- Gestion des utilisateurs internes (administrateur et technicien), avec numéro de téléphone.
 - Gestion des clients : société ou personne physique, sélection de ville tunisienne, affectation d'équipements.
 - Catalogue d'équipements indépendant du client, avec images multiples (une image principale).
-- Affectation des équipements du catalogue aux clients via une relation `ClientEquipement` (localisation, date d'installation).
+- Affectation des équipements du catalogue aux clients via une relation `ClientEquipement` (date d'achat, localisation, date d'installation). La localisation est facultative.
 - Contrats de maintenance couvrant les équipements affectés, avec calcul automatique du statut (actif / bientôt expiré / expiré).
 - Génération et prévisualisation du planning préventif lors de la création d'un contrat (périodicité, dates, technicien).
 - Vérification de disponibilité des techniciens par date pour les interventions.
@@ -56,9 +56,9 @@ Il s'agit d'une application **frontend de démonstration** : toutes les données
 ### Administrateur
 
 - **Dashboard global** : statistiques, KPIs, graphiques d'activité par mois et par type.
-- **Utilisateurs** : CRUD des utilisateurs internes (administrateur et technicien). Les comptes clients ne sont pas gérés ici.
-- **Clients** : CRUD, société ou personne physique, ville sélectionnée depuis une liste de villes tunisiennes, pays fixé à « Tunisie », affectation d'équipements du catalogue via `ClientEquipement`.
-- **Équipements** : catalogue global sans champ client ni statut ; images multiples avec une image principale ; CRUD complet avec filtres par type et marque.
+- **Utilisateurs** : CRUD des utilisateurs internes (administrateur et technicien). Les comptes clients ne sont pas gérés ici. Un utilisateur désactivé reste visible dans la liste avec une action **Restaurer** permettant de réactiver son accès.
+- **Clients** : CRUD, société ou personne physique, ville sélectionnée depuis une liste de villes tunisiennes, affectation d'équipements du catalogue via `ClientEquipement`. Chaque client dispose d'un mot de passe pour l'accès au portail client. La localisation chez le client est facultative.
+- **Équipements** : catalogue global sans champ client ni statut ; images multiples avec une image principale ; CRUD complet avec filtres par type et marque. La fiche équipement permet d'affecter l'équipement à un client directement depuis le module Équipements, sans modifier le catalogue (l'affectation est enregistrée dans `ClientEquipement`).
 - **Contrats** : CRUD, couverture des installations `ClientEquipement` du client, prévisualisation du planning préventif généré par dates et périodicité, affectation de technicien avec détection de conflit de disponibilité.
 - **Interventions** : CRUD, préventives et curatives, sans priorité, affectation de technicien avec vérification de disponibilité par date.
 - **Planning** : vue hebdomadaire (1 semaine, 2 semaines) et mensuelle, filtres par type, statut et technicien.
@@ -86,13 +86,24 @@ Il s'agit d'une application **frontend de démonstration** : toutes les données
 
 ## Comptes de démonstration
 
-| Rôle | Email | Mot de passe |
-|---|---|---|
-| Administrateur | `admin@sav.com` | `admin123` |
-| Technicien | `tech@sav.com` | `tech123` |
-| Client | `client@sav.com` | `client123` |
+La connexion accepte **l'email ou le numéro de téléphone** comme identifiant.
 
-> Le rôle **Client** existe pour l'authentification au portail client. Les clients métier sont gérés dans le module **Clients** de l'interface administrateur, indépendamment des comptes utilisateurs.
+### Utilisateurs internes
+
+| Rôle | Email | Téléphone | Mot de passe |
+|---|---|---|---|
+| Administrateur | `admin@sav.com` | `71100200` | `admin123` |
+| Technicien | `tech@sav.com` | `98200300` | `tech123` |
+
+### Clients (portail client)
+
+Les clients s'authentifient directement depuis leurs enregistrements dans le module **Clients**.
+
+| Client | Email | Téléphone | Mot de passe |
+|---|---|---|---|
+| Ahmed Ben Salah (particulier) | `ahmed.bensalah@mail.tn` | `98765432` | `ahmed123` |
+| EDI Solutions (société) | `contact@edi-solutions.tn` | `71345678` | `edi123` |
+| Centre Médical Ibn Sina (société) | `maintenance@ibnsina.tn` | `71234567` | `ibnsina123` |
 
 ---
 
@@ -177,10 +188,10 @@ sav-manager-frontend-setup/
 | Entité | Description |
 |---|---|
 | `User` | Utilisateur interne : administrateur ou technicien |
-| `Client` | Client métier : société ou personne physique (ville tunisienne, pays fixé à Tunisie) |
+| `Client` | Client métier : société ou personne physique (ville tunisienne). Dispose d'un mot de passe pour le portail client. |
 | `Equipment` | Équipement du catalogue global (climatiseur, surpression) avec images multiples |
 | `EquipmentImage` | Image associée à un équipement (nom de fichier, URL de prévisualisation, indicateur image principale) |
-| `ClientEquipement` | Affectation d'un équipement du catalogue à un client (localisation, date d'installation) |
+| `ClientEquipement` | Affectation d'un équipement du catalogue à un client (date d'achat, localisation facultative, date d'installation). Peut être créée depuis le module Client ou depuis la fiche équipement du module Équipements. |
 | `Contract` | Contrat de maintenance couvrant des installations `ClientEquipement` d'un client |
 | `Intervention` | Intervention préventive ou curative, sans priorité |
 | `Panne` | Déclaration de panne soumise par un client, sans priorité |
@@ -194,7 +205,11 @@ sav-manager-frontend-setup/
 
 - L'application est **entièrement frontend** : aucune persistance réelle des données.
 - Les opérations CRUD modifient l'état local React et sont perdues au rechargement.
-- La session utilisateur est stockée dans `localStorage` sous la clé `sav_session`.
+- La session utilisateur est stockée dans `localStorage` sous la clé `sav_session`. Elle contient rôle, identifiant et nom d'affichage (pas de mot de passe).
+- La connexion est possible avec l'email **ou** le numéro de téléphone.
+- Les utilisateurs internes s'authentifient depuis `mock-users.ts` ; les clients depuis `mock-clients.ts`.
+- La localisation d'un équipement chez le client est facultative.
+- La description d'une panne est obligatoire mais sans longueur minimale.
 - Un **technicien** ne voit que les interventions qui lui sont assignées.
 - Un **client** ne voit que ses propres données (équipements affectés, interventions, pannes, factures).
 - Les **interventions préventives** ne génèrent pas de factures.
@@ -202,6 +217,8 @@ sav-manager-frontend-setup/
 - La monnaie utilisée est le **dinar tunisien (TND)** avec une TVA à **19 %**.
 - Le statut d'un contrat (actif / bientôt expiré / expiré) est calculé dynamiquement à partir des dates.
 - Un technicien ne peut pas être affecté à deux interventions à la même date (vérification de disponibilité).
+- Lors de la création d'une intervention curative depuis une panne, la date prévue doit être sélectionnée avant de pouvoir choisir un technicien. Les techniciens indisponibles à la date choisie sont signalés et ne peuvent pas être sélectionnés.
+- Les numéros de téléphone sont stockés sur 8 chiffres, sans indicatif pays.
 - Le planning préventif est généré automatiquement à la création d'un contrat selon les dates et la périodicité choisies.
 
 ---
@@ -251,6 +268,7 @@ Connexion → Dashboard → Déclaration de panne (avec pièces jointes)
 |---|---|
 | Pas de backend | Aucune API REST ou GraphQL ; données simulées en mémoire |
 | Pas de persistance | Les modifications sont perdues au rechargement de la page |
+| État local par page | Chaque page gère son propre état `clientEquipements`. Une affectation créée depuis la page Équipements n'est pas visible en temps réel dans la page Clients, et vice-versa. Les deux vues se resynchronisent au rechargement. |
 | Upload de fichiers | Simulé (nom de fichier enregistré, aucun fichier réellement stocké) |
 | Export CSV | Logique présente, export réel non implémenté en démonstration |
 | Authentification | Simplifiée via `localStorage`, sans JWT ni session serveur |

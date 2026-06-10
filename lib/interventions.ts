@@ -18,18 +18,13 @@ import { mockUsers } from '@/data/mock-users';
 // Auth / role helpers
 // ---------------------------------------------------------------------------
 
-const CLIENT_USER_TO_CLIENT_ID: Record<string, string> = {
-  'user-client-1': 'client-3',
-};
-
 export function getClientIdForUser(user: User): string | null {
   if (user.role !== 'client') return null;
-  const mapped = CLIENT_USER_TO_CLIENT_ID[user.id];
-  if (mapped) return mapped;
-  const byEmail = mockClients.find(
-    (c) => c.email.toLowerCase() === user.email.toLowerCase()
-  );
-  return byEmail?.id ?? null;
+  // With the new auth model, user.id is the clientId for synthesized client sessions.
+  const byId = mockClients.find((c) => c.id === user.id);
+  if (byId) return user.id;
+  // Fallback: match by email for any edge case.
+  return mockClients.find((c) => c.email.toLowerCase() === user.email.toLowerCase())?.id ?? null;
 }
 
 export function filterInterventionsByRole(
@@ -115,7 +110,9 @@ export function getClientEquipementLabel(
   if (!ce) return 'Équipement inconnu';
   const eq = equipments.find((e) => e.id === ce.equipementId);
   if (!eq) return 'Équipement inconnu';
-  return `${eq.reference} — ${eq.modele} — ${ce.localisation}`;
+  return ce.localisation
+    ? `${eq.reference} — ${eq.modele} — ${ce.localisation}`
+    : `${eq.reference} — ${eq.modele}`;
 }
 
 // ---------------------------------------------------------------------------

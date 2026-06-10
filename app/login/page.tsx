@@ -9,14 +9,15 @@ import { Label } from '@/components/ui/label';
 import { authenticate } from '@/lib/auth';
 
 const TEST_ACCOUNTS = [
-  { label: 'Administrateur', email: 'admin@sav.com', password: 'admin123' },
-  { label: 'Technicien', email: 'tech@sav.com', password: 'tech123' },
-  { label: 'Client', email: 'client@sav.com', password: 'client123' },
+  { label: 'Administrateur', identifier: 'admin@sav.com', phone: '71100200', password: 'admin123' },
+  { label: 'Technicien', identifier: 'tech@sav.com', phone: '98200300', password: 'tech123' },
+  { label: 'Client (particulier)', identifier: 'ahmed.bensalah@mail.tn', phone: '98765432', password: 'ahmed123' },
+  { label: 'Client (société)', identifier: 'contact@edi-solutions.tn', phone: '71345678', password: 'edi123' },
 ] as const;
 
 export default function LoginPage() {
   const router = useRouter();
-  const [email, setEmail] = useState('');
+  const [identifier, setIdentifier] = useState('');
   const [password, setPassword] = useState('');
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
@@ -26,11 +27,11 @@ export default function LoginPage() {
     setError('');
     setIsLoading(true);
 
-    const session = authenticate(email, password);
+    const session = authenticate(identifier, password);
     if (session) {
       router.push('/dashboard');
     } else {
-      setError('Email ou mot de passe incorrect.');
+      setError('Identifiant ou mot de passe incorrect.');
     }
 
     setIsLoading(false);
@@ -50,19 +51,19 @@ export default function LoginPage() {
         <Card className="border border-border">
           <CardHeader className="pb-4">
             <CardTitle>Connexion</CardTitle>
-            <CardDescription>Connectez-vous avec votre email et mot de passe</CardDescription>
+            <CardDescription>Connectez-vous avec votre email ou téléphone et mot de passe</CardDescription>
           </CardHeader>
           <CardContent className="space-y-6">
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="identifier">Email ou téléphone</Label>
                 <Input
-                  id="email"
-                  type="email"
-                  autoComplete="email"
-                  placeholder="vous@exemple.com"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
+                  id="identifier"
+                  type="text"
+                  autoComplete="username"
+                  placeholder="email@exemple.com ou 71100200"
+                  value={identifier}
+                  onChange={(e) => setIdentifier(e.target.value)}
                   required
                   disabled={isLoading}
                 />
@@ -101,14 +102,21 @@ export default function LoginPage() {
               <summary className="text-sm font-medium text-foreground cursor-pointer select-none">
                 Comptes de démonstration
               </summary>
-              <ul className="space-y-2 text-sm text-muted-foreground mt-3">
+              <div className="mt-3 space-y-2">
+                <p className="text-xs text-muted-foreground mb-2">
+                  Connexion par email ou téléphone possible.
+                </p>
                 {TEST_ACCOUNTS.map((account) => (
-                  <li key={account.email}>
-                    <span className="text-foreground font-medium">{account.label} :</span>{' '}
-                    {account.email} / {account.password}
-                  </li>
+                  <div key={account.identifier} className="text-xs border-b border-border/50 pb-2 last:border-0 last:pb-0">
+                    <span className="font-medium text-foreground">{account.label}</span>
+                    <div className="text-muted-foreground mt-0.5 space-y-0.5">
+                      <div>{account.identifier}</div>
+                      <div>{account.phone}</div>
+                      <div>Mot de passe : <span className="font-mono">{account.password}</span></div>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </details>
           </CardContent>
         </Card>

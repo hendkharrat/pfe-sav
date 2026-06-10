@@ -84,7 +84,7 @@ export function ClientDetail({
           <div className="border-t border-border pt-4 space-y-2">
             <p className="text-xs text-muted-foreground uppercase tracking-wide">Adresse</p>
             <p className="text-sm">
-              {[client.adresse, client.ville, 'Tunisie'].filter(Boolean).join(', ') || '—'}
+              {[client.adresse, client.ville].filter(Boolean).join(', ') || '—'}
             </p>
           </div>
 
@@ -115,7 +115,7 @@ export function ClientDetail({
               </p>
             ) : (
               <div className="overflow-x-auto rounded-lg border border-border">
-                <table className="w-full min-w-[720px] text-sm">
+                <table className="w-full min-w-[820px] text-sm">
                   <thead>
                     <tr className="bg-muted/50 border-b border-border">
                       <th className="px-2 py-2" />
@@ -129,6 +129,12 @@ export function ClientDetail({
                         <span className="flex items-center gap-1">
                           <MapPin size={11} />
                           Localisation
+                        </span>
+                      </th>
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground text-xs">
+                        <span className="flex items-center gap-1">
+                          <Calendar size={11} />
+                          Achat
                         </span>
                       </th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground text-xs">
@@ -163,7 +169,12 @@ export function ClientDetail({
                           <td className="px-3 py-2 text-muted-foreground text-xs">
                             {eq ? EQUIPMENT_TYPE_LABELS[eq.type] : '—'}
                           </td>
-                          <td className="px-3 py-2 text-muted-foreground">{ce.localisation}</td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {ce.localisation || <span className="text-xs italic text-muted-foreground">Non renseignée</span>}
+                          </td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {ce.dateAchat ? formatDate(ce.dateAchat) : '—'}
+                          </td>
                           <td className="px-3 py-2 text-muted-foreground">
                             {formatDate(ce.dateInstallation)}
                           </td>

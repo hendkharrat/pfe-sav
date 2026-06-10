@@ -14,6 +14,8 @@ export interface User {
   prenom: string;
   nom: string;
   email: string;
+  telephone?: string;
+  password?: string;
   role: UserRole;
   actif: boolean;
   dateCreation: string;
@@ -32,11 +34,12 @@ export interface Client {
   nom?: string;
   email: string;
   telephone: string;
+  password?: string;
   adresse: string;
   ville: string;
   dateCreation: string;
   nombreEquipements: number;
-  userId: string;
+  userId?: string;
 }
 
 // --- Equipment ---
@@ -65,7 +68,8 @@ export interface ClientEquipement {
   id: string;
   clientId: string;
   equipementId: string;
-  localisation: string;
+  dateAchat?: string;
+  localisation?: string;
   dateInstallation: string;
   notes?: string;
 }
@@ -194,7 +198,14 @@ export interface DashboardStats {
 // --- Session ---
 
 export interface AuthSession {
-  user: User;
   isAuthenticated: boolean;
   loginTime: string;
+  role: UserRole;
+  displayName: string;
+  email: string;
+  telephone?: string;
+  /** Set for admin / technician logins. */
+  userId?: string;
+  /** Set for client logins. */
+  clientId?: string;
 }

@@ -18,7 +18,7 @@ import { MobileNavDialog } from './MobileNavDialog';
 
 export function AppHeader() {
   const router = useRouter();
-  const { user } = useAuth();
+  const { isAuthenticated, displayName, session } = useAuth();
   const [mobileNavOpen, setMobileNavOpen] = useState(false);
 
   const handleLogout = () => {
@@ -58,17 +58,17 @@ export function AppHeader() {
           {/* Right side: theme toggle + user dropdown */}
           <div className="flex items-center gap-2">
             <ThemeToggle />
-            {user && (
+            {isAuthenticated && (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button variant="ghost" size="sm" className="gap-2">
                     <User size={16} />
-                    <span className="hidden sm:inline">{user.prenom}</span>
+                    <span className="hidden sm:inline">{displayName.split(' ')[0]}</span>
                   </Button>
                 </DropdownMenuTrigger>
                 <DropdownMenuContent align="end">
                   <DropdownMenuItem disabled>
-                    <span className="text-xs text-muted-foreground">{user.email}</span>
+                    <span className="text-xs text-muted-foreground">{session?.email}</span>
                   </DropdownMenuItem>
                   <DropdownMenuSeparator />
                   <DropdownMenuItem onClick={handleProfile}>

@@ -45,6 +45,8 @@ interface ClientFormProps {
 }
 
 export function ClientForm({ open, client, onClose, onSubmit, isLoading = false, clientEquipements = mockClientEquipements }: ClientFormProps) {
+  const isEditing = !!client?.id;
+
   const [formData, setFormData] = useState({
     typeClient: (client?.typeClient ?? 'SOCIETE') as ClientType,
     societe: client?.societe ?? '',
@@ -55,6 +57,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
     telephone: client?.telephone ?? '',
     adresse: client?.adresse ?? '',
     ville: client?.ville ?? '',
+    password: '',
   });
 
   // Initialize assignments from live session state for edit mode
@@ -68,7 +71,6 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
   const [isAssignFormOpen, setIsAssignFormOpen] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<ClientEquipement | undefined>();
 
-  const isCreating = !client?.id;
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
@@ -83,12 +85,15 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Email invalide';
     }
+    if (!isEditing && !formData.password.trim()) {
+      newErrors.password = 'Le mot de passe est obligatoire';
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const reset = () => {
-    setFormData({ typeClient: 'SOCIETE', societe: '', contact: '', prenom: '', nom: '', email: '', telephone: '', adresse: '', ville: '' });
+    setFormData({ typeClient: 'SOCIETE', societe: '', contact: '', prenom: '', nom: '', email: '', telephone: '', adresse: '', ville: '', password: '' });
     setAssignments([]);
     setErrors({});
     setIsAssignFormOpen(false);
@@ -98,11 +103,14 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    const { typeClient, societe, contact, prenom, nom, ...shared } = formData;
+    const { typeClient, societe, contact, prenom, nom, password, ...shared } = formData;
+    const resolvedPassword = isEditing && !password.trim()
+      ? client?.password
+      : password.trim() || undefined;
     const clientData: Omit<Client, 'id' | 'dateCreation' | 'nombreEquipements' | 'userId'> =
       typeClient === 'SOCIETE'
-        ? { typeClient, societe: societe || undefined, contact: contact || undefined, ...shared }
-        : { typeClient, prenom: prenom || undefined, nom: nom || undefined, ...shared };
+        ? { typeClient, societe: societe || undefined, contact: contact || undefined, password: resolvedPassword, ...shared }
+        : { typeClient, prenom: prenom || undefined, nom: nom || undefined, password: resolvedPassword, ...shared };
     onSubmit({ clientData, assignments });
     if (!client) reset();
   };
@@ -179,6 +187,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
           {/* Société fields */}
           {isSociete ? (
             <>
+              {/* Nom société */}
               <div className="space-y-2">
                 <Label htmlFor="societe">Société *</Label>
                 <Input
@@ -190,85 +199,131 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
                 />
                 {errors.societe && <p className="text-xs text-red-500">{errors.societe}</p>}
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="contact">Contact</Label>
-                <Input
-                  id="contact"
-                  value={formData.contact}
-                  onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
-                  disabled={isLoading}
-                  placeholder="Ahmed Ben Salah"
-                />
+
+              {/* Contact / Email / Téléphone / Mot de passe */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="contact">Nom contact</Label>
+                  <Input
+                    id="contact"
+                    value={formData.contact}
+                    onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="Ahmed Ben Salah"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="contact@example.tn"
+                  />
+                  {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="telephone">Téléphone</Label>
+                  <Input
+                    id="telephone"
+                    type="tel"
+                    value={formData.telephone}
+                    onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="71345678"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientPassword">
+                    {isEditing ? 'Mot de passe (laisser vide pour conserver)' : 'Mot de passe *'}
+                  </Label>
+                  <Input
+                    id="clientPassword"
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="••••••••"
+                  />
+                  {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
+                </div>
               </div>
             </>
           ) : (
-            /* Personne physique fields */
-            <div className="grid grid-cols-2 gap-4">
-              <div className="space-y-2">
-                <Label htmlFor="prenom">Prénom *</Label>
-                <Input
-                  id="prenom"
-                  value={formData.prenom}
-                  onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
-                  disabled={isLoading}
-                  placeholder="Ahmed"
-                />
-                {errors.prenom && <p className="text-xs text-red-500">{errors.prenom}</p>}
+            <>
+              {/* Prénom / Nom */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="prenom">Prénom *</Label>
+                  <Input
+                    id="prenom"
+                    value={formData.prenom}
+                    onChange={(e) => setFormData({ ...formData, prenom: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="Ahmed"
+                  />
+                  {errors.prenom && <p className="text-xs text-red-500">{errors.prenom}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="nom">Nom *</Label>
+                  <Input
+                    id="nom"
+                    value={formData.nom}
+                    onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="Ben Salah"
+                  />
+                  {errors.nom && <p className="text-xs text-red-500">{errors.nom}</p>}
+                </div>
               </div>
-              <div className="space-y-2">
-                <Label htmlFor="nom">Nom *</Label>
-                <Input
-                  id="nom"
-                  value={formData.nom}
-                  onChange={(e) => setFormData({ ...formData, nom: e.target.value })}
-                  disabled={isLoading}
-                  placeholder="Ben Salah"
-                />
-                {errors.nom && <p className="text-xs text-red-500">{errors.nom}</p>}
+
+              {/* Email / Téléphone / Mot de passe */}
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-2">
+                  <Label htmlFor="email">Email *</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    value={formData.email}
+                    onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="contact@example.tn"
+                  />
+                  {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="telephone">Téléphone</Label>
+                  <Input
+                    id="telephone"
+                    type="tel"
+                    value={formData.telephone}
+                    onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="98765432"
+                  />
+                </div>
+                <div className="space-y-2">
+                  <Label htmlFor="clientPassword">
+                    {isEditing ? 'Mot de passe (laisser vide pour conserver)' : 'Mot de passe *'}
+                  </Label>
+                  <Input
+                    id="clientPassword"
+                    type="password"
+                    value={formData.password}
+                    onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+                    disabled={isLoading}
+                    placeholder="••••••••"
+                  />
+                  {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
+                </div>
               </div>
-            </div>
+            </>
           )}
 
-          {/* Email / Téléphone */}
-          <div className="grid grid-cols-2 gap-4">
-            <div className="space-y-2">
-              <Label htmlFor="email">Email *</Label>
-              <Input
-                id="email"
-                type="email"
-                value={formData.email}
-                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-                disabled={isLoading}
-                placeholder="contact@example.tn"
-              />
-              {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
-            </div>
-            <div className="space-y-2">
-              <Label htmlFor="telephone">Téléphone</Label>
-              <Input
-                id="telephone"
-                value={formData.telephone}
-                onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
-                disabled={isLoading}
-                placeholder="+216 71 234 567"
-              />
-            </div>
-          </div>
-
-          {/* Adresse */}
-          <div className="space-y-2">
-            <Label htmlFor="adresse">Adresse</Label>
-            <Input
-              id="adresse"
-              value={formData.adresse}
-              onChange={(e) => setFormData({ ...formData, adresse: e.target.value })}
-              disabled={isLoading}
-              placeholder="Rue du Lac Biwa, Les Berges du Lac"
-            />
-          </div>
-
-          {/* Ville / Pays */}
-          <div className="grid grid-cols-2 gap-4">
+          {/* Ville / Adresse */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-2">
               <Label>Ville</Label>
               <Select
@@ -289,10 +344,14 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
               </Select>
             </div>
             <div className="space-y-2">
-              <Label>Pays</Label>
-              <div className="flex h-9 w-full items-center rounded-md border border-input bg-muted/50 px-3 text-sm text-muted-foreground">
-                Tunisie
-              </div>
+              <Label htmlFor="adresse">Adresse</Label>
+              <Input
+                id="adresse"
+                value={formData.adresse}
+                onChange={(e) => setFormData({ ...formData, adresse: e.target.value })}
+                disabled={isLoading}
+                placeholder="Rue du Lac Biwa, Les Berges du Lac"
+              />
             </div>
           </div>
 
@@ -329,15 +388,16 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
               </p>
             ) : (
               <div className="overflow-x-auto rounded-lg border border-border">
-                <table className="w-full min-w-[720px] text-xs">
+                <table className="w-full min-w-[820px] text-xs">
                   <thead>
                     <tr className="bg-muted/40 border-b border-border">
                       <th className="px-2 py-2" />
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Équipement</th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Type</th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Localisation</th>
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground">Achat</th>
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground">Installation</th>
-                      {!isCreating && <th className="text-left px-3 py-2 font-medium text-muted-foreground">Contrat</th>}
+                      {isEditing && <th className="text-left px-3 py-2 font-medium text-muted-foreground">Contrat</th>}
                       <th className="text-right px-3 py-2 font-medium text-muted-foreground">Actions</th>
                     </tr>
                   </thead>
@@ -358,11 +418,16 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
                           <td className="px-3 py-2 text-muted-foreground">
                             {eq ? EQUIPMENT_TYPE_LABELS[eq.type] : '—'}
                           </td>
-                          <td className="px-3 py-2 text-muted-foreground">{ce.localisation}</td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {ce.localisation || <span className="text-xs italic">Non renseignée</span>}
+                          </td>
+                          <td className="px-3 py-2 text-muted-foreground">
+                            {ce.dateAchat ? formatDate(ce.dateAchat) : '—'}
+                          </td>
                           <td className="px-3 py-2 text-muted-foreground">
                             {formatDate(ce.dateInstallation)}
                           </td>
-                          {!isCreating && (
+                          {isEditing && (
                             <td className="px-3 py-2">
                               {activeContract ? (
                                 <div className="space-y-0.5">

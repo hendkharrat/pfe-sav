@@ -4,6 +4,8 @@ export const mockUsers: User[] = [
   {
     id: 'user-admin-1',
     email: 'admin@sav.com',
+    telephone: '71100200',
+    password: 'admin123',
     prenom: 'Sami',
     nom: 'Meftah',
     role: 'admin',
@@ -13,6 +15,8 @@ export const mockUsers: User[] = [
   {
     id: 'user-admin-2',
     email: 'leila.admin@sav.com',
+    telephone: '71100201',
+    password: 'admin456',
     prenom: 'Leila',
     nom: 'Abid',
     role: 'admin',
@@ -22,6 +26,8 @@ export const mockUsers: User[] = [
   {
     id: 'user-tech-1',
     email: 'tech@sav.com',
+    telephone: '98200300',
+    password: 'tech123',
     prenom: 'Mohamed',
     nom: 'Trabelsi',
     role: 'technician',
@@ -31,6 +37,8 @@ export const mockUsers: User[] = [
   {
     id: 'user-tech-2',
     email: 'walid.jlassi@sav.com',
+    telephone: '98200301',
+    password: 'tech456',
     prenom: 'Walid',
     nom: 'Jlassi',
     role: 'technician',
@@ -40,6 +48,8 @@ export const mockUsers: User[] = [
   {
     id: 'user-tech-3',
     email: 'amira.chebbi@sav.com',
+    telephone: '98200302',
+    password: 'tech789',
     prenom: 'Amira',
     nom: 'Chebbi',
     role: 'technician',
@@ -47,30 +57,14 @@ export const mockUsers: User[] = [
     dateCreation: '2024-03-01',
   },
   {
-    id: 'user-client-1',
-    email: 'client@sav.com',
-    prenom: 'Ahmed',
-    nom: 'Ben Salah',
-    role: 'client',
-    actif: true,
-    dateCreation: '2024-03-10',
-  },
-  {
     id: 'user-tech-4',
     email: 'ahmed.miled@sav.com',
+    telephone: '98200303',
+    password: 'tech000',
     prenom: 'Ahmed',
     nom: 'Miled',
     role: 'technician',
     actif: true,
     dateCreation: '2024-04-10',
-  },
-  {
-    id: 'user-client-2',
-    email: 'maintenance@ibnsina.tn',
-    prenom: 'Sonia',
-    nom: 'Belhaji',
-    role: 'client',
-    actif: true,
-    dateCreation: '2024-05-20',
   },
 ];

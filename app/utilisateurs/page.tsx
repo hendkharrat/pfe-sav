@@ -34,12 +34,12 @@ import { SortableHeader } from '@/components/shared/SortableHeader';
 import { TablePagination } from '@/components/shared/TablePagination';
 import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
 import { formatDate } from '@/lib/utils';
-import { Plus, Edit2, Trash2, Filter } from 'lucide-react';
+import { Plus, Edit2, Trash2, RotateCcw, Filter } from 'lucide-react';
 
 export default function UsersPage() {
   const router = useRouter();
-  const { user: currentUser, isLoading } = useAuth();
-  const { showSuccess, showError } = useToast();
+  const { isLoading } = useAuth();
+  const { showSuccess } = useToast();
 
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -53,6 +53,8 @@ export default function UsersPage() {
   const [selectedUser, setSelectedUser] = useState<User | undefined>();
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [userToDeactivate, setUserToDeactivate] = useState<User | null>(null);
+  const [isRestoreConfirmOpen, setIsRestoreConfirmOpen] = useState(false);
+  const [userToRestore, setUserToRestore] = useState<User | null>(null);
 
   // Initialize users from mock data — client-role users are managed in the Clients module
   useEffect(() => {
@@ -148,18 +150,30 @@ export default function UsersPage() {
     showSuccess('Utilisateur désactivé');
   }, [users, userToDeactivate, showSuccess]);
 
+  const handleRestoreUser = useCallback(() => {
+    if (!userToRestore) return;
+    const updated = users.map((u) =>
+      u.id === userToRestore.id ? { ...u, actif: true } : u
+    );
+    setUsers(updated);
+    setIsRestoreConfirmOpen(false);
+    setUserToRestore(null);
+    showSuccess('Utilisateur restauré');
+  }, [users, userToRestore, showSuccess]);
+
   const handleEditClick = (user: User) => {
     setSelectedUser(user);
     setIsFormOpen(true);
   };
 
   const handleDeactivateClick = (user: User) => {
-    if (!user.actif) {
-      showError('Cet utilisateur est déjà désactivé');
-      return;
-    }
     setUserToDeactivate(user);
     setIsConfirmOpen(true);
+  };
+
+  const handleRestoreClick = (user: User) => {
+    setUserToRestore(user);
+    setIsRestoreConfirmOpen(true);
   };
 
   if (isLoading) {
@@ -241,6 +255,7 @@ export default function UsersPage() {
                 <TableRow>
                   <SortableHeader label="Nom complet" sortKey="nom" sortConfig={sortConfig} onSort={handleSort} />
                   <SortableHeader label="Email" sortKey="email" sortConfig={sortConfig} onSort={handleSort} />
+                  <TableHead>Téléphone</TableHead>
                   <SortableHeader label="Rôle" sortKey="role" sortConfig={sortConfig} onSort={handleSort} />
                   <SortableHeader label="Statut" sortKey="statut" sortConfig={sortConfig} onSort={handleSort} />
                   <SortableHeader label="Date création" sortKey="dateCreation" sortConfig={sortConfig} onSort={handleSort} />
@@ -250,7 +265,7 @@ export default function UsersPage() {
               <TableBody>
                 {filteredUsers.length === 0 ? (
                   <TableRow>
-                    <TableCell colSpan={6} className="text-center py-8 text-muted-foreground">
+                    <TableCell colSpan={7} className="text-center py-8 text-muted-foreground">
                       Aucun utilisateur trouvé
                     </TableCell>
                   </TableRow>
@@ -259,6 +274,7 @@ export default function UsersPage() {
                     <TableRow key={user.id}>
                       <TableCell className="font-medium">{`${user.prenom} ${user.nom}`}</TableCell>
                       <TableCell className="text-muted-foreground">{user.email}</TableCell>
+                      <TableCell className="text-muted-foreground">{user.telephone || '—'}</TableCell>
                       <TableCell>
                         <RoleBadge role={user.role} />
                       </TableCell>
@@ -278,15 +294,25 @@ export default function UsersPage() {
                           >
                             <Edit2 size={16} />
                           </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            aria-label="Désactiver l'utilisateur"
-                            onClick={() => handleDeactivateClick(user)}
-                            disabled={!user.actif}
-                          >
-                            <Trash2 size={16} />
-                          </Button>
+                          {user.actif ? (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              aria-label="Désactiver l'utilisateur"
+                              onClick={() => handleDeactivateClick(user)}
+                            >
+                              <Trash2 size={16} />
+                            </Button>
+                          ) : (
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              aria-label="Restaurer l'utilisateur"
+                              onClick={() => handleRestoreClick(user)}
+                            >
+                              <RotateCcw size={16} />
+                            </Button>
+                          )}
                         </div>
                       </TableCell>
                     </TableRow>
@@ -320,13 +346,26 @@ export default function UsersPage() {
         <ConfirmDialog
           open={isConfirmOpen}
           title="Désactiver l'utilisateur"
-          description={`Êtes-vous sûr de vouloir désactiver ${userToDeactivate?.prenom} ${userToDeactivate?.nom}? Cet utilisateur ne pourra plus se connecter.`}
+          description={`Êtes-vous sûr de vouloir désactiver ${userToDeactivate?.prenom} ${userToDeactivate?.nom} ? Cet utilisateur ne pourra plus se connecter.`}
           actionLabel="Désactiver"
           actionVariant="destructive"
           onConfirm={handleDeactivateUser}
           onCancel={() => {
             setIsConfirmOpen(false);
             setUserToDeactivate(null);
+          }}
+        />
+
+        <ConfirmDialog
+          open={isRestoreConfirmOpen}
+          title="Restaurer l'utilisateur"
+          description={`Êtes-vous sûr de vouloir restaurer ${userToRestore?.prenom} ${userToRestore?.nom} ? Cet utilisateur pourra de nouveau se connecter.`}
+          actionLabel="Restaurer"
+          actionVariant="default"
+          onConfirm={handleRestoreUser}
+          onCancel={() => {
+            setIsRestoreConfirmOpen(false);
+            setUserToRestore(null);
           }}
         />
       </AppLayout>

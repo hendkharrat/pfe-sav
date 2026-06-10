@@ -23,7 +23,13 @@ import {
 } from '@/components/ui/select';
 import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
-import { getActiveTechnicians, getContractCoverage } from '@/lib/interventions';
+import { mockInterventions } from '@/data/mock-interventions';
+import {
+  getActiveTechnicians,
+  getContractCoverage,
+  isTechnicianAvailable,
+  TECHNICIAN_UNAVAILABLE_MESSAGE,
+} from '@/lib/interventions';
 import { getClientDisplayName } from '@/lib/utils';
 import { ShieldCheck, AlertCircle } from 'lucide-react';
 
@@ -84,7 +90,15 @@ export function CreateCurativeFromPanneDialog({
       }
     }
     if (!description.trim()) {
-      newErrors.description = 'La description de l’intervention est obligatoire';
+      newErrors.description = "La description de l'intervention est obligatoire";
+    }
+
+    if (
+      technicienId !== 'none' &&
+      datePrevue &&
+      !isTechnicianAvailable(technicienId, datePrevue, mockInterventions)
+    ) {
+      newErrors.technicienId = TECHNICIAN_UNAVAILABLE_MESSAGE;
     }
 
     setErrors(newErrors);
@@ -151,27 +165,7 @@ export function CreateCurativeFromPanneDialog({
 
           {/* Form Fields */}
           <div className="space-y-4">
-            {/* Technician */}
-            <div className="space-y-2">
-              <Label htmlFor="technicien" className="text-sm font-semibold">
-                Affecter un technicien (facultatif)
-              </Label>
-              <Select value={technicienId} onValueChange={setTechnicienId}>
-                <SelectTrigger id="technicien">
-                  <SelectValue placeholder="Choisir un technicien" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="none">Non affecté</SelectItem>
-                  {technicians.map((tech) => (
-                    <SelectItem key={tech.id} value={tech.id}>
-                      {tech.prenom} {tech.nom}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
-
-            {/* Planned Date */}
+            {/* Planned Date — must come before technician */}
             <div className="space-y-2">
               <Label htmlFor="datePrevue" className="text-sm font-semibold">
                 Date prévue *
@@ -180,13 +174,52 @@ export function CreateCurativeFromPanneDialog({
                 id="datePrevue"
                 type="date"
                 value={datePrevue}
-                onChange={(e) => setDatePrevue(e.target.value)}
+                onChange={(e) => {
+                  setDatePrevue(e.target.value);
+                  if (errors.datePrevue) setErrors((prev) => ({ ...prev, datePrevue: '' }));
+                }}
                 className="h-10"
               />
               {errors.datePrevue && (
                 <p className="text-xs text-red-500 font-medium flex items-center gap-1">
                   <AlertCircle size={12} />
                   {errors.datePrevue}
+                </p>
+              )}
+            </div>
+
+            {/* Technician — disabled until date is selected */}
+            <div className="space-y-2">
+              <Label htmlFor="technicien" className="text-sm font-semibold">
+                Affecter un technicien (facultatif)
+              </Label>
+              <Select
+                value={technicienId}
+                onValueChange={(v) => {
+                  setTechnicienId(v);
+                  if (errors.technicienId) setErrors((prev) => ({ ...prev, technicienId: '' }));
+                }}
+                disabled={!datePrevue}
+              >
+                <SelectTrigger id="technicien">
+                  <SelectValue placeholder={datePrevue ? 'Choisir un technicien' : 'Sélectionnez d\'abord une date'} />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="none">Non affecté</SelectItem>
+                  {technicians.map((tech) => {
+                    const unavailable = datePrevue && !isTechnicianAvailable(tech.id, datePrevue, mockInterventions);
+                    return (
+                      <SelectItem key={tech.id} value={tech.id} disabled={!!unavailable}>
+                        {tech.prenom} {tech.nom}{unavailable ? ' (indisponible)' : ''}
+                      </SelectItem>
+                    );
+                  })}
+                </SelectContent>
+              </Select>
+              {errors.technicienId && (
+                <p className="text-xs text-red-500 font-medium flex items-center gap-1">
+                  <AlertCircle size={12} />
+                  {errors.technicienId}
                 </p>
               )}
             </div>

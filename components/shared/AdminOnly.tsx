@@ -11,7 +11,7 @@ interface AdminOnlyProps {
 
 export function AdminOnly({ children }: AdminOnlyProps) {
   const router = useRouter();
-  const { user, isLoading } = useAuth();
+  const { role, isLoading } = useAuth();
 
   if (isLoading) {
     return (
@@ -26,7 +26,7 @@ export function AdminOnly({ children }: AdminOnlyProps) {
     );
   }
 
-  if (user?.role !== ROLES.ADMIN) {
+  if (role !== ROLES.ADMIN) {
     return (
       <div className="flex flex-col items-center justify-center min-h-screen bg-background gap-6">
         <div className="text-center space-y-4">

@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Equipment } from '@/types';
+import { ClientEquipement, Equipment } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AdminOnly } from '@/components/shared/AdminOnly';
 import { useAuth } from '@/hooks/useAuth';
@@ -11,6 +11,7 @@ import { EquipmentForm } from '@/components/forms/EquipmentForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
+import { mockClients } from '@/data/mock-clients';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -50,6 +51,7 @@ export default function EquipmentsPage() {
 
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [filteredEquipments, setFilteredEquipments] = useState<Equipment[]>([]);
+  const [clientEquipements, setClientEquipements] = useState<ClientEquipement[]>(mockClientEquipements);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
 
@@ -93,8 +95,24 @@ export default function EquipmentsPage() {
 
   const getUsageCount = useCallback(
     (equipmentId: string) =>
-      mockClientEquipements.filter((ce) => ce.equipementId === equipmentId).length,
-    []
+      clientEquipements.filter((ce) => ce.equipementId === equipmentId).length,
+    [clientEquipements]
+  );
+
+  const handleAddClientEquipement = useCallback(
+    (ce: ClientEquipement) => {
+      setClientEquipements((prev) => [...prev, ce]);
+      showSuccess('Équipement affecté avec succès');
+    },
+    [showSuccess]
+  );
+
+  const handleRemoveClientEquipement = useCallback(
+    (ceId: string) => {
+      setClientEquipements((prev) => prev.filter((ce) => ce.id !== ceId));
+      showSuccess('Affectation retirée');
+    },
+    [showSuccess]
   );
 
   const handleSort = useCallback((key: string) => {
@@ -365,6 +383,10 @@ export default function EquipmentsPage() {
           open={isDetailOpen}
           equipment={detailEquipment}
           onClose={() => setIsDetailOpen(false)}
+          clientEquipements={clientEquipements}
+          clients={mockClients}
+          onAddClientEquipement={handleAddClientEquipement}
+          onRemoveClientEquipement={handleRemoveClientEquipement}
         />
 
         <ConfirmDialog

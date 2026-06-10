@@ -19,7 +19,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
 import { ROLE_LABELS, ROLES } from '@/lib/constants';
 
 interface UserFormProps {
@@ -37,6 +36,7 @@ export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: U
     prenom: user?.prenom || '',
     nom: user?.nom || '',
     email: user?.email || '',
+    telephone: user?.telephone || '',
     role: user?.role || ('technician' as UserRole),
     actif: user?.actif ?? true,
     password: '',
@@ -53,6 +53,7 @@ export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: U
     if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
       newErrors.email = 'Email invalide';
     }
+    if (!formData.telephone.trim()) newErrors.telephone = 'Le téléphone est obligatoire';
     if (!user && !formData.password.trim()) {
       newErrors.password = 'Le mot de passe est obligatoire pour un nouvel utilisateur';
     }
@@ -74,6 +75,7 @@ export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: U
         prenom: '',
         nom: '',
         email: '',
+        telephone: '',
         role: 'technician',
         actif: true,
         password: '',
@@ -99,7 +101,23 @@ export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: U
           }}
           className="space-y-4"
         >
-          <div className="grid grid-cols-2 gap-4">
+          {/* Row 1: Rôle / Prénom / Nom */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="role">Rôle *</Label>
+              <Select
+                value={formData.role}
+                onValueChange={(role) => setFormData({ ...formData, role: role as UserRole })}
+              >
+                <SelectTrigger id="role" disabled={isLoading}>
+                  <SelectValue />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value={ROLES.ADMIN}>{ROLE_LABELS.admin}</SelectItem>
+                  <SelectItem value={ROLES.TECHNICIAN}>{ROLE_LABELS.technician}</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
             <div className="space-y-2">
               <Label htmlFor="prenom">Prénom *</Label>
               <Input
@@ -124,62 +142,47 @@ export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: U
             </div>
           </div>
 
-          <div className="space-y-2">
-            <Label htmlFor="email">Email *</Label>
-            <Input
-              id="email"
-              type="email"
-              value={formData.email}
-              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
-              disabled={isLoading}
-              placeholder="ahmed.bensalah@sav.tn"
-            />
-            {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
-          </div>
-
-          <div className="grid grid-cols-2 gap-4">
+          {/* Row 2: Email / Téléphone / Mot de passe */}
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="role">Rôle *</Label>
-              <Select
-                value={formData.role}
-                onValueChange={(role) => setFormData({ ...formData, role: role as UserRole })}
-              >
-                <SelectTrigger id="role" disabled={isLoading}>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value={ROLES.ADMIN}>{ROLE_LABELS.admin}</SelectItem>
-                  <SelectItem value={ROLES.TECHNICIAN}>{ROLE_LABELS.technician}</SelectItem>
-                </SelectContent>
-              </Select>
+              <Label htmlFor="email">Email *</Label>
+              <Input
+                id="email"
+                type="email"
+                value={formData.email}
+                onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                disabled={isLoading}
+                placeholder="ahmed.bensalah@sav.tn"
+              />
+              {errors.email && <p className="text-xs text-red-500">{errors.email}</p>}
             </div>
-            {isEditing && (
-              <div className="flex items-center gap-3 pt-8">
-                <Switch
-                  id="actif"
-                  checked={formData.actif}
-                  onCheckedChange={(actif) => setFormData({ ...formData, actif })}
+            <div className="space-y-2">
+              <Label htmlFor="telephone">Téléphone *</Label>
+              <Input
+                id="telephone"
+                type="tel"
+                value={formData.telephone}
+                onChange={(e) => setFormData({ ...formData, telephone: e.target.value })}
+                disabled={isLoading}
+                placeholder="71100200"
+              />
+              {errors.telephone && <p className="text-xs text-red-500">{errors.telephone}</p>}
+            </div>
+            {!user && (
+              <div className="space-y-2">
+                <Label htmlFor="password">Mot de passe *</Label>
+                <Input
+                  id="password"
+                  type="password"
+                  value={formData.password}
+                  onChange={(e) => setFormData({ ...formData, password: e.target.value })}
                   disabled={isLoading}
+                  placeholder="••••••••"
                 />
-                <Label htmlFor="actif">Compte actif</Label>
+                {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
               </div>
             )}
           </div>
-
-          {!user && (
-            <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe *</Label>
-              <Input
-                id="password"
-                type="password"
-                value={formData.password}
-                onChange={(e) => setFormData({ ...formData, password: e.target.value })}
-                disabled={isLoading}
-                placeholder="••••••••"
-              />
-              {errors.password && <p className="text-xs text-red-500">{errors.password}</p>}
-            </div>
-          )}
 
           <div className="flex gap-3 justify-end pt-4">
             <Button type="button" variant="outline" onClick={onClose} disabled={isLoading}>

@@ -1,6 +1,7 @@
 'use client';
 
-import { Equipment } from '@/types';
+import { useState } from 'react';
+import { Client, ClientEquipement, Equipment } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -13,28 +14,56 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockClients } from '@/data/mock-clients';
+import { mockEquipments } from '@/data/mock-equipments';
 import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
-import { ImageIcon, MapPin, Calendar, Building2 } from 'lucide-react';
+import { ImageIcon, MapPin, Calendar, Building2, Plus, Trash2 } from 'lucide-react';
+import { ClientEquipementAssignForm } from '@/components/forms/ClientEquipementAssignForm';
 
 interface EquipmentDetailProps {
   open: boolean;
   equipment: Equipment | null;
   onClose: () => void;
+  /** Live CE state from the parent page. Falls back to mockClientEquipements. */
+  clientEquipements?: ClientEquipement[];
+  /** Client list for the assign form. Falls back to mockClients. */
+  clients?: Client[];
+  /** Called when a new assignment is created. Omit to make the section read-only. */
+  onAddClientEquipement?: (ce: ClientEquipement) => void;
+  /** Called when an assignment row is removed. */
+  onRemoveClientEquipement?: (ceId: string) => void;
 }
 
-export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailProps) {
+export function EquipmentDetail({
+  open,
+  equipment,
+  onClose,
+  clientEquipements: clientEquipementsProp,
+  clients: clientsProp,
+  onAddClientEquipement,
+  onRemoveClientEquipement,
+}: EquipmentDetailProps) {
+  const [isAssignFormOpen, setIsAssignFormOpen] = useState(false);
+
   if (!equipment) return null;
+
+  const clientEquipements = clientEquipementsProp ?? mockClientEquipements;
+  const clients = clientsProp ?? mockClients;
 
   const mainImage = equipment.images?.find((img) => img.isMain);
   const otherImages = equipment.images?.filter((img) => !img.isMain) ?? [];
 
-  const affectations = mockClientEquipements
+  const affectations = clientEquipements
     .filter((ce) => ce.equipementId === equipment.id)
     .map((ce) => ({
       ce,
-      client: mockClients.find((c) => c.id === ce.clientId),
+      client: clients.find((c) => c.id === ce.clientId),
     }));
+
+  const handleRemove = (ceId: string) => {
+    if (!window.confirm('Retirer cette affectation client ?')) return;
+    onRemoveClientEquipement?.(ceId);
+  };
 
   return (
     <Dialog open={open} onOpenChange={(value) => !value && onClose()}>
@@ -116,16 +145,30 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
 
           {/* Affectations clients */}
           <div className="border-t border-border pt-4 space-y-3">
-            <div className="flex items-center gap-2">
-              <Building2 size={16} className="text-muted-foreground" />
-              <h3 className="font-medium text-sm">
-                Affectations clients
-                {affectations.length > 0 && (
-                  <Badge variant="secondary" className="ml-2 text-xs">
-                    {affectations.length}
-                  </Badge>
-                )}
-              </h3>
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-2">
+                <Building2 size={16} className="text-muted-foreground" />
+                <h3 className="font-medium text-sm">
+                  Affectations clients
+                  {affectations.length > 0 && (
+                    <Badge variant="secondary" className="ml-2 text-xs">
+                      {affectations.length}
+                    </Badge>
+                  )}
+                </h3>
+              </div>
+              {onAddClientEquipement && (
+                <Button
+                  type="button"
+                  variant="outline"
+                  size="sm"
+                  className="gap-1.5 h-7 text-xs"
+                  onClick={() => setIsAssignFormOpen(true)}
+                >
+                  <Plus size={12} />
+                  Affecter à un client
+                </Button>
+              )}
             </div>
 
             {affectations.length === 0 ? (
@@ -133,7 +176,7 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
                 Cet équipement n&apos;est affecté à aucun client.
               </p>
             ) : (
-              <div className="rounded-lg border border-border overflow-hidden">
+              <div className="rounded-lg border border-border overflow-x-auto">
                 <table className="w-full text-sm">
                   <thead>
                     <tr className="bg-muted/50 border-b border-border">
@@ -149,9 +192,20 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
                       <th className="text-left px-3 py-2 font-medium text-muted-foreground text-xs">
                         <span className="flex items-center gap-1">
                           <Calendar size={11} />
+                          Achat
+                        </span>
+                      </th>
+                      <th className="text-left px-3 py-2 font-medium text-muted-foreground text-xs">
+                        <span className="flex items-center gap-1">
+                          <Calendar size={11} />
                           Installation
                         </span>
                       </th>
+                      {onRemoveClientEquipement && (
+                        <th className="text-right px-3 py-2 font-medium text-muted-foreground text-xs">
+                          Actions
+                        </th>
+                      )}
                     </tr>
                   </thead>
                   <tbody>
@@ -160,10 +214,31 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
                         <td className="px-3 py-2 font-medium">
                           {client ? getClientDisplayName(client) : 'Client inconnu'}
                         </td>
-                        <td className="px-3 py-2 text-muted-foreground">{ce.localisation}</td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {ce.localisation || (
+                            <span className="text-xs italic text-muted-foreground">Non renseignée</span>
+                          )}
+                        </td>
+                        <td className="px-3 py-2 text-muted-foreground">
+                          {ce.dateAchat ? formatDate(ce.dateAchat) : '—'}
+                        </td>
                         <td className="px-3 py-2 text-muted-foreground">
                           {formatDate(ce.dateInstallation)}
                         </td>
+                        {onRemoveClientEquipement && (
+                          <td className="px-3 py-2 text-right">
+                            <Button
+                              type="button"
+                              variant="ghost"
+                              size="sm"
+                              className="h-6 w-6 p-0 text-destructive hover:text-destructive"
+                              aria-label="Retirer l'affectation"
+                              onClick={() => handleRemove(ce.id)}
+                            >
+                              <Trash2 size={12} />
+                            </Button>
+                          </td>
+                        )}
                       </tr>
                     ))}
                   </tbody>
@@ -179,6 +254,22 @@ export function EquipmentDetail({ open, equipment, onClose }: EquipmentDetailPro
           </Button>
         </DialogFooter>
       </DialogContent>
+
+      {/* Assignment sub-form — equipment-side mode */}
+      {onAddClientEquipement && (
+        <ClientEquipementAssignForm
+          open={isAssignFormOpen}
+          onOpenChange={(v) => setIsAssignFormOpen(v)}
+          clientId=""
+          existingAssignments={affectations.map(({ ce }) => ce)}
+          equipments={mockEquipments}
+          fixedEquipementId={equipment.id}
+          clients={clients}
+          onSubmit={(ce) => {
+            onAddClientEquipement(ce);
+          }}
+        />
+      )}
     </Dialog>
   );
 }

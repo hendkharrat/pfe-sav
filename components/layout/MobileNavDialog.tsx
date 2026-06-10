@@ -21,11 +21,11 @@ interface MobileNavDialogProps {
 export function MobileNavDialog({ open, onClose }: MobileNavDialogProps) {
   const pathname = usePathname();
   const router = useRouter();
-  const { user } = useAuth();
+  const { role, isAuthenticated } = useAuth();
 
-  if (!user) return null;
+  if (!isAuthenticated || !role) return null;
 
-  const navItems = getNavItems(user.role);
+  const navItems = getNavItems(role);
 
   const handleNavigate = (href: string) => {
     onClose();
@@ -44,7 +44,7 @@ export function MobileNavDialog({ open, onClose }: MobileNavDialogProps) {
         <DialogHeader>
           <DialogTitle>Navigation</DialogTitle>
         </DialogHeader>
-        <p className="text-xs text-muted-foreground -mt-2 mb-1">{ROLE_LABEL[user.role]}</p>
+        <p className="text-xs text-muted-foreground -mt-2 mb-1">{ROLE_LABEL[role]}</p>
         <nav>
           <ul className="space-y-0.5">
             {navItems.map((item) => {

@@ -67,9 +67,7 @@ export function PanneForm({
       newErrors.clientEquipementId = 'Veuillez sélectionner un équipement';
     }
     if (!formData.description.trim()) {
-      newErrors.description = 'La description de la panne est obligatoire';
-    } else if (formData.description.trim().length < 20) {
-      newErrors.description = 'La description doit faire au moins 20 caractères';
+      newErrors.description = 'La description est obligatoire.';
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -137,7 +135,7 @@ export function PanneForm({
               clientEquipements.map((ce) => {
                 const eq = mockEquipments.find((e) => e.id === ce.equipementId);
                 const label = eq
-                  ? `${eq.reference} — ${eq.marque} ${eq.modele} (${ce.localisation})`
+                  ? `${eq.reference} — ${eq.marque} ${eq.modele}${ce.localisation ? ` (${ce.localisation})` : ''}`
                   : ce.equipementId;
                 return (
                   <SelectItem key={ce.id} value={ce.id}>
@@ -158,14 +156,9 @@ export function PanneForm({
 
       {/* Description */}
       <div className="space-y-2">
-        <div className="flex justify-between items-center">
-          <Label htmlFor="description" className="text-sm font-semibold">
-            Description de la panne *
-          </Label>
-          <span className="text-xs text-muted-foreground font-medium">
-            {formData.description.trim().length} / 20 caractères min
-          </span>
-        </div>
+        <Label htmlFor="description" className="text-sm font-semibold">
+          Description de la panne *
+        </Label>
         <Textarea
           id="description"
           value={formData.description}
