@@ -1,0 +1,40 @@
+@startuml 14_seq_generation_planning
+title Diagramme de séquence — CU-08 : Générer automatiquement le planning préventif\n(acteur principal : Système)
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Administrateur"                  as Admin
+participant "Interface\n(Frontend)"           as UI
+participant "Contrôleur\n(ContractCtrl)"      as CTRL
+participant "Service Planning\n(PlanningService)" as SVC
+participant "DAO\n(InterventionDAO)"          as DAO
+database    "Base de données\n(MySQL)"        as DB
+
+CTRL  -> SVC  : generatePreventivePlanning(\n  contractId, dateDebut, dateFin,\n  periodicite, clientEquipementIds[])
+
+SVC   -> SVC  : Calcule les dates selon la périodicité
+note right of SVC
+  MENSUELLE → toutes les 4 semaines
+  TRIMESTRIELLE → tous les 3 mois
+  SEMESTRIELLE → tous les 6 mois
+  ANNUELLE → tous les 12 mois
+end note
+
+SVC   -> SVC  : Boucle : pour chaque date calculée
+loop Pour chaque date × chaque ClientEquipement couvert
+  SVC -> DAO : createIntervention({\n  type: PREVENTIVE,\n  clientEquipementId,\n  contractId,\n  datePrevue,\n  statut: PLANIFIEE,\n  description: "Maintenance préventive"\n})
+  DAO -> DB  : INSERT INTO interventions VALUES (...)
+  DB  --> DAO : interventionId
+  DAO --> SVC : OK
+end
+
+SVC --> CTRL : { interventionsGenerees: N }
+CTRL --> UI  : Planning généré (N interventions)
+UI   --> Admin : Prévisualisation du planning affichée
+Admin -> UI  : Confirme la création du contrat
+@enduml

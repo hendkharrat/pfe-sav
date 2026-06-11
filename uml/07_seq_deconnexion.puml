@@ -1,0 +1,19 @@
+@startuml 07_seq_deconnexion
+title Diagramme de séquence — CU-02 : Se déconnecter
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+
+actor       "Utilisateur"            as User
+participant "Interface\n(Frontend)"  as UI
+participant "Contrôleur\n(AuthCtrl)" as CTRL
+
+User -> UI   : Clique sur « Déconnexion »
+UI   -> CTRL : POST /api/auth/logout
+CTRL -> CTRL : Invalide la session
+CTRL --> UI  : 200 — session fermée
+UI   -> UI   : Efface les données de session
+UI   --> User : Redirige vers la page de connexion
+@enduml

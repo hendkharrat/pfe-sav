@@ -1,0 +1,65 @@
+@startuml 18_sprint3_use_case
+title Sprint 3 — Diagramme de cas d'utilisation\nFacturation, historique et tableaux de bord
+
+left to right direction
+skinparam usecase {
+  BackgroundColor #EBF5FB
+  BorderColor #2E74B5
+}
+skinparam actor {
+  BackgroundColor #FEF9E7
+  BorderColor #B7950B
+}
+
+actor "Administrateur" as Admin
+actor "Technicien"     as Tech
+actor "Client"         as Cli
+actor "Système"        as Sys
+
+rectangle "Sprint 3 — Facturation & Pilotage" {
+
+  ' Facturation
+  usecase "CU-16 : Générer une facture\n(curative + réalisée + hors contrat)\nTVA 19 % — TND"   as UC16
+  usecase "CU-18 : Marquer une facture payée"                                                       as UC18
+  usecase "CU-17a : Consulter toutes les factures"                                                  as UC17a
+  usecase "CU-17b : Consulter ses factures"                                                         as UC17b
+
+  ' Historique
+  usecase "CU-19a : Consulter l'historique global\ndes interventions"                               as UC19a
+  usecase "CU-19b : Consulter son historique\npersonnel (technicien)"                               as UC19b
+  usecase "CU-19c : Consulter l'historique\nde ses interventions (client)"                         as UC19c
+
+  ' Tableaux de bord
+  usecase "CU-20a : Consulter le tableau de bord\nglobal (KPIs + graphiques)"                       as UC20a
+  usecase "CU-20b : Consulter le tableau de bord\npersonnel (technicien)"                           as UC20b
+  usecase "CU-20c : Consulter l'espace client\n(équipements, pannes, interventions, factures)"     as UC20c
+
+  ' Filtres
+  usecase "CU-28 : Filtrer / Rechercher / Paginer"  as UC28
+
+  ' Système
+  usecase "SYS-05 : Calculer montant facture\n(TVA 19 %, TND)"      as SYS05
+  usecase "SYS-06 : Vérifier éligibilité\nfacture (3 conditions)"   as SYS06
+}
+
+Admin --> UC16
+Admin --> UC18
+Admin --> UC17a
+Admin --> UC19a
+Admin --> UC20a
+Admin --> UC28
+
+Tech  --> UC19b
+Tech  --> UC20b
+
+Cli   --> UC17b
+Cli   --> UC19c
+Cli   --> UC20c
+
+Sys   --> SYS05
+Sys   --> SYS06
+
+UC16 ..> SYS06 : <<include>>
+UC16 ..> SYS05 : <<include>>
+
+@enduml

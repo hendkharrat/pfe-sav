@@ -1,0 +1,77 @@
+@startuml 03_architecture_3_couches
+title Architecture de l'application — 3 couches
+
+skinparam componentStyle rectangle
+skinparam packageBackgroundColor #FDFEFE
+skinparam packageBorderColor #2E74B5
+skinparam componentBackgroundColor #EBF5FB
+skinparam componentBorderColor #2E74B5
+skinparam databaseBackgroundColor #E8F8F5
+skinparam databaseBorderColor #1ABC9C
+skinparam arrowColor #2C3E50
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #F39C12
+
+actor "Administrateur" as Admin
+actor "Technicien"     as Tech
+actor "Client"         as Cli
+
+package "Couche Présentation\n(Frontend)" {
+  component [Next.js App Router\nReact 19 / TypeScript] as Frontend
+  component [Composants UI\nTailwind CSS / shadcn/ui]   as UI
+  component [Hooks React\nuseAuth / useState]           as Hooks
+  component [Gestion session\n(localStorage)]           as Session
+
+  Frontend --> UI
+  Frontend --> Hooks
+  Frontend --> Session
+}
+
+package "Couche Logique Métier\n(Backend / API)" {
+  component [Routes API REST\n(Next.js API Routes)] as API
+  component [Contrôleurs\n(AuthController, ClientController,\nContractController, InterventionController...)] as Controllers
+  component [Services Métier\n(PlanningService, InvoiceService,\nContractService...)] as Services
+  component [Middleware\n(Auth, RBAC, Validation)] as Middleware
+
+  API --> Middleware
+  API --> Controllers
+  Controllers --> Services
+}
+
+package "Couche Accès aux Données\n(DAO / Repository)" {
+  component [DAO / Repository\n(UserDAO, ClientDAO, EquipementDAO,\nContractDAO, InterventionDAO, InvoiceDAO...)] as DAO
+  component [Prisma ORM\n(Modèles, Migrations, Transactions)] as Prisma
+
+  DAO --> Prisma
+}
+
+database "Base de données\nMySQL" as DB {
+  collections "Tables métier\n(users, clients, equipments,\nclient_equipements, contracts,\ninterventions, pannes, invoices...)" as Tables
+}
+
+' Flux entre couches
+Admin --> Frontend : HTTPS
+Tech  --> Frontend : HTTPS
+Cli   --> Frontend : HTTPS
+
+Frontend --> API : HTTP / JSON
+
+Services --> DAO : appels métier
+
+Prisma --> DB : SQL / Transactions\n(COMMIT / ROLLBACK)
+
+note right of Services
+  Logique automatique :
+  - Génération planning préventif
+  - Calcul statut contrats
+  - Vérification disponibilité technicien
+  - Vérification couverture contractuelle
+  - Calcul TVA 19 % / TND
+end note
+
+note bottom of Middleware
+  Contrôle d'accès basé sur les rôles
+  (RBAC : admin / technician / client)
+  Validation des données entrantes
+end note
+@enduml

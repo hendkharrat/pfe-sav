@@ -1,0 +1,43 @@
+@startuml 08_seq_modification_utilisateur
+title Diagramme de séquence — Modifier un utilisateur interne
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Administrateur"         as Admin
+participant "Interface\n(Frontend)"  as UI
+participant "Contrôleur\n(UserCtrl)" as CTRL
+participant "DAO\n(UserDAO)"         as DAO
+database    "Base de données\n(MySQL)" as DB
+
+Admin -> UI   : Saisit les nouvelles informations\n(prénom, nom, email, téléphone)
+UI    -> CTRL : PUT /api/users/{id} { données modifiées }
+
+CTRL  -> CTRL : Valide le format email et téléphone
+
+CTRL  -> DAO  : checkEmailUnique(email, excludeId)
+DAO   -> DB   : SELECT id FROM users WHERE email = ? AND id != ?
+DB    --> DAO  : résultat
+
+alt Email déjà utilisé par un autre compte
+  CTRL --> UI  : 409 — Email déjà utilisé
+  UI   --> Admin : Affiche message d'erreur
+else Email disponible
+  CTRL  -> DAO  : update(id, { prenom, nom, email, telephone })
+  DAO   -> DB   : UPDATE users SET ... WHERE id = ?
+  DB    --> DAO  : OK
+  DAO   --> CTRL : succès
+  CTRL  --> UI  : 200 — utilisateur mis à jour
+  UI    --> Admin : Affiche liste mise à jour
+end
+
+note over CTRL
+  Le rôle et le mot de passe
+  sont modifiés via des endpoints
+  séparés (sécurité).
+end note
+@enduml

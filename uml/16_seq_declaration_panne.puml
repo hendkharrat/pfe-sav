@@ -1,0 +1,63 @@
+@startuml 16_seq_declaration_panne
+title Diagramme de séquence — CU-12 : Déclarer une panne\n(sans priorité, avec pièces jointes)
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Client"                        as Cli
+participant "Interface\n(Frontend)"         as UI
+participant "Contrôleur\n(PanneCtrl)"       as CTRL
+participant "DAO\n(PanneDAO)"               as DAO
+database    "Base de données\n(MySQL)"      as DB
+
+Cli  -> UI   : Ouvre le formulaire de déclaration de panne
+UI   -> CTRL : GET /api/client/{id}/equipements
+CTRL -> DAO  : findClientEquipements(clientId)
+DAO  -> DB   : SELECT ce.*, e.* FROM client_equipements ce\nJOIN equipments e ON ce.equipementId = e.id\nWHERE ce.clientId = ?
+DB   --> DAO  : liste des installations
+DAO  --> CTRL : clientEquipements[]
+CTRL --> UI   : 200 — { clientEquipements[] }
+UI   --> Cli  : Affiche la liste des équipements affectés
+
+Cli  -> UI   : Sélectionne un équipement affecté\net saisit la description (obligatoire)
+
+opt Pièces jointes
+  loop Pour chaque pièce jointe (image, PDF, audio)
+    Cli -> UI : Sélectionne un fichier
+    UI  -> UI : Stocke temporairement le fichier
+  end
+end
+
+Cli -> UI   : Soumet la déclaration
+UI  -> CTRL : POST /api/pannes\n{ clientId, clientEquipementId,\n  description, piecesJointes[] }
+
+CTRL -> CTRL : Valide que la description est présente
+CTRL -> DAO  : checkClientEquipementOwnership(\n  clientId, clientEquipementId)
+DAO  -> DB   : SELECT id FROM client_equipements\nWHERE id = ? AND clientId = ?
+DB   --> DAO  : enregistrement ou null
+
+alt ClientEquipement n'appartient pas au client
+  CTRL --> UI  : 403 — Équipement introuvable
+  UI   --> Cli : Affiche message d'erreur
+else Données valides
+  CTRL -> DAO : createPanne({\n  clientId, clientEquipementId,\n  description,\n  statut: EN_ATTENTE\n})
+  DAO  -> DB  : INSERT INTO pannes VALUES (...)
+  DB   --> DAO : panneId
+
+  opt Pièces jointes présentes
+    loop Pour chaque pièce jointe
+      CTRL -> DAO : addPieceJointe(panneId, { filename, size, type })
+      DAO  -> DB  : INSERT INTO pieces_jointes VALUES (...)
+      DB   --> DAO : OK
+    end
+  end
+
+  DAO  --> CTRL : panne créée
+  CTRL --> UI   : 201 — { panne créée, statut: EN_ATTENTE }
+  UI   --> Cli  : Confirmation : panne enregistrée
+end
+@enduml

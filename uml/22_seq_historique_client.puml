@@ -1,0 +1,41 @@
+@startuml 22_seq_historique_client
+title Diagramme de séquence — CU-19c : Consulter l'historique des interventions\n(côté client)
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Client"                        as Cli
+participant "Interface\n(Frontend)"         as UI
+participant "Contrôleur\n(HistoriqueCtrl)"  as CTRL
+participant "DAO\n(InterventionDAO)"        as DAO
+database    "Base de données\n(MySQL)"      as DB
+
+Cli  -> UI   : Accède au module Historique
+UI   -> CTRL : GET /api/historique?filters=...
+CTRL -> CTRL : Extrait clientId depuis la session
+
+CTRL -> DAO  : findClientEquipements(clientId)
+DAO  -> DB   : SELECT id FROM client_equipements WHERE clientId = ?
+DB   --> DAO  : clientEquipementIds[]
+DAO  --> CTRL : clientEquipementIds[]
+
+CTRL -> DAO  : findInterventionsByClientEquipements(\n  clientEquipementIds[],\n  statuts: [REALISEE, ANNULEE],\n  filters)
+DAO  -> DB   : SELECT i.*\nFROM interventions i\nWHERE i.clientEquipementId IN (?)\nAND i.statut IN ('REALISEE', 'ANNULEE')\nAND (filtres appliqués)\nORDER BY i.dateRealisation DESC
+DB   --> DAO  : interventions[]
+DAO  --> CTRL : interventions[]
+
+CTRL -> CTRL : Enrichit les données\n(équipement, technicien, contrat lié)
+CTRL --> UI  : 200 — { interventions[] }
+UI   --> Cli : Affiche l'historique filtré\navec pagination
+
+note over CTRL
+  Le client ne voit que les
+  interventions liées à ses
+  propres installations ClientEquipement.
+  Aucune donnée d'autres clients n'est visible.
+end note
+@enduml

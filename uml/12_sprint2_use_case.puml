@@ -1,0 +1,55 @@
+@startuml 12_sprint2_use_case
+title Sprint 2 — Diagramme de cas d'utilisation\nGestion des interventions et des pannes
+
+left to right direction
+skinparam usecase {
+  BackgroundColor #EBF5FB
+  BorderColor #2E74B5
+}
+skinparam actor {
+  BackgroundColor #FEF9E7
+  BorderColor #B7950B
+}
+
+actor "Administrateur" as Admin
+actor "Technicien"     as Tech
+actor "Client"         as Cli
+actor "Système"        as Sys
+
+rectangle "Sprint 2 — Interventions & Pannes" {
+
+  usecase "CU-09 : Affecter un technicien\n(vérification disponibilité)"       as UC09
+  usecase "CU-10 : Consulter le planning\n(hebdomadaire / mensuel)"             as UC10
+  usecase "CU-12a : Démarrer une intervention"                                   as UC12a
+  usecase "CU-11 : Clôturer une intervention préventive\n(sans facture)"        as UC11
+  usecase "CU-15b : Clôturer une intervention curative\n(vérif. couverture)"    as UC15b
+  usecase "CU-12 : Déclarer une panne\n(description + pièces jointes,\nsans priorité)" as UC12
+  usecase "CU-13 : Prendre en charge une panne"                                  as UC13
+  usecase "CU-14 : Convertir panne\nen intervention curative"                    as UC14
+  usecase "CU-18 : Créer directement\nune intervention curative"                 as UC18
+  usecase "CU-19 : Consulter l'historique\ndes interventions"                    as UC19
+
+  usecase "SYS-03 : Vérifier disponibilité\ntechnicien par date"                as SYS03
+  usecase "SYS-04 : Vérifier couverture\ncontractuelle"                         as SYS04
+}
+
+Admin --> UC09
+Admin --> UC10
+Admin --> UC13
+Admin --> UC14
+Admin --> UC18
+Admin --> UC19
+Tech  --> UC10
+Tech  --> UC12a
+Tech  --> UC11
+Tech  --> UC15b
+Cli   --> UC12
+Sys   --> SYS03
+Sys   --> SYS04
+
+UC09  ..> SYS03 : <<include>>
+UC15b ..> SYS04 : <<include>>
+UC14  ..> SYS04 : <<include>>
+UC18  ..> SYS04 : <<include>>
+
+@enduml
