@@ -1,0 +1,59 @@
+@startuml 17_seq_cloture_curative_couverture
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Technicien"                          as Tech
+participant "Interface\n(Frontend)"               as UI
+participant "Contrôleur\n(InterventionCtrl)"      as CTRL
+participant "Service\n(CoverageService)"          as SVC
+database    "Base de données\n(MySQL)"            as DB
+
+Tech -> UI   : Saisit les informations de clôture\n(diagnostic, actions réalisées,\nmatériel utilisé, durée en minutes)
+UI   -> CTRL : PUT /api/interventions/{id}/close\n{ diagnostic, actions, materiel, duree }
+
+CTRL -> DB   : SELECT * FROM interventions WHERE id = ?
+DB   --> CTRL : intervention (type: CURATIVE, statut: PLANIFIEE ou EN_COURS)
+
+CTRL -> CTRL : Vérifie que le technicien est bien affecté
+CTRL -> CTRL : Vérifie que statut = PLANIFIEE ou EN_COURS
+
+alt Technicien non affecté ou statut invalide
+  CTRL --> UI : 403 — Opération non autorisée
+  UI   --> Tech : Affiche message d'erreur
+else
+  note over CTRL, SVC
+    Le Système vérifie automatiquement la couverture contractuelle.
+  end note
+
+  CTRL -> SVC : checkContractCoverage(\n  clientEquipementId, datePrevue)
+  SVC  -> DB  : SELECT c.id FROM contracts c\nJOIN contract_client_equipements cce\n  ON c.id = cce.contractId\nWHERE cce.clientEquipementId = ?\nAND c.dateDebut <= ?\nAND c.dateFin >= ?\nAND c.statut = 'ACTIF'
+  DB  --> SVC  : contrat ou null
+
+  alt Contrat actif trouvé
+    SVC --> CTRL : couvertureContrat = true
+  else Aucun contrat actif
+    SVC --> CTRL : couvertureContrat = false
+  end
+
+  CTRL -> DB   : UPDATE interventions SET ... WHERE id = ?
+  DB   --> CTRL : intervention mise à jour
+  CTRL --> UI   : 200 — { statut: REALISEE, couvertureContrat }
+  UI   --> Tech : Intervention clôturée
+
+  alt couvertureContrat = false
+    UI -> UI : Signale que l'intervention\nest éligible à la facturation
+  end
+end
+
+note over CTRL
+  Si couvertureContrat = false
+  → l'intervention devient éligible
+  à la génération d'une facture.
+  TVA 19 %, monnaie TND.
+end note
+@enduml

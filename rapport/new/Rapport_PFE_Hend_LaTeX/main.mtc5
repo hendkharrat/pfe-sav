@@ -1,0 +1,22 @@
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {4.1}Backlog du Sprint 2}{\reset@font\mtcSfont 52}{section.4.1}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {4.2}Analyse}{\reset@font\mtcSfont 54}{section.4.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {4.2.1}Diagramme de cas d'utilisation du Sprint 2}{\reset@font\mtcSSfont 54}{subsection.4.2.1}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {4.2.2}Description des cas d'utilisation}{\reset@font\mtcSSfont 55}{subsection.4.2.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.2.2.1}CU-09 : Affecter un technicien à une intervention}{\reset@font\mtcSSSfont 55}{subsubsection.4.2.2.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.2.2.2}CU-10 : Consulter le planning}{\reset@font\mtcSSSfont 56}{subsubsection.4.2.2.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.2.2.3}CU-11 : Clôturer une intervention préventive}{\reset@font\mtcSSSfont 57}{subsubsection.4.2.2.3}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.2.2.4}CU-12 : Déclarer une panne}{\reset@font\mtcSSSfont 58}{subsubsection.4.2.2.4}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.2.2.5}CU-13 : Prendre en charge une panne}{\reset@font\mtcSSSfont 59}{subsubsection.4.2.2.5}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.2.2.6}CU-14 : Convertir une panne en intervention curative}{\reset@font\mtcSSSfont 59}{subsubsection.4.2.2.6}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.2.2.7}CU-15 : Vérifier automatiquement la couverture contractuelle (Système)}{\reset@font\mtcSSSfont 60}{subsubsection.4.2.2.7}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {4.3}Conception}{\reset@font\mtcSfont 61}{section.4.3}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {4.3.1}Diagramme de classes du Sprint 2}{\reset@font\mtcSSfont 61}{subsection.4.3.1}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {4.3.2}Diagrammes de séquence}{\reset@font\mtcSSfont 61}{subsection.4.3.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.3.2.1}Diagramme de séquence : Génération automatique du planning préventif}{\reset@font\mtcSSSfont 61}{subsubsection.4.3.2.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.3.2.2}Identification textuelle --- Affecter un technicien à une intervention}{\reset@font\mtcSSSfont 61}{subsubsection.4.3.2.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.3.2.3}Diagramme de séquence : Consultation du planning}{\reset@font\mtcSSSfont 63}{subsubsection.4.3.2.3}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.3.2.4}Identification textuelle --- Clôturer une intervention préventive}{\reset@font\mtcSSSfont 63}{subsubsection.4.3.2.4}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.3.2.5}Diagramme de séquence : Déclaration de panne}{\reset@font\mtcSSSfont 64}{subsubsection.4.3.2.5}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.3.2.6}Identification textuelle --- Création et affectation d'une intervention curative}{\reset@font\mtcSSSfont 64}{subsubsection.4.3.2.6}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {4.3.2.7}Diagramme de séquence : Clôture intervention curative et vérification couverture}{\reset@font\mtcSSSfont 66}{subsubsection.4.3.2.7}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {4.4}Réalisation}{\reset@font\mtcSfont 66}{section.4.4}}

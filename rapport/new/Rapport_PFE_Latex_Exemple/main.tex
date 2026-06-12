@@ -1,0 +1,238 @@
+\documentclass[A4wide,12pt]{report}
+
+\DeclareUnicodeCharacter{202F}{\,}
+
+%\usepackage{arabtex}  % removed: conflicts with [utf8]{inputenc}
+%\usepackage{utf8}     % removed: conflicts with [utf8]{inputenc}
+%\setcode{utf8}        % removed: conflicts with [utf8]{inputenc}
+\usepackage{tikz}
+\usepackage[french]{minitoc}
+\usepackage[font={small,it}]{caption}
+\usepackage[utf8]{inputenc}
+\usepackage[french]{babel}
+\usepackage[T1]{fontenc}
+\usepackage{a4wide,indentfirst}
+\usepackage{pdflscape}
+\usepackage{graphicx}
+\graphicspath{{Figures/}{Figures/Chapitre2/}{Figures/Chapitre3/}{Figures/Chapitre4/}{Figures/Chapitre5/}}
+\usepackage{fancyhdr}
+\setlength{\headheight}{28pt}
+\usepackage{enumitem}
+\usepackage{lastpage}
+\usepackage{setspace}
+\setcounter{tocdepth}{4}
+\setcounter{secnumdepth}{4}
+\usepackage{longtable}
+\usepackage{subfigure}
+\usepackage{graphics}
+\usepackage{colortbl}
+\usepackage{xcolor}
+\usepackage[hidelinks]{hyperref}
+\usepackage{listings}
+\usepackage{pdfpages}
+\usepackage{float}
+\usepackage{footnote}
+\usepackage[bottom]{footmisc}
+\usepackage[a4paper,margin=2.5cm]{geometry}
+\usepackage{url}
+\usepackage{multirow}
+\usepackage{lipsum}
+\usepackage{wrapfig}
+\usepackage{cleveref}
+\usepackage[export]{adjustbox}
+\usepackage{color}
+
+
+\linespread{1.5}
+\setcounter{secnumdepth}{4}
+\DeclareUnicodeCharacter{0301}{\'{e}}
+
+% Configuration minitoc (dans le préambule, SANS \dominitoc)
+\mtcsettitle{minitoc}{Plan}
+\mtcsetrules{minitoc}{off}
+\mtcsetfeature{minitoc}{before}{\vspace{-20pt}}
+
+% CODE LISTING CONFIGURATION
+\lstset{
+    basicstyle=\small,
+    breakindent=10pt,
+    breaklines=true,
+    captionpos=b,
+    columns=fullflexible,
+    commentstyle=\sffamily\slshape\color[gray]{0.5},
+    frame=l,
+    stringstyle=\mdseries\rmfamily,
+    tabsize=2,
+    xleftmargin=16pt,
+    xrightmargin=20pt,
+    escapeinside={*'}{'*},
+    language=Python,
+    breaklines=true,
+}
+
+% HYPERSETUP
+\hypersetup{
+    breaklinks=true,
+    urlcolor=blue,
+    linkcolor=blue,
+    bookmarksopen=true,
+    pdftitle={{Mise en place d'un système décisionnel BI et IA pour l'optimisation de la gestion des stocks et la prévision de la demande, avec une intégration au futur ERP}},
+    pdfauthor={{Chaima Hadj Taieb}},
+    pdfsubject={{Mémoire de Mastère Professionnel en Data Science for Business and Economics}}
+}
+
+% COLORS
+\definecolor{color_29791}{rgb}{0,0,0}
+\definecolor{color_277797}{rgb}{0.988235,0.760784,0}
+\definecolor{color_32005}{rgb}{0,0.262745,0.537255}
+\definecolor{color_70400}{rgb}{0.156863,0.258824,0.482353}
+
+% CUSTOM CHAPTER STYLE (black box)
+\makeatletter
+\newlength{\chapter@number@width}
+\def\@makechapterhead#1{%
+  {\normalfont
+  \setlength{\parindent}{0pt}
+  \vspace*{10pt}
+  \settowidth{\chapter@number@width}{%
+    \hbox{\color{white}\Large\bfseries
+          \hspace{\dimexpr 1mm+3pt}%
+          \thechapter
+          \hspace{\dimexpr 1mm+3pt}%
+    }}
+  \hbox{%
+    \vtop{%
+      \hsize=\dimexpr\chapter@number@width+\tabcolsep+2\fboxrule+\tabcolsep
+      \begin{tabular}[t]{@{}c}
+        \scshape\strut\makebox[0pt]{\hspace{-50pt plus 1 fill minus 1 fill}\@chapapp\hspace{0pt plus 1 fill minus 1 fill}} 
+        \fboxsep=0pt
+        \colorbox{black}{\vbox{%
+           \hbox{\vbox to 1cm{}}
+           \hbox{\color{white}\LARGE\bfseries
+                 \hspace{\dimexpr 1mm+3pt}%
+                 \thechapter
+                 \hspace{\dimexpr 1mm+3pt}%
+                }
+           \hrule height 0.4pt depth 0pt width 0pt
+           \hbox{\vbox to 6pt{}}
+           \hbox{\parbox{0pt}{\Large\bfseries\vphantom{E}}}
+           }}%
+      \end{tabular}%
+      }%
+    \vtop{%
+      \advance\hsize by -\dimexpr\chapter@number@width+2\fboxrule+\tabcolsep
+      \hspace*{-0.5cm}\begin{tabular}[t]{c}
+        \scshape\strut\vphantom{\@chapapp} 
+        \fboxsep=0pt
+        \colorbox{white}{\vbox{%
+           \hbox{\vbox to \dimexpr 1mm+3pt{}}
+           \hbox{\LARGE\bfseries
+                 \hspace{\dimexpr 1mm+3pt}%
+                 \phantom{\thechapter}
+                 \hspace{\dimexpr 1mm+3pt}%
+                }
+           \hrule height 0.4pt depth 0pt width \hsize
+           \hbox{\vbox to 6pt{}}
+           \hbox{\hspace*{20pt}\parbox{\dimexpr\textwidth-2mm-6pt-\chapter@number@width-\tabcolsep-2\fboxrule-20pt}{\Large\bfseries #1}}
+           }}%
+      \end{tabular}%
+      }%
+    }%
+  \vspace{50pt}%
+  }
+}
+\makeatother
+
+\sloppy
+
+\begin{document}
+
+\pagenumbering{roman}
+
+\rhead{\emph{}}
+
+% ===== TITLE PAGE =====
+\includepdf[pages=-]{Rapport Chaima Hadj Taiebgarde.pdf}
+
+\setstretch{1.5}
+
+% ===== FRONT MATTER =====
+\input{Remerciement}
+\input{dedicaces}
+
+
+% ===== TABLE OF CONTENTS =====
+\dominitoc  % ← À placer impérativement AVANT \tableofcontents
+\tableofcontents
+\listoffigures
+\listoftables
+
+\newpage
+
+% ===== MAIN CONTENT =====
+\pagenumbering{arabic}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Introduction Générale}
+\input{introduction_generale}
+\input{chapitres/Chapitre1}
+\input{chapitres/Chapitre2}
+\input{chapitres/Chapitre3}
+\input{chapitres/Chapitre4}
+\input{chapitres/Chapitre5}
+
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Conclusion Générale}
+\input{conclusion_generale}
+
+% ===== BIBLIOGRAPHY =====
+\setstretch{1}
+\clearpage
+\addcontentsline{toc}{chapter}{Bibliographie}
+%\lhead{\emph{Bibliographie}}
+\bibliographystyle{plain}
+\bibliography{references}
+
+
+%% ===== Webographies =====
+\clearpage 
+\phantomsection
+\addcontentsline{toc}{chapter}{Webographie} 
+
+\chapter*{Webographie} 
+\markboth{Webographie}{Webographie} 
+
+\begin{enumerate}
+    \item Documentation officielle de Python. Disponible sur : \url{https://docs.python.org/} (consulté en mai 2025).
+    \item Documentation officielle de Pandas. Disponible sur : \url{https://pandas.pydata.org/docs/} (consulté en mai 2025).
+    \item Documentation officielle de Scikit-Learn. Disponible sur : \url{https://scikit-learn.org/stable/} (consulté en mai 2025).
+    \item Documentation officielle de PySide6. Disponible sur : \url{https://doc.qt.io/qtforpython/} (consulté en mai 2025).
+    \item Documentation officielle de Plotly. Disponible sur : \url{https://plotly.com/python/} (consulté en mai 2025).
+    \item Documentation officielle de SQLite. Disponible sur : \url{https://www.sqlite.org/docs.html} (consulté en mai 2025).
+    \item Documentation officielle de SQLAlchemy. Disponible sur : \url{https://docs.sqlalchemy.org/} (consulté en mai 2025).
+    \item Documentation officielle de XGBoost. Disponible sur : \url{https://xgboost.readthedocs.io/} (consulté en mai 2025).
+    \item Documentation officielle de GitHub. Disponible sur : \url{https://docs.github.com/} (consulté en mai 2025).
+    \item Documentation officielle de CRISP-DM. Disponible sur : \url{https://www.the-modeling-agency.com/crisp-dm.pdf} (consulté en mai 2025).
+\end{enumerate}
+
+\setstretch{1.5} 
+
+% ===== Annexes =====
+\cleardoublepage
+\appendix 
+\phantomsection
+\addcontentsline{toc}{chapter}{Annexes} 
+
+% Inclusion du PDF complet (toutes les pages)
+\includepdf[pages=-, scale=1]{ANNEXES.pdf}
+\thispagestyle{empty}
+\setstretch{1.5}
+
+% ===== Résumé (Quatrième de couverture) =====
+\cleardoublepage
+\pagestyle{empty}     % Supprime définitivement les en-têtes/pieds de page pour la fin
+\thispagestyle{empty} % Double sécurité pour la première page du résumé
+\input{resume}
+\end{document}

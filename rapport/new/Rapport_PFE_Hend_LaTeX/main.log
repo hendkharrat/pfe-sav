@@ -1,0 +1,3180 @@
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.5)  13 JUN 2026 00:00
+entering extended mode
+ restricted \write18 enabled.
+ %&-line parsing enabled.
+**./main.tex
+(main.tex
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-04-28>
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/base\report.cls
+Document Class: report 2025/01/22 v1.4n Standard LaTeX document class
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/base\size12.clo
+File: size12.clo 2025/01/22 v1.4n Standard LaTeX file (size option)
+)
+\c@part=\count276
+\c@chapter=\count277
+\c@section=\count278
+\c@subsection=\count279
+\c@subsubsection=\count280
+\c@paragraph=\count281
+\c@subparagraph=\count282
+\c@figure=\count283
+\c@table=\count284
+\abovecaptionskip=\skip49
+\belowcaptionskip=\skip50
+\bibindent=\dimen150
+)
+   defining Unicode char U+202F (decimal 8239)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/frontendlayer\tikz.
+sty
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgf.sty
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfrcs.st
+y
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-common.tex
+\pgfutil@everybye=\toks17
+\pgfutil@tempdima=\dimen151
+\pgfutil@tempdimb=\dimen152
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfutil
+-latex.def
+\pgfutil@abb=\box53
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfrcs.
+code.tex
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf\pgf.revision.tex)
+Package: pgfrcs 2025-08-29 v3.1.11a (3.1.11a)
+))
+Package: pgf 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/basiclayer\pgfcore.
+sty
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphicx.sty
+Package: graphicx 2024/12/31 v1.2e Enhanced LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics\keyval.sty
+Package: keyval 2022/05/29 v1.15 key=value parser (DPC)
+\KV@toks@=\toks18
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics\graphics.sty
+Package: graphics 2024/08/06 v1.4g Standard LaTeX Graphics (DPC,SPQR)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics\trig.sty
+Package: trig 2023/12/02 v1.11 sin cos tan (DPC)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\graphics.c
+fg
+File: graphics.cfg 2016/06/04 v1.11 sample graphics configuration
+)
+Package graphics Info: Driver file: pdftex.def on input line 106.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics-def\pdftex.def
+File: pdftex.def 2025/09/29 v1.2d Graphics/color driver for pdftex
+))
+\Gin@req@height=\dimen153
+\Gin@req@width=\dimen154
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/systemlayer\pgfsys.
+sty
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s.code.tex
+Package: pgfsys 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex
+\pgfkeys@pathtoks=\toks19
+\pgfkeys@temptoks=\toks20
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+libraryfiltered.code.tex
+\pgfkeys@tmptoks=\toks21
+))
+\pgf@x=\dimen155
+\pgf@y=\dimen156
+\pgf@xa=\dimen157
+\pgf@ya=\dimen158
+\pgf@xb=\dimen159
+\pgf@yb=\dimen160
+\pgf@xc=\dimen161
+\pgf@yc=\dimen162
+\pgf@xd=\dimen163
+\pgf@yd=\dimen164
+\w@pgf@writea=\write3
+\r@pgf@reada=\read2
+\c@pgf@counta=\count285
+\c@pgf@countb=\count286
+\c@pgf@countc=\count287
+\c@pgf@countd=\count288
+\t@pgf@toka=\toks22
+\t@pgf@tokb=\toks23
+\t@pgf@tokc=\toks24
+\pgf@sys@id@count=\count289
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgf.c
+fg
+File: pgf.cfg 2025-08-29 v3.1.11a (3.1.11a)
+)
+Driver file for pgf: pgfsys-pdftex.def
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s-pdftex.def
+File: pgfsys-pdftex.def 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+s-common-pdf.def
+File: pgfsys-common-pdf.def 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+ssoftpath.code.tex
+File: pgfsyssoftpath.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfsyssoftpath@smallbuffer@items=\count290
+\pgfsyssoftpath@bigbuffer@items=\count291
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/systemlayer\pgfsy
+sprotocol.code.tex
+File: pgfsysprotocol.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/xcolor\xcolor.sty
+Package: xcolor 2024/09/29 v3.02 LaTeX color extensions (UK)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics-cfg\color.cfg
+File: color.cfg 2016/01/02 v1.6 sample color configuration
+)
+Package xcolor Info: Driver file: pdftex.def on input line 274.
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics\mathcolor.ltx)
+Package xcolor Info: Model `cmy' substituted by `cmy0' on input line 1349.
+Package xcolor Info: Model `hsb' substituted by `rgb' on input line 1353.
+Package xcolor Info: Model `RGB' extended on input line 1365.
+Package xcolor Info: Model `HTML' substituted by `rgb' on input line 1367.
+Package xcolor Info: Model `Hsb' substituted by `hsb' on input line 1368.
+Package xcolor Info: Model `tHsb' substituted by `hsb' on input line 1369.
+Package xcolor Info: Model `HSB' substituted by `hsb' on input line 1370.
+Package xcolor Info: Model `Gray' substituted by `gray' on input line 1371.
+Package xcolor Info: Model `wave' substituted by `hsb' on input line 1372.
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+e.code.tex
+Package: pgfcore 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathutil.
+code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathparse
+r.code.tex
+\pgfmath@dimen=\dimen165
+\pgfmath@count=\count292
+\pgfmath@box=\box54
+\pgfmath@toks=\toks25
+\pgfmath@stack@operand=\toks26
+\pgfmath@stack@operation=\toks27
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.basic.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.trigonometric.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.random.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.comparison.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.base.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.round.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.misc.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfunct
+ions.integerarithmetics.code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathcalc.
+code.tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmathfloat
+.code.tex
+\c@pgfmathroundto@lastzeros=\count293
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfint.code.
+tex)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epoints.code.tex
+File: pgfcorepoints.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@picminx=\dimen166
+\pgf@picmaxx=\dimen167
+\pgf@picminy=\dimen168
+\pgf@picmaxy=\dimen169
+\pgf@pathminx=\dimen170
+\pgf@pathmaxx=\dimen171
+\pgf@pathminy=\dimen172
+\pgf@pathmaxy=\dimen173
+\pgf@xx=\dimen174
+\pgf@xy=\dimen175
+\pgf@yx=\dimen176
+\pgf@yy=\dimen177
+\pgf@zx=\dimen178
+\pgf@zy=\dimen179
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathconstruct.code.tex
+File: pgfcorepathconstruct.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@path@lastx=\dimen180
+\pgf@path@lasty=\dimen181
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathusage.code.tex
+File: pgfcorepathusage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@shorten@end@additional=\dimen182
+\pgf@shorten@start@additional=\dimen183
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+escopes.code.tex
+File: pgfcorescopes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfpic=\box55
+\pgf@hbox=\box56
+\pgf@layerbox@main=\box57
+\pgf@picture@serial@count=\count294
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+egraphicstate.code.tex
+File: pgfcoregraphicstate.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgflinewidth=\dimen184
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+etransformations.code.tex
+File: pgfcoretransformations.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@pt@x=\dimen185
+\pgf@pt@y=\dimen186
+\pgf@pt@temp=\dimen187
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+equick.code.tex
+File: pgfcorequick.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eobjects.code.tex
+File: pgfcoreobjects.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epathprocessing.code.tex
+File: pgfcorepathprocessing.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+earrows.code.tex
+File: pgfcorearrows.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfarrowsep=\dimen188
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eshade.code.tex
+File: pgfcoreshade.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@max=\dimen189
+\pgf@sys@shading@range@num=\count295
+\pgf@shadingcount=\count296
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eimage.code.tex
+File: pgfcoreimage.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+eexternal.code.tex
+File: pgfcoreexternal.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfexternal@startupbox=\box58
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+elayers.code.tex
+File: pgfcorelayers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+etransparency.code.tex
+File: pgfcoretransparency.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+epatterns.code.tex
+File: pgfcorepatterns.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/basiclayer\pgfcor
+erdf.code.tex
+File: pgfcorerdf.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+shapes.code.tex
+File: pgfmoduleshapes.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfnodeparttextbox=\box59
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+plot.code.tex
+File: pgfmoduleplot.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
+mp-version-0-65.sty
+Package: pgfcomp-version-0-65 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@nodesepstart=\dimen190
+\pgf@nodesepend=\dimen191
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/compatibility\pgfco
+mp-version-1-18.sty
+Package: pgfcomp-version-1-18 2025-08-29 v3.1.11a (3.1.11a)
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgffor.st
+y
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/utilities\pgfkeys.s
+ty
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgfkeys
+.code.tex))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pgf/math\pgfmath.sty
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/math\pgfmath.code
+.tex))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/utilities\pgffor.
+code.tex
+Package: pgffor 2025-08-29 v3.1.11a (3.1.11a)
+\pgffor@iter=\dimen192
+\pgffor@skip=\dimen193
+\pgffor@stack=\toks28
+\pgffor@toks=\toks29
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z\tikz.code.tex
+Package: tikz 2025-08-29 v3.1.11a (3.1.11a)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/libraries\pgflibr
+aryplothandlers.code.tex
+File: pgflibraryplothandlers.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgf@plot@mark@count=\count297
+\pgfplotmarksize=\dimen194
+)
+\tikz@lastx=\dimen195
+\tikz@lasty=\dimen196
+\tikz@lastxsaved=\dimen197
+\tikz@lastysaved=\dimen198
+\tikz@lastmovetox=\dimen199
+\tikz@lastmovetoy=\dimen256
+\tikzleveldistance=\dimen257
+\tikzsiblingdistance=\dimen258
+\tikz@figbox=\box60
+\tikz@figbox@bg=\box61
+\tikz@tempbox=\box62
+\tikz@tempbox@bg=\box63
+\tikztreelevel=\count298
+\tikznumberofchildren=\count299
+\tikznumberofcurrentchild=\count300
+\tikz@fig@count=\count301
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/modules\pgfmodule
+matrix.code.tex
+File: pgfmodulematrix.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+\pgfmatrixcurrentrow=\count302
+\pgfmatrixcurrentcolumn=\count303
+\pgf@matrix@numberofcolumns=\count304
+)
+\tikz@expandcount=\count305
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pgf/frontendlayer/tik
+z/libraries\tikzlibrarytopaths.code.tex
+File: tikzlibrarytopaths.code.tex 2025-08-29 v3.1.11a (3.1.11a)
+)))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption.sty
+Package: caption 2023/08/05 v3.6o Customizing captions (AR)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/caption\caption3.sty
+Package: caption3 2023/07/31 v2.4d caption3 kernel (AR)
+\caption@tempdima=\dimen259
+\captionmargin=\dimen260
+\caption@leftmargin=\dimen261
+\caption@rightmargin=\dimen262
+\caption@width=\dimen263
+\caption@indent=\dimen264
+\caption@parindent=\dimen265
+\caption@hangindent=\dimen266
+Package caption Info: Standard document class detected.
+)
+\c@caption@flags=\count306
+\c@continuedfloat=\count307
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/minitoc\minitoc.sty
+Package: minitoc 2018/07/12 v62 Package minitoc
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/minitoc\mtcmess.sty
+Package: mtcmess 2006/03/14
+)
+Package minitoc Info: I0001
+(minitoc)             *** minitoc package, version 62 ***.
+\tf@mtc=\write4
+\mtcindent=\skip51
+\mtcskipamount=\skip52
+Package minitoc Info: I0005
+(minitoc)             compatible with hyperref.
+Package minitoc Info: I0023
+(minitoc)             part level macros available.
+Package minitoc Info: I0003
+(minitoc)             chapter level macros available.
+\mtc@toks=\toks30
+\mtc@strutbox=\box64
+\mtc@hstrutbox=\box65
+Package minitoc Info: I0002
+(minitoc)             Autoconfiguration of extensions.
+\openout4 = `main.mtc0'.
+
+\openout4 = `main.mtc'.
+
+
+(main.mtc0)
+Package minitoc Info: I0012
+(minitoc)             Long extensions (Unix-like) will be used.
+Package minitoc Info: I0031
+(minitoc)             ==> this version is configured for UNIX-like 
+(minitoc)                 (long extensions) file names.
+\openout4 = `main.mtc'.
+
+\openout4 = `main.mtc0'.
+
+\c@mtc=\count308
+\c@minitocdepth=\count309
+\c@ptc=\count310
+\c@parttocdepth=\count311
+\ptcindent=\skip53
+Package minitoc Info: I0010
+(minitoc)             The english language is selected.
+(minitoc)              on input line 4910.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/minitoc\english.mld
+File: english.mld 2006/01/13
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/minitoc\english.mld
+File: english.mld 2006/01/13
+)
+Package minitoc Info: I0010
+(minitoc)             The french language is selected.
+(minitoc)              on input line 4911.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/minitoc\french.mld
+File: french.mld 2006/03/21
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/base\inputenc.sty
+Package: inputenc 2024/02/08 v1.3d Input encoding file
+\inpenc@prehook=\toks31
+\inpenc@posthook=\toks32
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/babel\babel.sty
+Package: babel 2026/05/20 v26.8 The multilingual framework for LuaLaTeX, pdfLaT
+eX and XeLaTeX
+\babel@savecnt=\count312
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding OT1) on input li
+ne 2084.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding OT1) on input li
+ne 2086.
+LaTeX Encoding Info:    Redeclaring text command \ij (encoding T1) on input lin
+e 2088.
+LaTeX Encoding Info:    Redeclaring text command \IJ (encoding T1) on input lin
+e 2089.
+LaTeX Encoding Info:    Ignoring declaration for text command \ij (encoding ?) 
+on input line 2090.
+LaTeX Encoding Info:    Ignoring declaration for text command \IJ (encoding ?) 
+on input line 2092.
+LaTeX Encoding Info:    Ignoring declaration for text command \SS (encoding ?) 
+on input line 2117.
+\U@D=\dimen267
+\l@unhyphenated=\language79
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/babel\txtbabel.def)
+\bbl@readstream=\read3
+\bbl@dirlevel=\count313
+Package babel Info: Configuration files are deprecated, as
+(babel)             they can break document portability.
+(babel)             Reported on input line 4228.
+
+*************************************
+* Local config file bblopts.cfg used
+*
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/arabi\bblopts.cfg
+File: bblopts.cfg 2005/09/08 v0.1 add Arabic and Farsi to "declared" options of
+ babel
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/babel/locale/fr\babel
+-french.tex)
+Package babel Info: Importing font and identification data for french
+(babel)             from babel-fr.ini. Reported on input line 4356.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\french.l
+df
+Language: french 2025-08-15 v4.0e French support from the babel system
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/babel-french\french3.
+ldf
+Language: french 2025-08-15 v3.7e French support from the babel system
+\FB@stdchar=\count314
+Package babel Info: Making : an active character on input line 273.
+Package babel Info: Making ; an active character on input line 274.
+Package babel Info: Making ! an active character on input line 275.
+Package babel Info: Making ? an active character on input line 276.
+\FBguill@level=\count315
+\FBold@everypar=\toks33
+\FB@Mht=\dimen268
+\mc@charclass=\count316
+\mc@charfam=\count317
+\mc@charslot=\count318
+\std@mcc=\count319
+\dec@mcc=\count320
+\FB@pardim=\dimen269
+\listindentFB=\dimen270
+\descindentFB=\dimen271
+\labelindentFB=\dimen272
+\labelwidthFB=\dimen273
+\leftmarginFB=\dimen274
+\parindentFFN=\dimen275
+\FBfnindent=\dimen276
+)))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/carlisle\scalefnt.sty)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/base\fontenc.sty
+Package: fontenc 2025/07/18 v2.1d Standard LaTeX package
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/a4wide\a4wide.sty
+Package: a4wide 1994/08/30
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/ntgclass\a4.sty
+Package: a4 2025/12/29 v1.2g A4 based page layout
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/tools\indentfirst.sty
+Package: indentfirst 2023/07/02 v1.03 Indent first paragraph (DPC)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pdflscape\pdflscape.sty
+Package: pdflscape 2022-10-27 v0.13 Display of landscape pages in PDF
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pdflscape\pdflscape-nom
+etadata.sty
+Package: pdflscape-nometadata 2022-10-28 v0.13 Display of landscape pages in PD
+F (HO)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/iftex\iftex.sty
+Package: iftex 2024/12/12 v1.0g TeX engine tests
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/graphics\lscape.sty
+Package: lscape 2020/05/28 v3.02 Landscape Pages (DPC)
+)
+Package pdflscape Info: Auto-detected driver: pdftex on input line 81.
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/fancyhdr\fancyhdr.sty
+Package: fancyhdr 2025/02/07 v5.2 Extensive control of page headers and footers
+
+\f@nch@headwidth=\skip54
+\f@nch@offset@elh=\skip55
+\f@nch@offset@erh=\skip56
+\f@nch@offset@olh=\skip57
+\f@nch@offset@orh=\skip58
+\f@nch@offset@elf=\skip59
+\f@nch@offset@erf=\skip60
+\f@nch@offset@olf=\skip61
+\f@nch@offset@orf=\skip62
+\f@nch@height=\skip63
+\f@nch@footalignment=\skip64
+\f@nch@widthL=\skip65
+\f@nch@widthC=\skip66
+\f@nch@widthR=\skip67
+\@temptokenb=\toks34
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/enumitem\enumitem.sty
+Package: enumitem 2025/02/06 v3.11 Customized lists
+\labelindent=\skip68
+\enit@outerparindent=\dimen277
+\enit@toks=\toks35
+\enit@inbox=\box66
+\enit@count@id=\count321
+\enitdp@description=\count322
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/lastpage\lastpage.sty
+Package: lastpage 2025/08/14 v2.1h lastpage: 2.09 or 2e? (HMM)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/lastpage\lastpage2e.sty
+Package: lastpage2e 2025/08/14 v2.1h Decide which 2e lastpage version to use (H
+MM)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/lastpage\lastpagemodern
+.sty
+Package: lastpagemodern 2025-08-14 v2.1h Refers to last page's name (HMM; JPG)
+\c@lastpagecount=\count323
+) 
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/setspace\setspace.sty
+Package: setspace 2022/12/04 v6.7b set line spacing
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/tools\longtable.sty
+Package: longtable 2025-10-13 v4.24 Multi-page Table package (DPC)
+\LTleft=\skip69
+\LTright=\skip70
+\LTpre=\skip71
+\LTpost=\skip72
+\LTchunksize=\count324
+\LTcapwidth=\dimen278
+\LT@head=\box67
+\LT@firsthead=\box68
+\LT@foot=\box69
+\LT@lastfoot=\box70
+\LT@gbox=\box71
+\LT@cols=\count325
+\LT@rows=\count326
+\c@LT@tables=\count327
+\c@LT@chunks=\count328
+\LT@p@ftn=\toks36
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/subfigure\subfigure.sty
+Package: subfigure 2002/07/30 v2.1.4 subfigure package
+\subfigtopskip=\skip73
+\subfigcapskip=\skip74
+\subfigcaptopadj=\dimen279
+\subfigbottomskip=\skip75
+\subfigcapmargin=\dimen280
+\subfiglabelskip=\skip76
+\c@subfigure=\count329
+\c@lofdepth=\count330
+\c@subtable=\count331
+\c@lotdepth=\count332
+****************************************
+* Local config file subfigure.cfg used *
+****************************************
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/subfigure\subfigure.cfg
+)
+\subfig@top=\skip77
+\subfig@bottom=\skip78
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/colortbl\colortbl.sty
+Package: colortbl 2026/05/01 v1.0l Color table columns (DPC)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/tools\array.sty
+Package: array 2025/09/25 v2.6n Tabular extension package (FMi)
+\col@sep=\dimen281
+\ar@mcellbox=\box72
+\extrarowheight=\dimen282
+\NC@list=\toks37
+\extratabsurround=\skip79
+\backup@length=\skip80
+\ar@cellbox=\box73
+)
+\everycr=\toks38
+\minrowclearance=\skip81
+\rownum=\count333
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hyperref.sty
+Package: hyperref 2026-04-24 v7.01q Hypertext links for LaTeX
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/kvsetkeys\kvsetkeys.sty
+Package: kvsetkeys 2022-10-05 v1.19 Key value parser (HO)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/kvdefinekeys\kvdefine
+keys.sty
+Package: kvdefinekeys 2019-12-19 v1.6 Define keys (HO)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pdfescape\pdfescape.s
+ty
+Package: pdfescape 2019/12/09 v1.15 Implements pdfTeX's escape features (HO)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/ltxcmds\ltxcmds.sty
+Package: ltxcmds 2023-12-04 v1.26 LaTeX kernel commands for general use (HO)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/pdftexcmds\pdftexcmds
+.sty
+Package: pdftexcmds 2020-06-27 v0.33 Utility functions of pdfTeX for LuaTeX (HO
+)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/infwarerr\infwarerr.s
+ty
+Package: infwarerr 2019/12/03 v1.5 Providing info/warning/error messages (HO)
+)
+Package pdftexcmds Info: \pdf@primitive is available.
+Package pdftexcmds Info: \pdf@ifprimitive is available.
+Package pdftexcmds Info: \pdfdraftmode found.
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/hycolor\hycolor.sty
+Package: hycolor 2020-01-27 v1.10 Color options for hyperref/bookmark (HO)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\nameref.sty
+Package: nameref 2026-01-29 v2.58 Cross-referencing by name of section
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/refcount\refcount.sty
+Package: refcount 2019/12/15 v3.6 Data extraction from label references (HO)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/gettitlestring\gettit
+lestring.sty
+Package: gettitlestring 2019/12/15 v1.6 Cleanup title references (HO)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/kvoptions\kvoptions.sty
+Package: kvoptions 2022-06-15 v3.15 Key value format for package options (HO)
+))
+\c@section@level=\count334
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/etoolbox\etoolbox.sty
+Package: etoolbox 2025/10/02 v2.5m e-TeX tools for LaTeX (JAW)
+\etb@tempcnta=\count335
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/stringenc\stringenc.s
+ty
+Package: stringenc 2019/11/29 v1.12 Convert strings between diff. encodings (HO
+)
+)
+\@linkdim=\dimen283
+\Hy@linkcounter=\count336
+\Hy@pagecounter=\count337
+ (C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\pd1enc.def
+File: pd1enc.def 2026-04-24 v7.01q Hyperref: PDFDocEncoding definition (HO)
+Now handling font encoding PD1 ...
+... no UTF-8 mapping file for font encoding PD1
+) (C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/intcalc\intcalc.sty
+Package: intcalc 2019/12/15 v1.3 Expandable calculations with integers (HO)
+)
+\Hy@SavedSpaceFactor=\count338
+ (C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\puenc.def
+File: puenc.def 2026-04-24 v7.01q Hyperref: PDF Unicode definition (HO)
+Now handling font encoding PU ...
+... no UTF-8 mapping file for font encoding PU
+)
+Package hyperref Info: Hyper figures OFF on input line 4199.
+Package hyperref Info: Link nesting OFF on input line 4204.
+Package hyperref Info: Hyper index ON on input line 4207.
+Package hyperref Info: Plain pages OFF on input line 4214.
+Package hyperref Info: Backreferencing OFF on input line 4219.
+Package hyperref Info: Implicit mode ON; LaTeX internals redefined.
+Package hyperref Info: Bookmarks ON on input line 4466.
+\c@Hy@tempcnt=\count339
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/url\url.sty
+\Urlmuskip=\muskip17
+Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
+)
+LaTeX Info: Redefining \url on input line 4805.
+\XeTeXLinkMargin=\dimen284
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/bitset\bitset.sty
+Package: bitset 2019/12/09 v1.3 Handle bit-vector datatype (HO)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/bigintcalc\bigintcalc
+.sty
+Package: bigintcalc 2019/12/15 v1.5 Expandable calculations on big integers (HO
+)
+))
+\Fld@menulength=\count340
+\Field@Width=\dimen285
+\Fld@charsize=\dimen286
+Package hyperref Info: Hyper figures OFF on input line 6091.
+Package hyperref Info: Link nesting OFF on input line 6096.
+Package hyperref Info: Hyper index ON on input line 6099.
+Package hyperref Info: backreferencing OFF on input line 6106.
+Package hyperref Info: Link coloring OFF on input line 6111.
+Package hyperref Info: Link coloring with OCG OFF on input line 6116.
+Package hyperref Info: PDF/A mode OFF on input line 6121.
+\Hy@abspage=\count341
+\c@Item=\count342
+\c@Hfootnote=\count343
+)
+Package hyperref Info: Driver (autodetected): hpdftex.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/hyperref\hpdftex.def
+File: hpdftex.def 2026-04-24 v7.01q Hyperref driver for pdfTeX
+\Fld@listcount=\count344
+\c@bookmark@seq@number=\count345
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/rerunfilecheck\rerunfil
+echeck.sty
+Package: rerunfilecheck 2025-06-21 v1.11 Rerun checks for auxiliary files (HO)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/uniquecounter\uniquec
+ounter.sty
+Package: uniquecounter 2019/12/15 v1.4 Provide unlimited unique counter (HO)
+)
+Package uniquecounter Info: New unique counter `rerunfilecheck' on input line 2
+84.
+)
+\Hy@SectionHShift=\skip82
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.sty
+\lst@mode=\count346
+\lst@gtempboxa=\box74
+\lst@token=\toks39
+\lst@length=\count347
+\lst@currlwidth=\dimen287
+\lst@column=\count348
+\lst@pos=\count349
+\lst@lostspace=\dimen288
+\lst@width=\dimen289
+\lst@newlines=\count350
+\lst@lineno=\count351
+\lst@maxwidth=\dimen290
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstpatch.sty
+File: lstpatch.sty 2025/11/14 1.11b (Carsten Heinz)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstmisc.sty
+File: lstmisc.sty 2025/11/14 1.11b (Carsten Heinz)
+\c@lstnumber=\count352
+\lst@skipnumbers=\count353
+\lst@framebox=\box75
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/listings\listings.cfg
+File: listings.cfg 2025/11/14 1.11b listings configuration
+))
+Package: listings 2025/11/14 1.11b (Carsten Heinz)
+==> First Aid for listings.sty no longer applied!
+    Expected:
+        2024/09/23 1.10c (Carsten Heinz)
+    but found:
+        2025/11/14 1.11b (Carsten Heinz)
+    so I'm assuming it got fixed.
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pdfpages\pdfpages.sty
+Package: pdfpages 2026/03/30 v0.6h Insert pages of external PDF documents (AM)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/base\ifthen.sty
+Package: ifthen 2024/03/16 v1.1e Standard LaTeX ifthen package (DPC)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/tools\calc.sty
+Package: calc 2025/03/01 v4.3b Infix arithmetic (KKT,FJ)
+\calc@Acount=\count354
+\calc@Bcount=\count355
+\calc@Adimen=\dimen291
+\calc@Bdimen=\dimen292
+\calc@Askip=\skip83
+\calc@Bskip=\skip84
+LaTeX Info: Redefining \setlength on input line 86.
+LaTeX Info: Redefining \addtolength on input line 87.
+\calc@Ccount=\count356
+\calc@Cskip=\skip85
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/eso-pic\eso-pic.sty
+Package: eso-pic 2025/12/10 v3.0d eso-pic (RN)
+\ESO@tempdima=\dimen293
+\ESO@tempdimb=\dimen294
+)
+\AM@pagewidth=\dimen295
+\AM@pageheight=\dimen296
+\AM@fboxrule=\dimen297
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/pdfpages\pppdftex.def
+File: pppdftex.def 2026/03/30 v0.6h Pdfpages driver for pdfTeX (AM)
+)
+\pdfpages@includegraphics@status=\count357
+\AM@pagebox=\box76
+\AM@global@opts=\toks40
+\AM@pagecnt=\count358
+\AM@toc@title=\toks41
+\AM@lof@heading=\toks42
+\c@AM@survey=\count359
+\AM@templatesizebox=\box77
+) (C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/float\float.sty
+Package: float 2001/11/08 v1.3d Float enhancements (AL)
+\c@float@type=\count360
+\float@exts=\toks43
+\float@box=\box78
+\@float@everytoks=\toks44
+\@floatcapt=\box79
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/mdwtools\footnote.sty
+Package: footnote 1997/01/28 1.13 Save footnotes around boxes
+\fn@notes=\box80
+\fn@width=\dimen298
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/footmisc\footmisc.sty
+Package: footmisc 2025/05/09 v7.0b a miscellany of footnote facilities
+\FN@temptoken=\toks45
+\footnotemargin=\dimen299
+Package footmisc Info: Declaring symbol style bringhurst on input line 549.
+Package footmisc Info: Declaring symbol style chicago on input line 557.
+Package footmisc Info: Declaring symbol style wiley on input line 566.
+Package footmisc Info: Declaring symbol style lamport-robust on input line 577.
+
+Package footmisc Info: Declaring symbol style lamport* on input line 597.
+Package footmisc Info: Declaring symbol style lamport*-robust on input line 618
+.
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.sty
+Package: geometry 2026/03/07 v6.0 Page Geometry
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/iftex\ifvtex.sty
+Package: ifvtex 2019/10/25 v1.7 ifvtex legacy package. Use iftex instead.
+)
+\Gm@cnth=\count361
+\Gm@cntv=\count362
+\c@Gm@tempcnt=\count363
+\Gm@bindingoffset=\dimen300
+\Gm@wd@mp=\dimen301
+\Gm@odd@mp=\dimen302
+\Gm@even@mp=\dimen303
+\Gm@layoutwidth=\dimen304
+\Gm@layoutheight=\dimen305
+\Gm@layouthoffset=\dimen306
+\Gm@layoutvoffset=\dimen307
+\Gm@dimlist=\toks46
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/geometry\geometry.cfg))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/multirow\multirow.sty
+Package: multirow 2024/11/12 v2.9 Span multiple rows of a table
+\multirow@colwidth=\skip86
+\multirow@cntb=\count364
+\multirow@dima=\skip87
+\bigstrutjot=\dimen308
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.sty
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/l3packages/l3keys2e\l3k
+eys2e.sty
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/l3kernel\expl3.sty
+Package: expl3 2026-04-28 L3 programming layer (loader) 
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/l3backend\l3backend-pdf
+tex.def
+File: l3backend-pdftex.def 2026-02-18 L3 backend support: PDF output (pdfTeX)
+\l__color_backend_stack_int=\count365
+))
+Package: l3keys2e 2025-10-09 LaTeX2e option processing using LaTeX3 keys
+)
+Package: lipsum 2021-09-20 v2.7 150 paragraphs of Lorem Ipsum dummy text
+\g__lipsum_par_int=\count366
+\l__lipsum_a_int=\count367
+\l__lipsum_b_int=\count368
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/lipsum\lipsum.ltd.tex))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/wrapfig\wrapfig.sty
+\wrapoverhang=\dimen309
+\WF@size=\dimen310
+\c@WF@wrappedlines=\count369
+\WF@box=\box81
+\WF@everypar=\toks47
+Package: wrapfig 2003/01/31  v 3.6
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/cleveref\cleveref.sty
+Package: cleveref 2018/03/27 v0.21.4 Intelligent cross-referencing
+Package cleveref Info: `hyperref' support loaded on input line 2370.
+LaTeX Info: Redefining \cref on input line 2370.
+LaTeX Info: Redefining \Cref on input line 2370.
+LaTeX Info: Redefining \crefrange on input line 2370.
+LaTeX Info: Redefining \Crefrange on input line 2370.
+LaTeX Info: Redefining \cpageref on input line 2370.
+LaTeX Info: Redefining \Cpageref on input line 2370.
+LaTeX Info: Redefining \cpagerefrange on input line 2370.
+LaTeX Info: Redefining \Cpagerefrange on input line 2370.
+LaTeX Info: Redefining \labelcref on input line 2370.
+LaTeX Info: Redefining \labelcpageref on input line 2370.
+Package cleveref Info: `listings' support loaded on input line 3131.
+)
+==> First Aid for cleveref.sty applied!
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\adjustbox.sty
+Package: adjustbox 2025/02/26 v1.3c Adjusting TeX boxes (trim, clip, ...)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/xkeyval\xkeyval.sty
+Package: xkeyval 2022/06/16 v2.9 package option processing (HA)
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkeyval.tex
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/generic/xkeyval\xkvutils.tex
+\XKV@toks=\toks48
+\XKV@tempa@toks=\toks49
+)
+\XKV@depth=\count370
+File: xkeyval.tex 2014/12/03 v2.7a key=value parser (HA)
+))
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\adjcalc.sty
+Package: adjcalc 2012/05/16 v1.1 Provides advanced setlength with multiple back
+-ends (calc, etex, pgfmath)
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\trimclip.sty
+Package: trimclip 2025/02/21 v1.2a Trim and clip general TeX material
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/collectbox\collectbox.s
+ty
+Package: collectbox 2022/10/17 v0.4c Collect macro arguments as boxes
+\collectedbox=\box82
+)
+\tc@llx=\dimen311
+\tc@lly=\dimen312
+\tc@urx=\dimen313
+\tc@ury=\dimen314
+Package trimclip Info: Using driver 'tc-pdftex.def'.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/adjustbox\tc-pdftex.def
+File: tc-pdftex.def 2025/02/26 v2.3 Clipping driver for pdftex
+))
+\adjbox@Width=\dimen315
+\adjbox@Height=\dimen316
+\adjbox@Depth=\dimen317
+\adjbox@Totalheight=\dimen318
+\adjbox@pwidth=\dimen319
+\adjbox@pheight=\dimen320
+\adjbox@pdepth=\dimen321
+\adjbox@ptotalheight=\dimen322
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/ifoddpage\ifoddpage.sty
+Package: ifoddpage 2022/10/18 v1.2 Conditionals for odd/even page detection
+\c@checkoddpage=\count371
+) (C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/varwidth\varwidth.sty
+Package: varwidth 2009/03/30 ver 0.92;  Variable-width minipages
+\@vwid@box=\box83
+\sift@deathcycles=\count372
+\@vwid@loff=\dimen323
+\@vwid@roff=\dimen324
+)
+==> First Aid for varwidth.sty applied!
+)
+   defining Unicode char U+0301 (decimal 769)
+Package minitoc Info: I0017
+(minitoc)             \mtcsettitle redefines the macro 
+(minitoc)             "mtctitle" as 
+(minitoc)             "Plan" on input line 51.
+Package minitoc Info: I0008
+(minitoc)             Horizontal rules are inhibited 
+(minitoc)             for the minitocs on input line 52.
+Package minitoc Info: I0014
+(minitoc)             \mtcsetfeature redefines the macro 
+(minitoc)             "beforeminitoc" as 
+(minitoc)             "\vspace {-20pt}" on input line 53.
+ (C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/listings\lstlang1.sty
+File: lstlang1.sty 2025/11/14 1.11b listings language file
+)
+Package hyperref Info: Option `breaklinks' set `true' on input line 82.
+Package hyperref Info: Option `bookmarksopen' set `true' on input line 82.
+\chapter@number@width=\skip88
+Package french3.ldf Info: Setting StandardItemizeEnv=true for
+(french3.ldf)             compatibility with enumitem package,
+(french3.ldf)             reported on input line 148.
+Package french3.ldf Info: Setting StandardEnumerateEnv=true for
+(french3.ldf)             compatibility with enumitem package,
+(french3.ldf)             reported on input line 148.
+
+
+LaTeX Warning: Unused global option(s):
+    [A4wide].
+
+(main.aux
+Package babel Info: 'french' activates 'french' shorthands.
+(babel)             Reported on input line 12.
+)
+\openout1 = `main.aux'.
+
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for PD1/pdf/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+LaTeX Font Info:    Checking defaults for PU/pdf/m/n on input line 148.
+LaTeX Font Info:    ... okay on input line 148.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/context/base/mkii\supp-pdf.mk
+ii
+[Loading MPS to PDF converter (version 2006.09.02).]
+\scratchcounter=\count373
+\scratchdimen=\dimen325
+\scratchbox=\box84
+\nofMPsegments=\count374
+\nofMParguments=\count375
+\everyMPshowfont=\toks50
+\MPscratchCnt=\count376
+\MPscratchDim=\dimen326
+\MPnumerator=\count377
+\makeMPintoPDFobject=\count378
+\everyMPtoPDFconversion=\toks51
+)
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/epstopdf-pkg\epstopdf-b
+ase.sty
+Package: epstopdf-base 2020-01-24 v2.11 Base part for package epstopdf
+Package epstopdf-base Info: Redefining graphics rule for `.eps' on input line 4
+85.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/00miktex\epstopdf-sys.c
+fg
+File: epstopdf-sys.cfg 2021/03/18 v2.0 Configuration of epstopdf for MiKTeX
+))
+Package caption Info: Begin \AtBeginDocument code.
+Package caption Info: french babel package is loaded.
+Package caption Info: float package is loaded.
+Package caption Info: hyperref package is loaded.
+Package caption Info: listings package is loaded.
+Package caption Info: longtable package is loaded.
+
+(C:\Users\medam\AppData\Local\Programs\MiKTeX\tex/latex/caption\ltcaption.sty
+Package: ltcaption 2021/01/08 v1.4c longtable captions (AR)
+)
+Package caption Info: subfigure package is loaded.
+Package caption Info: wrapfig package is loaded.
+Package caption Info: End \AtBeginDocument code.
+\c@minilofdepth=\count379
+\c@minilotdepth=\count380
+\c@partlofdepth=\count381
+\c@partlotdepth=\count382
+\c@sectlofdepth=\count383
+\c@sectlotdepth=\count384
+Package minitoc(hints) Info: I0049
+(minitoc(hints))             ==> You requested the hints option. 
+(minitoc(hints))             Some hints are eventually given below.
+
+
+Package minitoc(hints) Warning: W0030
+(minitoc(hints))                --- The \part command is altered 
+(minitoc(hints))                after minitoc.
+
+
+Package minitoc(hints) Warning: W0023
+(minitoc(hints))                --- It may be the consequence 
+(minitoc(hints))                of loading the ``hyperref'' package.
+
+
+Package minitoc(hints) Warning: W0028
+(minitoc(hints))                --- The \chapter command is altered 
+(minitoc(hints))                after minitoc.
+
+
+Package minitoc(hints) Warning: W0023
+(minitoc(hints))                --- It may be the consequence 
+(minitoc(hints))                of loading the ``hyperref'' package.
+
+LaTeX Info: Redefining \degres on input line 148.
+Package hyperref Info: Link coloring OFF on input line 148.
+(main.out) (main.out)
+\@outlinefile=\write5
+\openout5 = `main.out'.
+
+\c@lstlisting=\count385
+
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: a4paper
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(71.13188pt, 455.24411pt, 71.13188pt)
+* v-part:(T,H,B)=(71.13188pt, 702.78308pt, 71.13188pt)
+* \paperwidth=597.50787pt
+* \paperheight=845.04684pt
+* \textwidth=455.24411pt
+* \textheight=702.78308pt
+* \oddsidemargin=-1.1381pt
+* \evensidemargin=-1.1381pt
+* \topmargin=-54.1381pt
+* \headheight=28.0pt
+* \headsep=25.0pt
+* \topskip=12.0pt
+* \footskip=30.0pt
+* \marginparwidth=54.2025pt
+* \marginparsep=10.0pt
+* \columnsep=10.0pt
+* \skip\footins=10.8pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+(Remerciement.tex) (dedicaces.tex [1
+
+{C:/Users/medam/AppData/Local/MiKTeX/fonts/map/pdftex/pdftex.map}])
+Package minitoc Info: I0024
+(minitoc)             PREPARING MINITOCS FROM main.toc on input line 167.
+
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode Re
+merciements}{\reset@font\mtcSfont i}{section*.1}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode DÃ
+©dicace}{\reset@font\mtcSfont ii}{section*.2}}
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc1.
+\openout4 = `main.mtc1'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc2.
+\openout4 = `main.mtc2'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc3.
+\openout4 = `main.mtc3'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc4.
+\openout4 = `main.mtc4'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc5.
+\openout4 = `main.mtc5'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc6.
+\openout4 = `main.mtc6'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc7.
+\openout4 = `main.mtc7'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc8.
+\openout4 = `main.mtc8'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc9.
+\openout4 = `main.mtc9'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc10.
+\openout4 = `main.mtc10'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc11.
+\openout4 = `main.mtc11'.
+
+Package minitoc Info: I0033
+(minitoc)             Writing main.mtc12.
+\openout4 = `main.mtc12'.
+
+[2] (main.toc
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <12> on input line 2.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <8> on input line 2.
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <6> on input line 2.
+ [3
+
+] [4]
+Underfull \hbox (badness 10000) in paragraph at lines 59--59
+ [][] [][]\T1/cmr/m/n/12 CU-06 : Af-fec-ter un équi-pe-ment à un client 
+ []
+
+[5] [6])
+\tf@toc=\write6
+\openout6 = `main.toc'.
+
+ [7] (main.lof [8
+
+])
+\tf@lof=\write7
+\openout7 = `main.lof'.
+
+ [9] (main.lot [10
+
+])
+\tf@lot=\write8
+\openout8 = `main.lot'.
+
+ [11] (introduction_generale.tex [1
+
+
+]) (chapitres/Chapitre1.tex [2]
+Chapitre 1.
+
+Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
+[]| [] 
+ []
+
+\openout4 = `main.mtc'.
+
+\openout4 = `main.mtc'.
+
+LaTeX Font Info:    External font `cmex10' loaded for size
+(Font)              <10.95> on input line 9.
+(main.mtc2) [3
+
+] [4] [5] [6] [7]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 170.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 170.
+
+
+Underfull \hbox (badness 7925) in paragraph at lines 178--179
+[]|\T1/cmr/m/n/12 Informations dis-per-sées sur
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 181--182
+[]|\T1/cmr/m/n/12 Existence d'un suivi des
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 190--191
+[]|\T1/cmr/m/n/12 Manque d'au-to-ma-ti-sa-tion
+ []
+
+
+Underfull \hbox (badness 3460) in paragraph at lines 192--193
+[]|\T1/cmr/m/n/12 Suivi des in-ter-ven-
+ []
+
+
+Underfull \hbox (badness 4699) in paragraph at lines 193--194
+[]|\T1/cmr/m/n/12 Un his-to-rique est conservé
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 196--197
+[]|\T1/cmr/m/n/12 Communication
+ []
+
+
+Overfull \hbox (3.4567pt too wide) in paragraph at lines 172--209
+ [][] 
+ []
+
+[8]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 252.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 252.
+
+
+Underfull \hbox (badness 3199) in paragraph at lines 259--262
+\T1/cmr/m/n/12 ni-ciens ; dis-po-ni-bi-lité d'un his-to-
+ []
+
+
+Overfull \hbox (0.66669pt too wide) in paragraph at lines 266--267
+[]|\T1/cmr/bx/n/12 Externes| 
+ []
+
+
+Underfull \hbox (badness 2469) in paragraph at lines 269--272
+\T1/cmr/m/n/12 ment des uti-li-sa-teurs ; risque de
+ []
+
+
+Overfull \hbox (3.45671pt too wide) in paragraph at lines 254--274
+ [][] 
+ []
+
+[9] [10] [11]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 345.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 345.
+
+) (chapitres/Chapitre2.tex [12] [13]
+Chapitre 2.
+
+Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
+[]| [] 
+ []
+
+\openout4 = `main.mtc'.
+
+\openout4 = `main.mtc'.
+
+(main.mtc3) [14
+
+] [15] [16]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 141.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 141.
+
+
+Overfull \hbox (10.95447pt too wide) in paragraph at lines 147--148
+[]|\T1/cmr/bx/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 148--149
+[]|\T1/cmr/m/n/12 Gestionnaire prin-ci-pal
+ []
+
+
+Underfull \hbox (badness 4096) in paragraph at lines 153--154
+[]|\T1/cmr/m/n/12 Agent de main-te-nance
+ []
+
+
+Underfull \hbox (badness 1062) in paragraph at lines 154--156
+[]|\T1/cmr/m/n/12 Consultation de ses in-ter-ven-tions as-si-
+ []
+
+
+Underfull \hbox (badness 4181) in paragraph at lines 158--159
+[]|\T1/cmr/m/n/12 Bénéficiaire du ser-vice
+ []
+
+
+Overfull \hbox (3.45673pt too wide) in paragraph at lines 143--169
+ [][] 
+ []
+
+[17] [18] [19]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 235.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 235.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 252.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 252.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 259.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 259.
+
+
+Underfull \hbox (badness 2134) in paragraph at lines 275--278
+[]|\T1/cmr/m/n/12 Utilisateur in-terne : ad-mi-nis-tra-teur ou tech-ni-cien. At
+-tri-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 285--288
+[]|\T1/cmr/m/n/12 Équipement du ca-ta-logue glo-bal, in-dé-pen-dant
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 285--288
+\T1/cmr/m/n/12 de tout client. At-tri-buts : id, re-fe-rence, type
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 285--288
+\T1/cmr/m/n/12 (\T1/cmtt/m/n/12 CLIMATISEUR\T1/cmr/m/n/12 /\T1/cmtt/m/n/12 SYST
+EME_SURPRESSION\T1/cmr/m/n/12 ), marque, mo-dele,
+ []
+
+
+Overfull \hbox (7.72716pt too wide) in paragraph at lines 293--294
+[]|\T1/cmtt/m/n/12 ClientEquipement| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 300--304
+[]|\T1/cmr/m/n/12 Contrat de main-te-nance cou-vrant des ins-tal-la-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 300--304
+\T1/cmr/m/n/12 tions \T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 . At-tri-bu
+ts : id, re-fe-rence,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 300--304
+\T1/cmr/m/n/12 clien-tId, da-te-De-but, da-te-Fin, per-io-di-cite, sta-tut
+ []
+
+
+Underfull \hbox (badness 5563) in paragraph at lines 306--312
+\T1/cmr/m/n/12 At-tri-buts : id, re-fe-rence, type (\T1/cmtt/m/n/12 PREVENTIVE\
+T1/cmr/m/n/12 /\T1/cmtt/m/n/12 CURATIVE\T1/cmr/m/n/12 ),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 306--312
+\T1/cmr/m/n/12 clien-tId, equi-pe-men-tId, clien-tE-qui-pe-men-tId, tech-ni-cie
+-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 306--312
+\T1/cmr/m/n/12 nId, contrac-tId, da-te-Pre-vue, da-te-Rea-li-sa-tion, sta-tut
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 306--312
+\T1/cmr/m/n/12 (\T1/cmtt/m/n/12 PLANIFIEE\T1/cmr/m/n/12 /\T1/cmtt/m/n/12 EN_COU
+RS\T1/cmr/m/n/12 /\T1/cmtt/m/n/12 REALISEE\T1/cmr/m/n/12 /\T1/cmtt/m/n/12 ANNUL
+EE\T1/cmr/m/n/12 ), cou-ver-tu-re-Con-
+ []
+
+
+Underfull \hbox (badness 5756) in paragraph at lines 314--318
+[]|\T1/cmr/m/n/12 Déclaration de panne par un client, sans champ de
+ []
+
+
+Underfull \hbox (badness 5161) in paragraph at lines 314--318
+\T1/cmr/m/n/12 prio-rité. At-tri-buts : id, re-fe-rence, clien-tId, equi-pe-men
+-
+ []
+
+
+Underfull \hbox (badness 1803) in paragraph at lines 314--318
+\T1/cmr/m/n/12 tId, clien-tE-qui-pe-men-tId, da-te-De-cla-ra-tion, des-crip-tio
+n, sta-
+ []
+
+
+Underfull \hbox (badness 3849) in paragraph at lines 324--328
+[]|\T1/cmr/m/n/12 Facture gé-né-rée pour une in-ter-ven-tion cu-ra-tive réa-li-
+sée
+ []
+
+
+Underfull \hbox (badness 1571) in paragraph at lines 324--328
+\T1/cmr/m/n/12 nId, da-teE-mis-sion, mon-tan-tHT, tva, mon-tantTTC, sta-tut
+ []
+
+[20]
+ignored: Infinite glue shrinkage found in box being split [21]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 363.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 363.
+
+[22]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 386.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 386.
+
+
+Overfull \hbox (13.01169pt too wide) in alignment at lines 385--391
+ [] [] [] [] 
+ []
+
+
+Overfull \hbox (13.01169pt too wide) in alignment at lines 391--396
+ [] [] [] [] 
+ []
+
+
+Overfull \hbox (13.01169pt too wide) in alignment at lines 396--398
+ [] [] [] [] 
+ []
+
+
+Overfull \hbox (13.01169pt too wide) in alignment at lines 398--400
+ [] [] [] [] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 401--402
+[]|\T1/cmr/m/n/12 Tout uti-li-sa-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 406--407
+[]|\T1/cmr/m/n/12 Tout uti-li-sa-
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 410--411
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 1769) in paragraph at lines 411--413
+[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux gé-rer les
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 419--420
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 423--424
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 428--429
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 433--434
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 4792) in paragraph at lines 434--436
+[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux af-fec-ter
+ []
+
+
+Underfull \hbox (badness 1418) in paragraph at lines 434--436
+\T1/cmr/m/n/12 un équi-pe-ment du ca-ta-logue à un client via
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 438--439
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 439--441
+[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux créer
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 439--441
+\T1/cmr/m/n/12 un contrat cou-vrant des ins-tal-la-tions
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 448--449
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 452--453
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 474--475
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 479--480
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 483--484
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 488--489
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 492--493
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 2027) in paragraph at lines 493--494
+[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux consul-ter
+ []
+
+
+Overfull \hbox (4.39795pt too wide) in paragraph at lines 508--509
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 2134) in paragraph at lines 519--521
+\T1/cmr/m/n/12 per-son-nel (équi-pe-ments, in-ter-ven-tions, pannes,
+ []
+
+
+Overfull \hbox (13.01169pt too wide) in alignment at lines 400--527
+ [] [] [] [] 
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [23]
+ignored: Infinite glue shrinkage fo
+und in box being split [24]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 532.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 532.
+
+
+Overfull \hbox (13.01125pt too wide) in alignment at lines 531--537
+ [] [] [] [] 
+ []
+
+
+Overfull \hbox (13.01125pt too wide) in alignment at lines 537--541
+ [] [] [] [] 
+ []
+
+
+Overfull \hbox (13.01125pt too wide) in alignment at lines 541--543
+ [] [] [] [] 
+ []
+
+
+Overfull \hbox (13.01125pt too wide) in alignment at lines 543--545
+ [] [] [] [] 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 547--548
+[]|\T1/cmr/m/n/12 Authentification
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 547--548
+\T1/cmr/m/n/12 et ré-fé-ren-tiel
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--552
+[]|\T1/cmr/m/n/12 Connexion (email ou té-lé-
+ []
+
+
+Underfull \hbox (badness 2635) in paragraph at lines 548--552
+\T1/cmr/m/n/12 phone), dé-con-nexion, contrôle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--552
+\T1/cmr/m/n/12 d'ac-cès, CRUD uti-li-sa-teurs
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--552
+\T1/cmr/m/n/12 (soft-delete + res-tau-ra-tion),
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 548--552
+\T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 , ges-tion
+ []
+
+
+Underfull \hbox (badness 7451) in paragraph at lines 548--552
+\T1/cmr/m/n/12 contrats, gé-né-ra-tion au-to-ma-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 552--555
+[]|\T1/cmtt/m/n/12 User\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 Client\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 552--555
+\T1/cmtt/m/n/12 Equipment\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 552--555
+\T1/cmtt/m/n/12 EquipmentImage\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 552--555
+\T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 4391) in paragraph at lines 557--558
+[]|\T1/cmr/m/n/12 Gestion des in-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 558--563
+[]|\T1/cmr/m/n/12 Planning (heb-do-ma-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 558--563
+\T1/cmr/m/n/12 daire/mensuel), af-fec-ta-tion
+ []
+
+
+Underfull \hbox (badness 4144) in paragraph at lines 558--563
+\T1/cmr/m/n/12 tech-ni-cien (vé-ri-fi-ca-tion dis-po-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 558--563
+\T1/cmr/m/n/12 ni-bi-lité), dé-mar-rage/clôture
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 558--563
+\T1/cmr/m/n/12 panne $\OMS/cmsy/m/n/12 !$ \T1/cmr/m/n/12 cu-ra-tive, vé-ri-fi-c
+a-
+ []
+
+
+Underfull \hbox (badness 4505) in paragraph at lines 558--563
+\T1/cmr/m/n/12 tion cou-ver-ture contrac-tuelle,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 563--565
+[]|\T1/cmtt/m/n/12 Intervention\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 1286) in paragraph at lines 563--565
+\T1/cmtt/m/n/12 Panne\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 PieceJointe\T1/cmr/m/n/12
+ ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 563--565
+\T1/cmtt/m/n/12 Contract\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 567--568
+[]|\T1/cmr/m/n/12 Facturation,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 567--568
+\T1/cmr/m/n/12 his-to-rique et
+ []
+
+
+Underfull \hbox (badness 6608) in paragraph at lines 568--573
+\T1/cmr/m/n/12 to-rique tech-ni-cien, his-to-rique
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 573--575
+[]|\T1/cmtt/m/n/12 Invoice\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 573--575
+\T1/cmtt/m/n/12 LigneFacture\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 573--575
+\T1/cmtt/m/n/12 Intervention\T1/cmr/m/n/12 ,
+ []
+
+
+Overfull \hbox (13.01125pt too wide) in alignment at lines 545--576
+ [] [] [] [] 
+ []
+
+[25]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 587.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 587.
+
+[26]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 608.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 608.
+
+[27]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 656.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 656.
+
+) (chapitres/Chapitre3.tex [28]
+Chapitre 3.
+
+Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
+[]| [] 
+ []
+
+\openout4 = `main.mtc'.
+
+\openout4 = `main.mtc'.
+
+(main.mtc4) [29
+
+]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 32.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 32.
+
+
+Overfull \hbox (3.21933pt too wide) in paragraph at lines 35--35
+[]|\T1/cmr/bx/n/12 Priorité| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 35--36
+[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
+ []
+
+
+Overfull \hbox (3.21933pt too wide) in paragraph at lines 40--40
+[]|\T1/cmr/bx/n/12 Priorité| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 40--41
+[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
+ []
+
+
+Underfull \hbox (badness 1354) in paragraph at lines 48--50
+\T1/cmr/m/n/12 je veux me connec-ter
+ []
+
+
+Underfull \hbox (badness 1558) in paragraph at lines 51--53
+[]|\T1/cmr/m/n/12 Connexion réus-sie avec
+ []
+
+
+Underfull \hbox (badness 1796) in paragraph at lines 51--53
+\T1/cmr/m/n/12 fi-chée si iden-ti-fiant ou
+ []
+
+
+Underfull \hbox (badness 1939) in paragraph at lines 55--56
+[]|\T1/cmr/m/n/12 En tant qu'uti-li-sa-teur
+ []
+
+
+Underfull \hbox (badness 4303) in paragraph at lines 57--58
+\T1/cmr/m/n/12 tion vers la page de
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--62
+[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-
+ []
+
+
+Underfull \hbox (badness 1173) in paragraph at lines 60--62
+\T1/cmr/m/n/12 tra-teur, je veux gé-rer
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--62
+\T1/cmr/m/n/12 les comptes uti-li-sa-
+ []
+
+
+Underfull \hbox (badness 1490) in paragraph at lines 60--62
+\T1/cmr/m/n/12 teurs in-ternes (CRUD
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 60--62
+\T1/cmr/m/n/12 + désac-ti-va-tion +
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 62--62
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 1038) in paragraph at lines 63--65
+[]|\T1/cmr/m/n/12 CRUD com-plet ; désac-
+ []
+
+
+Underfull \hbox (badness 1237) in paragraph at lines 63--65
+\T1/cmr/m/n/12 ti-va-tion lo-gique (\T1/cmtt/m/n/12 actif
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--65
+\T1/cmtt/m/n/12 = false\T1/cmr/m/n/12 ) ; uti-li-sa-teur
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 63--65
+\T1/cmr/m/n/12 désac-tivé vi-sible avec
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 69--71
+[]|\T1/cmr/m/n/12 Chaque rôle n'ac-cède
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 75--75
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 76--78
+[]|\T1/cmr/m/n/12 Formulaire adapté au
+ []
+
+
+Underfull \hbox (badness 1924) in paragraph at lines 76--78
+\T1/cmr/m/n/12 type ; ville sé-lec-tion-née
+ []
+
+
+Underfull \hbox (badness 1237) in paragraph at lines 76--78
+\T1/cmr/m/n/12 de-puis liste tu-ni-sienne ;
+ []
+
+
+Underfull \hbox (badness 6125) in paragraph at lines 76--78
+\T1/cmr/m/n/12 mot de passe por-tail
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 82--82
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (3.00002pt too wide) in paragraph at lines 82--83
+[]|\T1/cmr/m/n/12 Moyenne| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--85
+[]|\T1/cmr/m/n/12 Modifications en-re-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--85
+\T1/cmr/m/n/12 gis-trées ; sup-pres-sion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 83--85
+\T1/cmr/m/n/12 si au-cune contrainte
+ []
+
+
+Underfull \hbox (badness 2401) in paragraph at lines 87--89
+\T1/cmr/m/n/12 teur, je veux ajou-ter
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 89--89
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--92
+[]|\T1/cmr/m/n/12 Équipement ajouté
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--92
+\T1/cmr/m/n/12 au ca-ta-logue glo-bal ;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--92
+\T1/cmr/m/n/12 type \T1/cmtt/m/n/12 CLIMATISEUR \T1/cmr/m/n/12 ou
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 90--92
+\T1/cmtt/m/n/12 SYSTEME_SURPRESSION \T1/cmr/m/n/12 ;
+ []
+
+
+Underfull \hbox (badness 8019) in paragraph at lines 90--92
+\T1/cmr/m/n/12 plu-sieurs images ; une
+ []
+
+
+Underfull \hbox (badness 7291) in paragraph at lines 90--92
+\T1/cmr/m/n/12 image prin-ci-pale dé-si-
+ []
+
+
+Underfull \hbox (badness 2134) in paragraph at lines 94--96
+\T1/cmr/m/n/12 teur, je veux af-fec-ter
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 96--96
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--99
+[]|\T1/cmr/m/n/12 Enregistrement
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--99
+\T1/cmtt/m/n/12 ClientEquipement
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--99
+\T1/cmr/m/n/12 créé avec da-teA-chat,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 97--99
+\T1/cmr/m/n/12 da-teIns-tal-la-tion, lo-ca-li-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 101--103
+[]|\T1/cmr/m/n/12 En tant qu'ad-mi-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 101--103
+\T1/cmr/m/n/12 nis-tra-teur, je veux
+ []
+
+
+Underfull \hbox (badness 1454) in paragraph at lines 101--103
+\T1/cmr/m/n/12 créer un contrat cou-
+ []
+
+
+Underfull \hbox (badness 1052) in paragraph at lines 101--103
+\T1/cmr/m/n/12 vrant des ins-tal-la-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 101--103
+\T1/cmtt/m/n/12 ClientEquipement
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 103--103
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 3579) in paragraph at lines 104--106
+\T1/cmr/m/n/12 et à un en-semble de
+ []
+
+
+Underfull \hbox (badness 3168) in paragraph at lines 104--106
+\T1/cmr/m/n/12 rio-di-cité choi-sie ; dates
+ []
+
+
+Underfull \hbox (badness 1184) in paragraph at lines 108--110
+[]|\T1/cmr/m/n/12 En tant que sys-tème,
+ []
+
+
+Underfull \hbox (badness 1708) in paragraph at lines 108--110
+\T1/cmr/m/n/12 ti-que-ment le plan-ning
+ []
+
+
+Underfull \hbox (badness 1888) in paragraph at lines 111--113
+\T1/cmr/m/n/12 créées se-lon pé-rio-di-cité
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 111--113
+\T1/cmr/m/n/12 et ins-tal-la-tions cou-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 111--113
+\T1/cmr/m/n/12 vertes ; pré-vi-sua-li-sa-tion
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 116--116
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (3.00002pt too wide) in paragraph at lines 116--117
+[]|\T1/cmr/m/n/12 Moyenne| 
+ []
+
+
+Underfull \hbox (badness 1168) in paragraph at lines 117--118
+[]|\T1/cmr/m/n/12 Détail du contrat avec
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [30]
+ignored: Infinite glue shrinkage fo
+und in box being split [31]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 133.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 133.
+
+[32]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 152.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 152.
+
+[33]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 197.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 197.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 229.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 229.
+
+[34] [35]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 294.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 294.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 336.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 336.
+
+[36]
+Underfull \hbox (badness 10000) in paragraph at lines 360--362
+[]\T1/cmr/m/n/12 Créer un équi-pe-ment avec : ré-fé-rence, type (\T1/cmtt/m/n/1
+2 CLIMATISEUR \T1/cmr/m/n/12 ou
+ []
+
+LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 375.
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 379.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 379.
+
+[37]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 427.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 427.
+
+
+Underfull \hbox (badness 1496) in paragraph at lines 434--436
+[]|\T1/cmr/m/n/12 Ce cas d'uti-li-sa-tion per-met à l'ad-mi-nis-tra-teur de cré
+er
+ []
+
+
+Underfull \hbox (badness 3942) in paragraph at lines 434--436
+\T1/cmr/m/n/12 un contrat de main-te-nance cou-vrant des ins-tal-la-tions
+ []
+
+[38] [39]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 491.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 491.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 505--507
+[]|\T1/cmr/m/n/12 Un contrat va-lide vient d'être en-re-gis-tré avec ses
+ []
+
+
+Underfull \hbox (badness 1297) in paragraph at lines 517--519
+[]\T1/cmr/m/n/12 Le Sys-tème re-çoit les don-nées du contrat (da-te-De-but, da-
+te-Fin, per-io-di-cite,
+ []
+
+[40]
+Underfull \hbox (badness 10000) in paragraph at lines 531--533
+[]\T1/cmr/m/n/12 Une in-ter-ven-tion pré-ven-tive est gé-né-rée pour chaque cou
+ple (date,
+ []
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 549.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 549.
+
+
+Underfull \hbox (badness 6380) in paragraph at lines 553--556
+[]\T1/cmr/m/n/12 Les en-ti-tés im-pli-quées dans ce sprint sont : \T1/cmtt/m/n/
+12 User\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 Client\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 
+Equipment\T1/cmr/m/n/12 ,
+ []
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 568.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 568.
+
+[41] [42]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 614.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 614.
+
+[43]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 691.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 691.
+
+[44] [45]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 751.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 751.
+
+[46]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 814.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 814.
+
+[47]
+Underfull \hbox (badness 4303) in paragraph at lines 851--853
+[]\T1/cmr/m/n/12 Le Sys-tème crée une in-ter-ven-tion pré-ven-tive pour chaque 
+couple (date,
+ []
+
+[48]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 885.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 885.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 898.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 898.
+
+) (chapitres/Chapitre4.tex [49] [50]
+Chapitre 4.
+
+Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
+[]| [] 
+ []
+
+\openout4 = `main.mtc'.
+
+\openout4 = `main.mtc'.
+
+(main.mtc5) [51
+
+]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 30.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 30.
+
+
+Overfull \hbox (3.21933pt too wide) in paragraph at lines 33--33
+[]|\T1/cmr/bx/n/12 Priorité| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 33--34
+[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
+ []
+
+
+Overfull \hbox (3.21933pt too wide) in paragraph at lines 38--38
+[]|\T1/cmr/bx/n/12 Priorité| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--39
+[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 47--47
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
+\T1/cmr/m/n/12 par date ; tech-ni-cien
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 48--50
+\T1/cmr/m/n/12 in-dis-po-nible si-gnalé
+ []
+
+
+Underfull \hbox (badness 5681) in paragraph at lines 48--50
+\T1/cmr/m/n/12 et non sé-lec-tion-nable ;
+ []
+
+
+Underfull \hbox (badness 2913) in paragraph at lines 52--54
+\T1/cmr/m/n/12 vue heb-do-ma-daire ou
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 54--54
+[]|\T1/cmr/m/n/12 Admin /
+ []
+
+
+Underfull \hbox (badness 1394) in paragraph at lines 55--57
+[]|\T1/cmr/m/n/12 Vues 1 se-maine, 2 se-
+ []
+
+
+Underfull \hbox (badness 1888) in paragraph at lines 55--57
+\T1/cmr/m/n/12 maines, men-suelle ; ad-
+ []
+
+
+Underfull \hbox (badness 1783) in paragraph at lines 61--62
+\T1/cmr/m/n/12 seules ses in-ter-ven-tions
+ []
+
+
+Underfull \hbox (badness 1472) in paragraph at lines 66--68
+[]|\T1/cmr/m/n/12 Saisie : compte rendu,
+ []
+
+
+Underfull \hbox (badness 1454) in paragraph at lines 72--74
+[]|\T1/cmr/m/n/12 Saisie : diag-nos-tic, ac-
+ []
+
+
+Underfull \hbox (badness 4328) in paragraph at lines 72--74
+\T1/cmr/m/n/12 tions, ma-té-riel, du-rée ;
+ []
+
+
+Underfull \hbox (badness 4084) in paragraph at lines 76--78
+\T1/cmr/m/n/12 pe-ments, sans champ
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--81
+[]|\T1/cmr/m/n/12 Sélection équi-pe-ment
+ []
+
+
+Underfull \hbox (badness 2717) in paragraph at lines 79--81
+\T1/cmr/m/n/12 af-fecté au client ; des-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--81
+\T1/cmr/m/n/12 crip-tion obli-ga-toire ;
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--81
+\T1/cmr/m/n/12 pièces jointes (image,
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--81
+\T1/cmr/m/n/12 PDF, au-dio) ; au-cun
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 79--81
+\T1/cmr/m/n/12 champ de prio-rité ;
+ []
+
+
+Underfull \hbox (badness 1552) in paragraph at lines 83--85
+\T1/cmr/m/n/12 teur, je veux prendre
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 85--85
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
+[]|\T1/cmtt/m/n/12 Panne \T1/cmr/m/n/12 passe à
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
+\T1/cmtt/m/n/12 PRISE_EN_CHARGE \T1/cmr/m/n/12 puis
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
+\T1/cmtt/m/n/12 CONVERTIE \T1/cmr/m/n/12 ; in-ter-ven-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
+\T1/cmr/m/n/12 tion cu-ra-tive créée ;
+ []
+
+
+Underfull \hbox (badness 1107) in paragraph at lines 86--88
+\T1/cmr/m/n/12 cou-ver-ture contrac-tuelle
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 86--88
+\T1/cmr/m/n/12 dé-tec-tée au-to-ma-ti-que-
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 91--91
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 92--94
+[]|\T1/cmr/m/n/12 Formulaire avec
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 92--94
+\T1/cmr/m/n/12 client, ins-tal-la-tion
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 92--94
+\T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 ,
+ []
+
+
+Underfull \hbox (badness 2735) in paragraph at lines 92--94
+\T1/cmr/m/n/12 date, des-crip-tion ; cou-
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 97--97
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Overfull \hbox (3.00002pt too wide) in paragraph at lines 97--98
+[]|\T1/cmr/m/n/12 Moyenne| 
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 102--102
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 2111) in paragraph at lines 103--104
+[]|\T1/cmr/m/n/12 Vue fil-trée sur sta-tuts
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [52]
+ignored: Infinite glue shrinkage fo
+und in box being split [53]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 119.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 119.
+
+[54]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 140.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 140.
+
+[55]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 201.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 201.
+
+[56]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 243.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 243.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 288.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 288.
+
+[57]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 342.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 342.
+
+[58]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 375.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 375.
+
+[59]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 421.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 421.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 434--435
+[]|\T1/cmr/m/n/12 Une in-ter-ven-tion cu-ra-tive existe avec un
+ []
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 466.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 466.
+
+[60]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 484.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 484.
+
+[61] [62]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 557.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 557.
+
+[63]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 611.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 611.
+
+[64]
+Underfull \hbox (badness 5475) in paragraph at lines 636--638
+[]\T1/cmr/m/n/12 L'administrateur sai-sit les in-for-ma-tions de l'in-ter-ven-t
+ion cu-ra-tive (client,
+ []
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 673.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 673.
+
+[65]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 686.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 686.
+
+) (chapitres/Chapitre5.tex [66]
+Chapitre 5.
+
+Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
+[]| [] 
+ []
+
+\openout4 = `main.mtc'.
+
+\openout4 = `main.mtc'.
+
+(main.mtc6) [67
+
+]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 31.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 31.
+
+
+Overfull \hbox (3.21933pt too wide) in paragraph at lines 34--34
+[]|\T1/cmr/bx/n/12 Priorité| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 34--35
+[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
+ []
+
+
+Overfull \hbox (3.21933pt too wide) in paragraph at lines 38--38
+[]|\T1/cmr/bx/n/12 Priorité| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 38--39
+[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
+ []
+
+
+Underfull \hbox (badness 2261) in paragraph at lines 46--47
+\T1/cmr/m/n/12 teur, je veux gé-né-rer
+ []
+
+
+Underfull \hbox (badness 4391) in paragraph at lines 46--47
+\T1/cmr/m/n/12 li-sée et hors contrat
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 47--47
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--50
+[]|\T1/cmr/m/n/12 Éligibilité vé-ri-fiée :
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--50
+\T1/cmr/m/n/12 type = \T1/cmtt/m/n/12 CURATIVE \T1/cmr/m/n/12 +
+ []
+
+
+Underfull \hbox (badness 2818) in paragraph at lines 47--50
+\T1/cmr/m/n/12 sta-tut = \T1/cmtt/m/n/12 REALISEE \T1/cmr/m/n/12 +
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--50
+\T1/cmtt/m/n/12 couvertureContrat \T1/cmr/m/n/12 =
+ []
+
+
+Underfull \hbox (badness 3514) in paragraph at lines 47--50
+\T1/cmr/m/n/12 false ; lignes de dé-tail
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--50
+\T1/cmr/m/n/12 (main-d'÷uvre, ma-té-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 47--50
+\T1/cmr/m/n/12 riel) ; \T1/cmtt/m/n/12 montantTTC \T1/cmr/m/n/12 =
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 51--51
+\T1/cmr/m/n/12 une fac-ture comme
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 51--51
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 7030) in paragraph at lines 54--54
+\T1/cmr/m/n/12 filtres (sta-tut, client,
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 55--55
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 55--56
+[]|\T1/cmr/m/n/12 Liste pa-gi-née ; filtres
+ []
+
+
+Overfull \hbox (3.00002pt too wide) in paragraph at lines 57--57
+[]|\T1/cmr/m/n/12 Moyenne| 
+ []
+
+
+Overfull \hbox (3.00002pt too wide) in paragraph at lines 61--61
+[]|\T1/cmr/m/n/12 Moyenne| 
+ []
+
+
+Underfull \hbox (badness 1527) in paragraph at lines 61--62
+[]|\T1/cmr/m/n/12 Seules les in-ter-ven-tions
+ []
+
+
+Underfull \hbox (badness 2035) in paragraph at lines 61--62
+\T1/cmr/m/n/12 as-si-gnées au tech-ni-cien
+ []
+
+
+Underfull \hbox (badness 1205) in paragraph at lines 63--63
+\T1/cmr/m/n/12 veux consul-ter l'his-to-
+ []
+
+
+Overfull \hbox (3.00002pt too wide) in paragraph at lines 64--64
+[]|\T1/cmr/m/n/12 Moyenne| 
+ []
+
+
+Underfull \hbox (badness 1527) in paragraph at lines 64--65
+[]|\T1/cmr/m/n/12 Seules les in-ter-ven-tions
+ []
+
+
+Overfull \hbox (15.77931pt too wide) in paragraph at lines 67--67
+[]|\T1/cmr/m/n/12 Administrateur| 
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--69
+[]|\T1/cmr/m/n/12 KPIs : in-ter-ven-tions
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--69
+\T1/cmr/m/n/12 to-tales / en at-tente
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--69
+\T1/cmr/m/n/12 / réa-li-sées, contrats
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 67--69
+\T1/cmr/m/n/12 ac-tifs/expirés, clients,
+ []
+
+
+Underfull \hbox (badness 1931) in paragraph at lines 67--69
+\T1/cmr/m/n/12 équi-pe-ments, CA men-
+ []
+
+
+Underfull \hbox (badness 1237) in paragraph at lines 73--75
+\T1/cmr/m/n/12 cours, pannes ou-vertes,
+ []
+
+
+Overfull \hbox (3.00002pt too wide) in paragraph at lines 77--77
+[]|\T1/cmr/m/n/12 Moyenne| 
+ []
+
+
+Underfull \hbox (badness 5288) in paragraph at lines 77--78
+[]|\T1/cmr/m/n/12 Filtres dis-po-nibles sur
+ []
+
+
+ignored: Infinite glue shrinkage found in box being split [68]
+ignored: Infinite glue shrinkage fo
+und in box being split [69]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 95.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 95.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 114.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 114.
+
+[70] [71]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 178.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 178.
+
+[72]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 220.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 220.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 258.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 258.
+
+[73]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 291.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 291.
+
+[74]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 321.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 321.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 351.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 351.
+
+[75]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 385.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 385.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 422.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 422.
+
+[76]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 440.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 440.
+
+[77]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 499.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 499.
+
+[78]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 558.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 558.
+
+[79] [80]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 610.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 610.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 623.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 623.
+
+) [81] (conclusion_generale.tex) [82
+
+
+]
+No file main.bbl.
+[83
+
+
+
+] (resume.tex [84
+
+
+])
+Package minitoc Info: I0009
+(minitoc)             Listing minitoc auxiliary files. 
+(minitoc)             Creating the main.maf file.
+\openout4 = `main.maf'.
+
+Package minitoc(hints) Info: I0053
+(minitoc(hints))             You have loaded the float package; 
+(minitoc(hints))             please be aware that the minitoc package 
+(minitoc(hints))             facilities can not be used for new types 
+(minitoc(hints))             of floats defined by the float package.
+
+
+Package minitoc(hints) Warning: W0024
+(minitoc(hints))                Some hints have been written 
+(minitoc(hints))                in the main.log file.
+
+[85] 
+enddocument/afterlastpage (AED): lastpage setting LastPage.
+(main.aux)
+ ***********
+LaTeX2e <2025-11-01>
+L3 programming layer <2026-04-28>
+ ***********
+Package rerunfilecheck Info: File `main.out' has not changed.
+(rerunfilecheck)             Checksum: B1A113F12CD0867A026AC766A93C1FDB;29858.
+ ) 
+Here is how much of TeX's memory you used:
+ 32933 strings out of 467683
+ 617566 string characters out of 5414722
+ 1293802 words of memory out of 5000000
+ 60903 multiletter control sequences out of 15000+600000
+ 644918 words of font info for 71 fonts, out of 8000000 for 9000
+ 1141 hyphenation exceptions out of 8191
+ 102i,14n,107p,560b,710s stack positions out of 10000i,1000n,20000p,200000b,200000s
+ <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti
+1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
+0\ecsc1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
+/dpi600\ecrm1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
+pen/ec/dpi600\ecbx1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour
+/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/
+ljfour/jknappen/ec/dpi600\ecxc1728.pk> <C:\Users\medam\AppData\Local\MiKTeX\fon
+ts/pk/ljfour/jknappen/ec/dpi600\ecxc2074.pk> <C:\Users\medam\AppData\Local\MiKT
+eX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1200.pk> <C:\Users\medam\AppData\Loca
+l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk> <C:\Users\medam\AppDat
+a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\medam\
+AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk> <C:\Users\
+medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\
+Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti1200.pk
+> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1
+728.pk><C:/Users/medam/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
+s/cm/cmmi12.pfb><C:/Users/medam/AppData/Local/Programs/MiKTeX/fonts/type1/publi
+c/amsfonts/cm/cmr12.pfb><C:/Users/medam/AppData/Local/Programs/MiKTeX/fonts/typ
+e1/public/amsfonts/cm/cmsy10.pfb>
+Output written on main.pdf (96 pages, 610374 bytes).
+PDF statistics:
+ 2295 PDF objects out of 2487 (max. 8388607)
+ 516 named destinations out of 1000 (max. 500000)
+ 1029 words of extra memory for PDF output out of 10000 (max. 10000000)
+

@@ -1,0 +1,57 @@
+@startuml 20_seq_generation_facture
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Administrateur"             as Admin
+participant "Interface\n(Frontend)"      as UI
+participant "Contrôleur\n(InvoiceCtrl)"  as CTRL
+participant "Service\n(InvoiceService)"  as SVC
+database    "Base de données\n(MySQL)"   as DB
+
+Admin -> UI   : Accède à la liste des interventions\néligibles à la facturation
+UI    -> CTRL : GET /api/interventions?eligible=true
+CTRL  -> DB   : SELECT * FROM interventions\nWHERE type = 'CURATIVE'\nAND statut = 'REALISEE'\nAND couvertureContrat = false\nAND invoiceId IS NULL
+DB    --> CTRL : interventions éligibles
+CTRL  --> UI   : 200 — { interventions éligibles }
+UI    --> Admin : Liste des interventions facturables
+
+Admin -> UI   : Sélectionne une intervention
+Admin -> UI   : Saisit les lignes de détail\n(description, quantité, prix unitaire)
+UI    -> CTRL : POST /api/invoices\n{ interventionId, lignes[] }
+
+CTRL  -> DB   : SELECT * FROM interventions WHERE id = ?
+DB    --> CTRL : intervention
+
+CTRL  -> SVC  : verifyEligibility(intervention)
+SVC   -> SVC  : Vérifie type = CURATIVE
+SVC   -> SVC  : Vérifie statut = REALISEE
+SVC   -> SVC  : Vérifie couvertureContrat = false
+
+alt Une condition non satisfaite
+  CTRL --> UI  : 400 — Intervention non éligible
+  UI   --> Admin : "Cette intervention ne peut pas être facturée"
+else Les 3 conditions satisfaites
+  CTRL -> SVC  : calculateInvoice(lignes[])
+  SVC  -> SVC  : montantHT = somme(ligne.montant)
+  SVC  -> SVC  : tva = 0.19
+  SVC  -> SVC  : montantTTC = montantHT × 1.19
+  note right of SVC
+    Monnaie : Dinar Tunisien (TND)
+    TVA = 19 %
+    montantTTC = montantHT × 1,19
+  end note
+  SVC --> CTRL : { montantHT, tva, montantTTC }
+
+  CTRL -> DB   : INSERT INTO invoices VALUES (...)
+  DB   --> CTRL : invoiceId
+  CTRL -> DB   : INSERT INTO lignes_facture VALUES (...) × N
+  DB   --> CTRL : { id, numero, montantTTC }
+  CTRL --> UI   : 201 — { facture générée }
+  UI   --> Admin : Facture créée et affichée (statut : IMPAYEE)
+end
+@enduml

@@ -1,0 +1,47 @@
+@startuml 09_seq_controle_acces
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Utilisateur"                    as User
+participant "Interface\n(Frontend)"          as UI
+participant "Middleware\n(AuthMiddleware)"    as MW
+participant "Contrôleur"                     as CTRL
+database    "Base de données\n(MySQL)"       as DB
+
+User -> UI : Accède à une page protégée
+
+UI   -> MW  : Requête HTTP + session
+
+MW   -> MW  : Lit la session (rôle, id)
+
+alt Session absente ou expirée
+  MW  --> UI  : Redirection → page de connexion
+  UI  --> User : Page de connexion affichée
+else Session présente
+  MW  -> MW  : Vérifie que le rôle autorise l'accès\nà la ressource demandée
+
+  alt Rôle insuffisant
+    MW  --> UI  : 403 — Accès refusé
+    UI  --> User : Affiche « Accès non autorisé »
+  else Rôle autorisé
+    MW  -> CTRL : Transmet la requête avec le contexte utilisateur
+    CTRL -> DB  : Requête filtrée selon le rôle\n(admin → tout, technicien → ses données,\nclient → ses données)
+    DB  --> CTRL : Données filtrées
+    CTRL --> UI  : 200 — Données autorisées
+    UI   --> User : Affiche la page
+  end
+end
+
+note over MW
+  Règles d'accès :
+  Admin → accès complet
+  Technicien → ses interventions uniquement
+  Client → ses équipements, pannes,
+  interventions, factures uniquement
+end note
+@enduml

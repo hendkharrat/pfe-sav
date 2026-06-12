@@ -1,0 +1,40 @@
+\babel@toc {french}{}\relax 
+\contentsline {xchapter}{}{1}{chapter*.7}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Étude préalable}{3}{chapter.1}%
+\contentsline {figure}{\numberline {1.1}{\ignorespaces Diagramme de la méthodologie Scrum}}{12}{figure.caption.10}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Préparation du projet}{14}{chapter.2}%
+\contentsline {figure}{\numberline {2.1}{\ignorespaces Diagramme de cas d'utilisation global}}{20}{figure.caption.13}%
+\contentsline {figure}{\numberline {2.2}{\ignorespaces Diagramme de classes global}}{20}{figure.caption.14}%
+\contentsline {figure}{\numberline {2.3}{\ignorespaces Architecture de l'application}}{28}{figure.caption.18}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Sprint 1 --- Authentification et référentiel métier}{29}{chapter.3}%
+\contentsline {figure}{\numberline {3.1}{\ignorespaces Diagramme de cas d'utilisation du Sprint 1}}{33}{figure.caption.20}%
+\contentsline {figure}{\numberline {3.2}{\ignorespaces Diagramme de classes du Sprint 1}}{41}{figure.caption.29}%
+\contentsline {figure}{\numberline {3.3}{\ignorespaces Diagramme de séquence : Connexion}}{42}{figure.caption.30}%
+\contentsline {figure}{\numberline {3.4}{\ignorespaces Diagramme de séquence : Déconnexion}}{43}{figure.caption.31}%
+\contentsline {figure}{\numberline {3.5}{\ignorespaces Diagramme de séquence : Modification utilisateur}}{45}{figure.caption.32}%
+\contentsline {figure}{\numberline {3.6}{\ignorespaces Diagramme de séquence : Contrôle d'accès}}{46}{figure.caption.33}%
+\contentsline {figure}{\numberline {3.7}{\ignorespaces Diagramme de séquence : Ajout équipement et gestion des images}}{47}{figure.caption.34}%
+\contentsline {figure}{\numberline {3.8}{\ignorespaces Diagramme de séquence : Consultation d'un contrat}}{49}{figure.caption.35}%
+\contentsline {figure}{\numberline {3.9}{\ignorespaces Captures d'écran de réalisation du Sprint 1}}{49}{figure.caption.36}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Sprint 2 --- Gestion des interventions}{51}{chapter.4}%
+\contentsline {figure}{\numberline {4.1}{\ignorespaces Diagramme de cas d'utilisation du Sprint 2}}{54}{figure.caption.38}%
+\contentsline {figure}{\numberline {4.2}{\ignorespaces Diagramme de classes du Sprint 2}}{61}{figure.caption.46}%
+\contentsline {figure}{\numberline {4.3}{\ignorespaces Diagramme de séquence : Génération automatique du planning préventif}}{61}{figure.caption.47}%
+\contentsline {figure}{\numberline {4.4}{\ignorespaces Diagramme de séquence : Consultation du planning}}{63}{figure.caption.48}%
+\contentsline {figure}{\numberline {4.5}{\ignorespaces Diagramme de séquence : Déclaration de panne}}{64}{figure.caption.49}%
+\contentsline {figure}{\numberline {4.6}{\ignorespaces Diagramme de séquence : Clôture intervention curative et vérification couverture}}{66}{figure.caption.50}%
+\contentsline {figure}{\numberline {4.7}{\ignorespaces Captures d'écran de réalisation du Sprint 2}}{66}{figure.caption.51}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Sprint 3 --- Facturation et tableau de bord}{67}{chapter.5}%
+\contentsline {figure}{\numberline {5.1}{\ignorespaces Diagramme de cas d'utilisation du Sprint 3}}{70}{figure.caption.53}%
+\contentsline {figure}{\numberline {5.2}{\ignorespaces Diagramme de classes du Sprint 3}}{77}{figure.caption.62}%
+\contentsline {figure}{\numberline {5.3}{\ignorespaces Diagramme de séquence : Génération d'une facture}}{77}{figure.caption.63}%
+\contentsline {figure}{\numberline {5.4}{\ignorespaces Diagramme de séquence : Consultation du tableau de bord administrateur}}{78}{figure.caption.64}%
+\contentsline {figure}{\numberline {5.5}{\ignorespaces Diagramme de séquence : Consultation de l'historique côté client}}{80}{figure.caption.65}%
+\contentsline {figure}{\numberline {5.6}{\ignorespaces Diagramme de séquence : Consultation de l'espace client}}{81}{figure.caption.66}%
+\contentsline {figure}{\numberline {5.7}{\ignorespaces Captures d'écran de réalisation du Sprint 3}}{81}{figure.caption.67}%
+\contentsline {xchapter}{}{82}{chapter*.70}%

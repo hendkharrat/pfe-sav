@@ -1,0 +1,119 @@
+@startuml 19_sprint3_class_diagram
+
+skinparam classBackgroundColor #EBF5FB
+skinparam classBorderColor #2E74B5
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #F39C12
+skinparam linetype ortho
+
+enum InterventionType {
+  PREVENTIVE
+  CURATIVE
+}
+
+enum InterventionStatut {
+  PLANIFIEE
+  EN_COURS
+  REALISEE
+  ANNULEE
+}
+
+enum InvoiceStatut {
+  PAYEE
+  IMPAYEE
+  EN_ATTENTE
+}
+
+class Client {
+  + id : String
+  + prenom : String
+  + nom : String
+  + email : String
+  + telephone : String
+}
+
+class User <<Technicien>> {
+  + id : String
+  + prenom : String
+  + nom : String
+  + role : UserRole
+  + actif : Boolean
+}
+
+class Intervention {
+  + id : String
+  + reference : String
+  + type : InterventionType
+  + clientId : String
+  + clientEquipementId : String
+  + technicienId : String
+  + datePrevue : Date
+  + dateRealisation : Date
+  + statut : InterventionStatut
+  + couvertureContrat : Boolean
+  + diagnostic : String
+  + actionsRealisees : String
+  + materielUtilise : String
+  + dureeMinutes : Integer
+}
+
+class Invoice {
+  + id : String
+  + numero : String
+  + clientId : String
+  + interventionId : String
+  + dateEmission : Date
+  + montantHT : Float
+  + tva : Float
+  + montantTTC : Float
+  + statut : InvoiceStatut
+  --
+  + calculerMontantTTC() : Float
+  + marquerPayee() : void
+}
+
+class LigneFacture {
+  + description : String
+  + quantite : Integer
+  + prixUnitaire : Float
+  + montant : Float
+}
+
+note bottom of Invoice
+  Générée UNIQUEMENT si :
+  Intervention.type = CURATIVE
+  ET Intervention.statut = REALISEE
+  ET Intervention.couvertureContrat = false
+  --
+  montantTTC = montantHT × 1,19
+  TVA = 19 % — Monnaie : TND
+end note
+
+class DashboardStats {
+  + totalInterventions : Integer
+  + pendingInterventions : Integer
+  + completedInterventions : Integer
+  + activeContracts : Integer
+  + expiredContracts : Integer
+  + totalClients : Integer
+  + totalEquipment : Integer
+  + monthlyRevenue : Float
+  + overdueInvoices : Integer
+}
+
+note right of DashboardStats
+  Calculé dynamiquement par
+  le Système à chaque accès
+  au tableau de bord admin.
+end note
+
+Intervention "1"    --   "0..1" Invoice    : facturée par
+Invoice      "1"    *--  "*"    LigneFacture : contient
+Client       "1"    --   "*"    Invoice    : facturé
+User         "0..1" --   "*"    Intervention : affecté (technicien)
+Client       "1"    --   "*"    Intervention : concerne
+
+Intervention .. InterventionType
+Intervention .. InterventionStatut
+Invoice      .. InvoiceStatut
+@enduml

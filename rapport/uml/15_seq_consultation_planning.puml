@@ -1,0 +1,39 @@
+@startuml 15_seq_consultation_planning
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Utilisateur\n(Admin ou Technicien)" as User
+participant "Interface\n(Frontend)"               as UI
+participant "Contrôleur\n(PlanningCtrl)"          as CTRL
+database    "Base de données\n(MySQL)"            as DB
+
+User -> UI   : Ouvre le module Planning
+User -> UI   : Sélectionne la vue (1 sem. / 2 sem. / mensuelle)\net les filtres (type, statut, technicien)
+
+UI   -> CTRL : GET /api/planning?vue=...&dateDebut=...&dateFin=...&filters=...
+CTRL -> CTRL : Détermine le périmètre selon le rôle
+
+alt Rôle = admin
+  CTRL -> DB  : SELECT * FROM interventions\nWHERE datePrevue BETWEEN ? AND ?\nAND (filters appliqués)
+else Rôle = technicien
+  CTRL -> DB  : SELECT * FROM interventions\nWHERE technicienId = ?\nAND datePrevue BETWEEN ? AND ?
+end
+
+DB   --> CTRL : liste d'interventions
+
+CTRL -> CTRL : Enrichit les données\n(client, équipement, technicien)
+CTRL --> UI   : 200 — { interventions[] }
+
+UI   --> User : Affiche le calendrier\nselon la vue sélectionnée
+
+note right of CTRL
+  Le technicien ne voit que
+  les interventions dont il est
+  le technicien affecté.
+end note
+@enduml

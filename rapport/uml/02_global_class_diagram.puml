@@ -1,0 +1,261 @@
+@startuml 02_global_class_diagram
+
+skinparam classBackgroundColor #EBF5FB
+skinparam classBorderColor #2E74B5
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #F39C12
+skinparam linetype ortho
+
+' ===================== ENUMERATIONS =====================
+
+enum UserRole {
+  admin
+  technician
+  client
+}
+
+enum ClientType {
+  SOCIETE
+  PERSONNE_PHYSIQUE
+}
+
+enum EquipmentType {
+  CLIMATISEUR
+  SYSTEME_SURPRESSION
+}
+
+enum ContractStatut {
+  ACTIF
+  BIENTOT_EXPIRE
+  EXPIRE
+}
+
+enum Periodicite {
+  MENSUELLE
+  TRIMESTRIELLE
+  SEMESTRIELLE
+  ANNUELLE
+}
+
+enum InterventionType {
+  PREVENTIVE
+  CURATIVE
+}
+
+enum InterventionStatut {
+  PLANIFIEE
+  EN_COURS
+  REALISEE
+  ANNULEE
+}
+
+enum PanneStatut {
+  EN_ATTENTE
+  PRISE_EN_CHARGE
+  CONVERTIE
+  ANNULEE
+}
+
+enum InvoiceStatut {
+  PAYEE
+  IMPAYEE
+  EN_ATTENTE
+}
+
+' ===================== CLASSES =====================
+
+class User {
+  + id : String
+  + prenom : String
+  + nom : String
+  + email : String
+  + telephone : String
+  + password : String
+  + role : UserRole
+  + actif : Boolean
+  + dateCreation : Date
+}
+
+note right of User
+  Un technicien ne peut pas être
+  affecté à deux interventions
+  prévues à la même date.
+  Désactivation logique : actif = false.
+  Action « Restaurer » disponible.
+end note
+
+class Client {
+  + id : String
+  + typeClient : ClientType
+  + societe : String
+  + contact : String
+  + prenom : String
+  + nom : String
+  + email : String
+  + telephone : String
+  + password : String
+  + adresse : String
+  + ville : String
+  + dateCreation : Date
+}
+
+class Equipment {
+  + id : String
+  + reference : String
+  + type : EquipmentType
+  + marque : String
+  + modele : String
+  + numeroSerie : String
+  + description : String
+}
+
+note top of Equipment
+  Catalogue global indépendant de tout client.
+  L'association avec un client se fait
+  uniquement via ClientEquipement.
+end note
+
+class EquipmentImage {
+  + id : String
+  + filename : String
+  + previewUrl : String
+  + isMain : Boolean
+}
+
+class ClientEquipement {
+  + id : String
+  + clientId : String
+  + equipementId : String
+  + dateAchat : Date
+  + dateInstallation : Date
+  + localisation : String
+  + notes : String
+}
+
+class Contract {
+  + id : String
+  + reference : String
+  + clientId : String
+  + dateDebut : Date
+  + dateFin : Date
+  + periodicite : Periodicite
+  + statut : ContractStatut
+  + clientEquipementIds : String[]
+}
+
+note bottom of Contract
+  Couvre des installations ClientEquipement,
+  pas des équipements du catalogue directement.
+  Statut calculé dynamiquement par le Système :
+  ACTIF si fin > auj+30j,
+  BIENTOT_EXPIRE si fin dans 0-30j,
+  EXPIRE si fin dépassée.
+end note
+
+class Intervention {
+  + id : String
+  + reference : String
+  + type : InterventionType
+  + clientId : String
+  + clientEquipementId : String
+  + technicienId : String
+  + contractId : String
+  + datePrevue : Date
+  + dateRealisation : Date
+  + statut : InterventionStatut
+  + couvertureContrat : Boolean
+  + description : String
+  + diagnostic : String
+  + actionsRealisees : String
+  + materielUtilise : String
+  + dureeMinutes : Integer
+  + observations : String
+}
+
+class Panne {
+  + id : String
+  + reference : String
+  + clientId : String
+  + clientEquipementId : String
+  + dateDeclaration : Date
+  + description : String
+  + statut : PanneStatut
+  + interventionId : String
+}
+
+note right of Panne
+  Description obligatoire.
+end note
+
+class PieceJointe {
+  + id : String
+  + filename : String
+  + size : Integer
+  + type : String
+  + previewUrl : String
+}
+
+class Invoice {
+  + id : String
+  + numero : String
+  + clientId : String
+  + interventionId : String
+  + dateEmission : Date
+  + montantHT : Float
+  + tva : Float
+  + montantTTC : Float
+  + statut : InvoiceStatut
+}
+
+note bottom of Invoice
+  Générée UNIQUEMENT si :
+  Intervention.type = CURATIVE
+  ET Intervention.statut = REALISEE
+  ET Intervention.couvertureContrat = false
+  TVA = 19 % — montantTTC = montantHT × 1,19
+  Monnaie : Dinar Tunisien (TND)
+end note
+
+class LigneFacture {
+  + description : String
+  + quantite : Integer
+  + prixUnitaire : Float
+  + montant : Float
+}
+
+' ===================== RELATIONS =====================
+
+Client      "1"    *--  "*"   ClientEquipement : possède >
+Equipment   "1"    *--  "*"   ClientEquipement : affecté via >
+Equipment   "1"    *--  "*"   EquipmentImage   : possède >
+Client      "1"    --   "*"   Contract         : souscrit >
+Contract    "*"    --   "*"   ClientEquipement : couvre
+
+note on link
+  Un contrat peut couvrir plusieurs
+  installations ClientEquipement.
+  Une installation peut être couverte
+  par plusieurs contrats dans le temps,
+  mais par un seul contrat actif à la fois.
+end note
+
+ClientEquipement "1" <-- "*" Intervention    : concerne
+User             "0..1" -- "*" Intervention  : affecté (technicien)
+Contract         "0..1" -- "*" Intervention  : planifie
+Panne            "0..1" -- "1" Intervention  : convertie en
+Panne            "1"    *--  "*" PieceJointe : contient
+Client           "1"    --   "*" Panne       : déclare
+Invoice          "1"    *--  "*" LigneFacture : contient
+Intervention     "1"    --   "0..1" Invoice  : facturée par
+
+' Enums
+User         .. UserRole
+Client       .. ClientType
+Equipment    .. EquipmentType
+Contract     .. ContractStatut
+Contract     .. Periodicite
+Intervention .. InterventionType
+Intervention .. InterventionStatut
+Panne        .. PanneStatut
+Invoice      .. InvoiceStatut
+@enduml

@@ -1,0 +1,48 @@
+\babel@toc {french}{}\relax 
+\contentsline {xchapter}{}{1}{chapter*.7}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Étude préalable}{3}{chapter.1}%
+\contentsline {table}{\numberline {1.1}{\ignorespaces Critiques de l'existant}}{8}{table.caption.8}%
+\contentsline {table}{\numberline {1.2}{\ignorespaces Analyse SWOT de la situation actuelle du service après-vente}}{10}{table.caption.9}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Préparation du projet}{14}{chapter.2}%
+\contentsline {table}{\numberline {2.1}{\ignorespaces Identification des acteurs}}{18}{table.caption.12}%
+\contentsline {table}{\numberline {2.2}{\ignorespaces Description des entités du modèle}}{21}{table.2.2}%
+\contentsline {table}{\numberline {2.3}{\ignorespaces Équipe et rôles Scrum}}{23}{table.caption.15}%
+\contentsline {table}{\numberline {2.4}{\ignorespaces Product Backlog --- 28 User Stories}}{23}{table.2.4}%
+\contentsline {table}{\numberline {2.5}{\ignorespaces Planification des sprints}}{26}{table.2.5}%
+\contentsline {table}{\numberline {2.6}{\ignorespaces Environnement matériel}}{27}{table.caption.16}%
+\contentsline {table}{\numberline {2.7}{\ignorespaces Environnement logiciel}}{27}{table.caption.17}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Sprint 1 --- Authentification et référentiel métier}{29}{chapter.3}%
+\contentsline {table}{\numberline {3.1}{\ignorespaces Backlog du Sprint 1 --- US-01 à US-11}}{30}{table.3.1}%
+\contentsline {table}{\numberline {3.2}{\ignorespaces CU-01 : S'authentifier}}{33}{table.caption.21}%
+\contentsline {table}{\numberline {3.3}{\ignorespaces CU-02 : Se déconnecter}}{34}{table.caption.22}%
+\contentsline {table}{\numberline {3.4}{\ignorespaces CU-03 : Gérer les utilisateurs internes}}{35}{table.caption.23}%
+\contentsline {table}{\numberline {3.5}{\ignorespaces CU-04 : Gérer les clients}}{36}{table.caption.24}%
+\contentsline {table}{\numberline {3.6}{\ignorespaces CU-05 : Gérer le catalogue d'équipements}}{37}{table.caption.25}%
+\contentsline {table}{\numberline {3.7}{\ignorespaces CU-06 : Affecter un équipement à un client}}{38}{table.caption.26}%
+\contentsline {table}{\numberline {3.8}{\ignorespaces CU-07 : Gérer les contrats de maintenance}}{39}{table.caption.27}%
+\contentsline {table}{\numberline {3.9}{\ignorespaces CU-08 : Générer automatiquement le planning préventif}}{40}{table.caption.28}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Sprint 2 --- Gestion des interventions}{51}{chapter.4}%
+\contentsline {table}{\numberline {4.1}{\ignorespaces Backlog du Sprint 2 --- US-11 à US-20}}{52}{table.4.1}%
+\contentsline {table}{\numberline {4.2}{\ignorespaces CU-09 : Affecter un technicien à une intervention}}{55}{table.caption.39}%
+\contentsline {table}{\numberline {4.3}{\ignorespaces CU-10 : Consulter le planning}}{56}{table.caption.40}%
+\contentsline {table}{\numberline {4.4}{\ignorespaces CU-11 : Clôturer une intervention préventive}}{57}{table.caption.41}%
+\contentsline {table}{\numberline {4.5}{\ignorespaces CU-12 : Déclarer une panne}}{58}{table.caption.42}%
+\contentsline {table}{\numberline {4.6}{\ignorespaces CU-13 : Prendre en charge une panne}}{59}{table.caption.43}%
+\contentsline {table}{\numberline {4.7}{\ignorespaces CU-14 : Convertir une panne en intervention curative}}{59}{table.caption.44}%
+\contentsline {table}{\numberline {4.8}{\ignorespaces CU-15 : Vérifier automatiquement la couverture contractuelle}}{60}{table.caption.45}%
+\addvspace {10\p@ }
+\contentsline {xchapter}{Sprint 3 --- Facturation et tableau de bord}{67}{chapter.5}%
+\contentsline {table}{\numberline {5.1}{\ignorespaces Backlog du Sprint 3}}{68}{table.5.1}%
+\contentsline {table}{\numberline {5.2}{\ignorespaces CU-16 : Générer une facture}}{71}{table.caption.54}%
+\contentsline {table}{\numberline {5.3}{\ignorespaces CU-17 : Consulter les factures}}{72}{table.caption.55}%
+\contentsline {table}{\numberline {5.4}{\ignorespaces CU-18 : Marquer une facture comme payée}}{73}{table.caption.56}%
+\contentsline {table}{\numberline {5.5}{\ignorespaces CU-19 : Consulter le tableau de bord administrateur}}{74}{table.caption.57}%
+\contentsline {table}{\numberline {5.6}{\ignorespaces CU-20 : Consulter le tableau de bord technicien}}{74}{table.caption.58}%
+\contentsline {table}{\numberline {5.7}{\ignorespaces CU-21 : Consulter l'espace client (dashboard client)}}{75}{table.caption.59}%
+\contentsline {table}{\numberline {5.8}{\ignorespaces CU-22 : Consulter l'historique des interventions}}{75}{table.caption.60}%
+\contentsline {table}{\numberline {5.9}{\ignorespaces CU-23 : Filtrer les interventions}}{76}{table.caption.61}%
+\contentsline {xchapter}{}{82}{chapter*.70}%
