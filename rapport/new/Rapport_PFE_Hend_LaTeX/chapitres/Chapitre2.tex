@@ -5,6 +5,7 @@
 \renewcommand{\footrulewidth}{0.5pt}
 \chapter{Préparation du projet}\setlength{\headheight}{28pt}
 \label{ch2}
+\thispagestyle{empty}
 \minitoc
 \newpage
 
@@ -227,13 +228,9 @@ Les principaux cas d'utilisation du système sont :
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{01\_global\_use\_case.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.43\textwidth]{Figures/Chapitre1/global_use_case_diagram.png}
 \caption{Diagramme de cas d'utilisation global}
-\label{fig:ch2:usecase_global}
+\label{fig:ch2:class_global}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -244,25 +241,21 @@ entre les onze entités principales.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{02\_global\_class\_diagram.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre1/global_class_diagram.png}
 \caption{Diagramme de classes global}
 \label{fig:ch2:class_global}
 \end{figure}
 
-\textbf{Description des entités :}
+\textbf{Dictionnaire de données :}
 
 \begin{longtable}{|p{3.2cm}|p{11.3cm}|}
-\caption{Description des entités du modèle}
-\label{tab:ch2:entites} \\
+\caption{Dictionnaire de données}
+\label{tab:ch2:dictionnaire} \\
 \hline
 \textbf{Entité} & \textbf{Description} \\
 \hline
 \endfirsthead
-\caption*{Description des entités (suite)} \\
+\caption*{Dictionnaire de données (suite)} \\
 \hline
 \textbf{Entité} & \textbf{Description} \\
 \hline
@@ -320,7 +313,7 @@ Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
   & Pièce jointe associée à une panne.
     Attributs : id, filename, size, type, previewUrl. \\
 \hline
-\texttt{Invoice}
+\texttt{Facture}
   & Facture générée pour une intervention curative réalisée hors contrat.
     Attributs : id, numero, clientId, interventionId, dateEmission, montantHT, tva,
     montantTTC, statut (\texttt{PAYEE}/\texttt{IMPAYEE}/\texttt{EN\_ATTENTE}),
@@ -332,7 +325,9 @@ Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
 \hline
 \end{longtable}
 
-\textbf{Relations principales :}
+\textbf{Relations entre les entités :}
+
+Les relations entre les entités du dictionnaire de données sont les suivantes :
 
 \begin{itemize}
     \item \texttt{Client} $1 \rightarrow *$ \texttt{ClientEquipement}
@@ -346,8 +341,8 @@ Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
     \item \texttt{Intervention} $* \rightarrow 0..1$ \texttt{Contract}
     \item \texttt{Panne} $1 \rightarrow *$ \texttt{PieceJointe}
     \item \texttt{Panne} $0..1 \rightarrow 1$ \texttt{Intervention} (conversion)
-    \item \texttt{Invoice} $* \rightarrow 1$ \texttt{Intervention}
-    \item \texttt{Invoice} $1 \rightarrow *$ \texttt{LigneFacture}
+    \item \texttt{Facture} $* \rightarrow 1$ \texttt{Intervention}
+    \item \texttt{Facture} $1 \rightarrow *$ \texttt{LigneFacture}
     \item \texttt{Intervention} $* \rightarrow 0..1$ \texttt{User} (technicien affecté)
 \end{itemize}
 
@@ -570,7 +565,7 @@ US-28 & Tous
     historique technicien, historique client,
     dashboard admin (KPIs + graphiques), dashboard technicien,
     dashboard client
-  & \texttt{Invoice}, \texttt{LigneFacture}, \texttt{Intervention},
+  & \texttt{Facture}, \texttt{LigneFacture}, \texttt{Intervention},
     \texttt{Client}, \texttt{User} \\
 \hline
 \end{longtable}
@@ -648,11 +643,7 @@ l'intégrité des données via la gestion des transactions (COMMIT/ROLLBACK).
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{03\_architecture\_3\_couches.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre2/architecture.png}
 \caption{Architecture de l'application}
 \label{fig:ch2:architecture}
 \end{figure}

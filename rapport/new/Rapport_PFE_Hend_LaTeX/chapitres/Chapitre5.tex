@@ -5,6 +5,7 @@
 \renewcommand{\footrulewidth}{0.5pt}
 \chapter{Sprint 3 --- Facturation et tableau de bord}\setlength{\headheight}{28pt}
 \label{ch5}
+\thispagestyle{empty}
 \minitoc
 \newpage
 
@@ -87,13 +88,9 @@ Moyenne & Filtres disponibles sur toutes les listes ; pagination fonctionnelle. 
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{18\_sprint3\_use\_case.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/use_case_sprint3.png}
 \caption{Diagramme de cas d'utilisation du Sprint 3}
-\label{fig:ch5:usecase_sprint3}
+\label{fig:ch5:use_case_sprint3}
 \end{figure}
 
 Les acteurs impliqués dans ce sprint sont :
@@ -414,11 +411,7 @@ Postconditions & Les résultats filtrés sont affichés avec pagination. \\
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{19\_sprint3\_class\_diagram.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/class_diagram_sprint3.png}
 \caption{Diagramme de classes du Sprint 3}
 \label{fig:ch5:class_sprint3}
 \end{figure}
@@ -432,15 +425,10 @@ Les entités impliquées dans ce sprint sont : \texttt{Invoice}, \texttt{LigneFa
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{20\_seq\_generation\_facture.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/seq_genererfacture_sprint3.png}
 \caption{Diagramme de séquence : Génération d'une facture}
 \label{fig:ch5:seq_generation_facture}
 \end{figure}
-
 \subsubsection{b) Identification textuelle --- Consultation des factures}
 
 \textbf{Nom du cas d'utilisation :} Consulter les factures \quad
@@ -491,11 +479,7 @@ selon ses droits d'accès.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{21\_seq\_dashboard\_admin.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/seq_dashboardadmin_sprint3.png}
 \caption{Diagramme de séquence : Consultation du tableau de bord administrateur}
 \label{fig:ch5:seq_dashboard_admin}
 \end{figure}
@@ -550,11 +534,7 @@ rôle et des critères de filtrage.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{22\_seq\_historique\_client.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/seq_historiqueclient_sprint3.png}
 \caption{Diagramme de séquence : Consultation de l'historique côté client}
 \label{fig:ch5:seq_historique_client}
 \end{figure}
@@ -602,11 +582,7 @@ Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{23\_seq\_espace\_client.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/seq_espaceclient_sprint3.png}
 \caption{Diagramme de séquence : Consultation de l'espace client}
 \label{fig:ch5:seq_espace_client}
 \end{figure}
@@ -616,12 +592,32 @@ Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER --- CAPTURES D'ÉCRAN]} \\[0.5em]
-Captures d'écran de réalisation du Sprint 3.
-\vspace{1cm}}}
-\caption{Captures d'écran de réalisation du Sprint 3}
-\label{fig:ch5:realisation_sprint3}
+\includegraphics[width=0.55\textwidth]{Figures/Chapitre5/gestfacture.png}
+\hfill
+\includegraphics[width=0.4\textwidth]{Figures/Chapitre5/viewfact.png}
+\caption{Captures d'écran de la gestion des factures : page de gestion du facture et page de visualisation}
+\label{fig:ch4:gestion_factures}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/dashboardtech.png}
+\caption{Capture d'écran de la page tableau de bord technicien}
+\label{fig:ch5:dashboard_technicien}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/dashboardclientpart.png}
+\caption{Capture d'écran de la page tableau de bord d'un client particulier}
+\label{fig:ch5:dashboard_client_particulier}
+\end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/dashboardclientsociete.png}
+\caption{Capture d'écran de la page tableau de bord d'un client société}
+\label{fig:ch5:dashboard_client_societe}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────────────────

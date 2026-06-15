@@ -53,7 +53,17 @@
       "Bash(pandoc --version)",
       "Bash(pandoc.exe --version)",
       "Bash(/usr/local/bin/pandoc --version)",
-      "PowerShell(Get-Command *)"
+      "PowerShell(Get-Command *)",
+      "Bash(pdflatex -interaction=nonstopmode main.tex)",
+      "Bash(grep -c \"\\\\\\\\\\\\\\\\texttt{Invoice}\" chapitres/Chapitre2.tex)",
+      "Bash(grep -c \"\\\\\\\\\\\\\\\\texttt{Facture}\" chapitres/Chapitre2.tex)",
+      "Bash(java -version)",
+      "Bash(Get-Command plantuml *)",
+      "Bash(Get-Command java *)",
+      "Bash(Select-Object -ExpandProperty Source)",
+      "Bash(where plantuml *)",
+      "Bash(pip show *)",
+      "Bash(npm list *)"
     ]
   }
 }

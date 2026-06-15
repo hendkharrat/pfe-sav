@@ -1,54 +1,64 @@
 @startuml 12_sprint2_use_case
-
 left to right direction
-skinparam usecase {
-  BackgroundColor #EBF5FB
-  BorderColor #2E74B5
+skinparam packageStyle rectangle
+skinparam actorStyle Hollow
+
+actor "Utilisateur" as U
+actor "Technicien" as T
+actor "Administrateur" as A
+actor "Client" as C
+
+A --|> T
+T --|> U
+C --|> U
+
+rectangle "Sprint 2 — Gestion des interventions" {
+
+  usecase "S'authentifier" as UC_AUTH
+  usecase "Se déconnecter" as UC_LOGOUT
+
+  usecase "Gérer le planning" as UC_PLANNING
+  usecase "Affecter un technicien" as UC_AFFECTER_TECH
+  usecase "Consulter le planning" as UC_CONSULT_PLANNING
+
+  usecase "Gérer les interventions" as UC_INTERVENTIONS
+  usecase "Démarrer une intervention" as UC_START_INTER
+  usecase "Clôturer une intervention\npréventive" as UC_CLOSE_PREV
+  usecase "Clôturer une intervention\ncurative" as UC_CLOSE_CUR
+
+  usecase "Gérer les pannes" as UC_PANNES
+  usecase "Déclarer une panne" as UC_DECL_PANNE
+  usecase "Consulter ses pannes" as UC_LIST_PANNES
+  usecase "Prendre en charge\nune panne" as UC_TAKE_PANNE
+  usecase "Convertir en intervention" as UC_CONVERT_PANNE
+  usecase "Créer une intervention\ncurative" as UC_CREATE_CUR
+
+  note right of UC_INTERVENTIONS
+    La disponibilité du technicien
+    et la couverture contractuelle
+    sont vérifiées automatiquement.
+  end note
 }
-skinparam actor {
-  BackgroundColor #FEF9E7
-  BorderColor #B7950B
-}
 
-actor "Administrateur" as Admin
-actor "Technicien"     as Tech
-actor "Client"         as Cli
-actor "Système"        as Sys
+U --> UC_AUTH
+U --> UC_LOGOUT
 
-rectangle {
+A --> UC_PLANNING
+A --> UC_PANNES
+T --> UC_INTERVENTIONS
+C --> UC_PANNES
 
-  usecase "CU-09 : Affecter un technicien\n(vérification disponibilité)"       as UC09
-  usecase "CU-10 : Consulter le planning\n(hebdomadaire / mensuel)"             as UC10
-  usecase "CU-12a : Démarrer une intervention"                                   as UC12a
-  usecase "CU-11 : Clôturer une intervention préventive\n(sans facture)"        as UC11
-  usecase "CU-15b : Clôturer une intervention curative\n(vérif. couverture)"    as UC15b
-  usecase "CU-12 : Déclarer une panne\n(description + pièces jointes,\nsans priorité)" as UC12
-  usecase "CU-13 : Prendre en charge une panne"                                  as UC13
-  usecase "CU-14 : Convertir panne\nen intervention curative"                    as UC14
-  usecase "CU-18 : Créer directement\nune intervention curative"                 as UC18
-  usecase "CU-19 : Consulter l'historique\ndes interventions"                    as UC19
+UC_AFFECTER_TECH ..> UC_PLANNING : <<extend>>
+UC_CONSULT_PLANNING ..> UC_PLANNING : <<extend>>
 
-  usecase "SYS-03 : Vérifier disponibilité\ntechnicien par date"                as SYS03
-  usecase "SYS-04 : Vérifier couverture\ncontractuelle"                         as SYS04
-}
+UC_START_INTER ..> UC_INTERVENTIONS : <<extend>>
+UC_CLOSE_PREV ..> UC_INTERVENTIONS : <<extend>>
+UC_CLOSE_CUR ..> UC_INTERVENTIONS : <<extend>>
 
-Admin --> UC09
-Admin --> UC10
-Admin --> UC13
-Admin --> UC14
-Admin --> UC18
-Admin --> UC19
-Tech  --> UC10
-Tech  --> UC12a
-Tech  --> UC11
-Tech  --> UC15b
-Cli   --> UC12
-Sys   --> SYS03
-Sys   --> SYS04
-
-UC09  ..> SYS03 : <<include>>
-UC15b ..> SYS04 : <<include>>
-UC14  ..> SYS04 : <<include>>
-UC18  ..> SYS04 : <<include>>
+UC_DECL_PANNE ..> UC_PANNES : <<extend>>
+UC_LIST_PANNES ..> UC_PANNES : <<extend>>
+UC_TAKE_PANNE ..> UC_PANNES : <<extend>>
+UC_CONVERT_PANNE ..> UC_PANNES : <<extend>>
+UC_CREATE_CUR ..> UC_PANNES : <<extend>>
 
 @enduml

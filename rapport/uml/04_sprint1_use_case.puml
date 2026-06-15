@@ -1,47 +1,74 @@
 @startuml 04_sprint1_use_case
-
 left to right direction
-skinparam usecase {
-  BackgroundColor #EBF5FB
-  BorderColor #2E74B5
+skinparam packageStyle rectangle
+skinparam actorStyle Hollow
+
+actor "Utilisateur" as U
+actor "Administrateur" as A
+
+A --|> U
+
+rectangle "Sprint 1 — Authentification et référentiel métier" {
+
+  usecase "S'authentifier" as UC_AUTH
+  usecase "Se déconnecter" as UC_LOGOUT
+
+  usecase "Gérer les utilisateurs" as UC_USERS
+  usecase "Ajouter un utilisateur" as UC_ADD_USER
+  usecase "Modifier un utilisateur" as UC_MOD_USER
+  usecase "Supprimer un utilisateur" as UC_DEL_USER
+  usecase "Consulter la liste\ndes utilisateurs" as UC_LIST_USERS
+
+  usecase "Gérer les clients" as UC_CLIENTS
+  usecase "Ajouter un client" as UC_ADD_CLIENT
+  usecase "Modifier un client" as UC_MOD_CLIENT
+  usecase "Supprimer un client" as UC_DEL_CLIENT
+  usecase "Consulter la liste\ndes clients" as UC_LIST_CLIENTS
+
+  usecase "Gérer les équipements" as UC_EQ
+  usecase "Ajouter un équipement" as UC_ADD_EQ
+  usecase "Modifier un équipement" as UC_MOD_EQ
+  usecase "Supprimer un équipement" as UC_DEL_EQ
+  usecase "Consulter le catalogue" as UC_LIST_EQ
+  usecase "Affecter à un client" as UC_ASSIGN_EQ
+
+  usecase "Gérer les contrats" as UC_CONTRACTS
+  usecase "Créer un contrat" as UC_CREATE_CONTRACT
+  usecase "Modifier un contrat" as UC_MOD_CONTRACT
+  usecase "Consulter un contrat" as UC_VIEW_CONTRACT
+
+  note right of UC_CONTRACTS
+    La création d'un contrat génère
+    automatiquement le planning préventif.
+  end note
 }
-skinparam actor {
-  BackgroundColor #FEF9E7
-  BorderColor #B7950B
-}
 
-actor "Tout utilisateur" as User
-actor "Administrateur"  as Admin
-actor "Système"         as Sys
+U --> UC_AUTH
+U --> UC_LOGOUT
 
-rectangle {
+A --> UC_USERS
+A --> UC_CLIENTS
+A --> UC_EQ
+A --> UC_CONTRACTS
 
-  usecase "CU-01 : Se connecter\n(email ou téléphone 8 chiffres)" as UC01
-  usecase "CU-02 : Se déconnecter"                                 as UC02
-  usecase "CU-04 : Contrôler les accès\nselon le rôle"            as UC04
+UC_ADD_USER ..> UC_USERS : <<extend>>
+UC_MOD_USER ..> UC_USERS : <<extend>>
+UC_DEL_USER ..> UC_USERS : <<extend>>
+UC_LIST_USERS ..> UC_USERS : <<extend>>
 
-  usecase "CU-03 : Gérer les utilisateurs internes\n(Créer / Modifier / Désactiver / Restaurer)" as UC03
+UC_ADD_CLIENT ..> UC_CLIENTS : <<extend>>
+UC_MOD_CLIENT ..> UC_CLIENTS : <<extend>>
+UC_DEL_CLIENT ..> UC_CLIENTS : <<extend>>
+UC_LIST_CLIENTS ..> UC_CLIENTS : <<extend>>
 
-  usecase "CU-04c : Gérer les clients\n(SOCIETE / PERSONNE_PHYSIQUE,\nvilles tunisiennes, mot de passe portail)"  as UC04c
-  usecase "CU-05 : Gérer le catalogue d'équipements\n(CLIMATISEUR / SYSTEME_SURPRESSION,\nimages multiples + image principale)" as UC05
-  usecase "CU-06 : Affecter un équipement à un client\nvia ClientEquipement\n(dateAchat, dateInstallation, localisation)" as UC06
-  usecase "CU-07 : Gérer les contrats de maintenance\n(périodicité, installations ClientEquipement couvertes)" as UC07
-  usecase "CU-08 : Générer automatiquement\nle planning préventif"  as UC08
-  usecase "CU-11a : Consulter un contrat\net ses interventions planifiées" as UC11a
-}
+UC_ADD_EQ ..> UC_EQ : <<extend>>
+UC_MOD_EQ ..> UC_EQ : <<extend>>
+UC_DEL_EQ ..> UC_EQ : <<extend>>
+UC_LIST_EQ ..> UC_EQ : <<extend>>
+UC_ASSIGN_EQ ..> UC_EQ : <<extend>>
 
-User  --> UC01
-User  --> UC02
-Sys   --> UC04
-Admin --> UC03
-Admin --> UC04c
-Admin --> UC05
-Admin --> UC06
-Admin --> UC07
-Admin --> UC11a
-Sys   --> UC08
-
-UC07 ..> UC08 : <<include>>
-UC08 ..> UC06 : <<include>>
+UC_CREATE_CONTRACT ..> UC_CONTRACTS : <<extend>>
+UC_MOD_CONTRACT ..> UC_CONTRACTS : <<extend>>
+UC_VIEW_CONTRACT ..> UC_CONTRACTS : <<extend>>
 
 @enduml

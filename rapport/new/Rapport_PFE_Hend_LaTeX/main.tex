@@ -143,6 +143,20 @@
 }
 \makeatother
 
+% Réduction de l'espace vertical avant les titres de chapitres non numérotés
+% (Introduction, Conclusion, Perspectives, Webographie, TOC, listes)
+% Sans titlesec pour ne pas écraser le style personnalisé \@makechapterhead
+\makeatletter
+\def\@makeschapterhead#1{%
+  \vspace*{-20pt}%
+  {\parindent \z@ \raggedright
+    \normalfont
+    \interlinepenalty\@M
+    \Huge \bfseries #1\par\nobreak
+    \vskip 25\p@
+  }}
+\makeatother
+
 \sloppy
 
 \begin{document}
@@ -153,7 +167,7 @@
 
 % ===== TITLE PAGE =====
 % TODO: ajouter la page de garde finale PDF ici
-% \includepdf[pages=-]{page_garde.pdf}
+\includepdf[pages=-]{page-de-garde.pdf}
 
 \setstretch{1.5}
 
@@ -164,11 +178,25 @@
 
 % ===== TABLE OF CONTENTS =====
 \dominitoc  % ← À placer impérativement AVANT \tableofcontents
-\tableofcontents
-\listoffigures
-\listoftables
 
-\newpage
+\cleardoublepage
+\begingroup
+\makeatletter
+\let\ps@plain\ps@empty
+\makeatother
+\pagestyle{empty}
+
+\tableofcontents
+\cleardoublepage
+
+\listoffigures
+\cleardoublepage
+
+\listoftables
+\cleardoublepage
+
+\endgroup
+\pagestyle{fancy}
 
 % ===== MAIN CONTENT =====
 \pagenumbering{arabic}
@@ -188,36 +216,22 @@
 \addcontentsline{toc}{chapter}{Conclusion Générale}
 \input{conclusion_generale}
 
-% ===== BIBLIOGRAPHY =====
-\setstretch{1}
-\clearpage
-\addcontentsline{toc}{chapter}{Bibliographie}
-\bibliographystyle{plain}
-\bibliography{references}
-
+% ===== Perspectives =====
+\cleardoublepage
+\phantomsection
+\addcontentsline{toc}{chapter}{Perspectives}
+\chapter*{Perspectives}
+\thispagestyle{empty}
+\input{perspectives}
 
 % ===== Webographie =====
 \clearpage
+\pagestyle{empty}
 \phantomsection
 \addcontentsline{toc}{chapter}{Webographie}
-
 \chapter*{Webographie}
+\thispagestyle{empty}
 \markboth{Webographie}{Webographie}
-
-% TODO: migrer la webographie depuis rapport_pfe_corrige-12-06-2026-clean-db.md
-
-\setstretch{1.5}
-
-% ===== Annexes =====
-\cleardoublepage
-\appendix
-\phantomsection
-\addcontentsline{toc}{chapter}{Annexes}
-
-% TODO: ajouter le PDF des annexes une fois disponible
-% \includepdf[pages=-, scale=1]{ANNEXES.pdf}
-% \thispagestyle{empty}
-\setstretch{1.5}
 
 % ===== Résumé (Quatrième de couverture) =====
 \cleardoublepage

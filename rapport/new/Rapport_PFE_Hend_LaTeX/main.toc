@@ -1,6 +1,6 @@
 \babel@toc {french}{}\relax 
-\contentsline {section}{Remerciements}{i}{section*.1}%
-\contentsline {section}{Dédicace}{ii}{section*.2}%
+\contentsline {section}{Remerciements}{ii}{section*.1}%
+\contentsline {section}{Dédicace}{iii}{section*.2}%
 \contentsline {chapter}{Introduction Générale}{1}{section*.6}%
 \contentsline {xchapter}{}{1}{chapter*.7}%
 \contentsline {chapter}{\numberline {1}Étude préalable}{3}{chapter.1}%
@@ -8,7 +8,7 @@
 \contentsline {section}{\numberline {1.2}Présentation de l'organisme d'accueil}{4}{section.1.2}%
 \contentsline {subsection}{\numberline {1.2.1}Historique}{4}{subsection.1.2.1}%
 \contentsline {subsection}{\numberline {1.2.2}Domaine d'activité}{4}{subsection.1.2.2}%
-\contentsline {subsection}{\numberline {1.2.3}Positionnement}{4}{subsection.1.2.3}%
+\contentsline {subsection}{\numberline {1.2.3}Positionnement}{5}{subsection.1.2.3}%
 \contentsline {subsection}{\numberline {1.2.4}Produits et services}{5}{subsection.1.2.4}%
 \contentsline {subsection}{\numberline {1.2.5}Organisation et environnement de travail}{5}{subsection.1.2.5}%
 \contentsline {section}{\numberline {1.3}Cadre du stage}{5}{section.1.3}%
@@ -21,13 +21,13 @@
 \contentsline {section}{\numberline {1.5}Analyse de l'existant}{7}{section.1.5}%
 \contentsline {subsection}{\numberline {1.5.1}Étude de l'existant}{7}{subsection.1.5.1}%
 \contentsline {subsection}{\numberline {1.5.2}Critiques de l'existant}{8}{subsection.1.5.2}%
-\contentsline {subsection}{\numberline {1.5.3}Les applications existantes}{8}{subsection.1.5.3}%
+\contentsline {subsection}{\numberline {1.5.3}Les applications existantes}{9}{subsection.1.5.3}%
 \contentsline {subsection}{\numberline {1.5.4}Analyse SWOT}{10}{subsection.1.5.4}%
 \contentsline {section}{\numberline {1.6}Solution proposée}{10}{section.1.6}%
 \contentsline {section}{\numberline {1.7}Processus de développement}{11}{section.1.7}%
 \contentsline {subsection}{\numberline {1.7.1}Les méthodologies Agile}{11}{subsection.1.7.1}%
 \contentsline {subsection}{\numberline {1.7.2}La méthodologie SCRUM}{12}{subsection.1.7.2}%
-\contentsline {subsection}{\numberline {1.7.3}Langages de modélisation}{12}{subsection.1.7.3}%
+\contentsline {subsection}{\numberline {1.7.3}Langages de modélisation}{13}{subsection.1.7.3}%
 \contentsline {chapter}{\numberline {2}Préparation du projet}{14}{chapter.2}%
 \contentsline {section}{\numberline {2.1}Capture des besoins}{15}{section.2.1}%
 \contentsline {subsection}{\numberline {2.1.1}Spécification des besoins}{15}{subsection.2.1.1}%
@@ -37,94 +37,93 @@
 \contentsline {subsection}{\numberline {2.2.1}Identification des acteurs}{17}{subsection.2.2.1}%
 \contentsline {subsection}{\numberline {2.2.2}Identification des cas d'utilisation}{18}{subsection.2.2.2}%
 \contentsline {subsection}{\numberline {2.2.3}Diagramme de cas d'utilisation global}{20}{subsection.2.2.3}%
-\contentsline {section}{\numberline {2.3}Diagramme de classes global}{20}{section.2.3}%
-\contentsline {section}{\numberline {2.4}Pilotage du projet avec Scrum}{23}{section.2.4}%
-\contentsline {subsection}{\numberline {2.4.1}Équipe et rôles}{23}{subsection.2.4.1}%
-\contentsline {subsection}{\numberline {2.4.2}Le Backlog du produit}{23}{subsection.2.4.2}%
-\contentsline {subsection}{\numberline {2.4.3}Planification des sprints}{26}{subsection.2.4.3}%
-\contentsline {section}{\numberline {2.5}Environnement de travail}{27}{section.2.5}%
-\contentsline {subsection}{\numberline {2.5.1}Environnement matériel}{27}{subsection.2.5.1}%
-\contentsline {subsection}{\numberline {2.5.2}Environnement logiciel}{27}{subsection.2.5.2}%
-\contentsline {section}{\numberline {2.6}Architecture de l'application}{27}{section.2.6}%
-\contentsline {chapter}{\numberline {3}Sprint 1 --- Authentification et référentiel métier}{29}{chapter.3}%
-\contentsline {section}{\numberline {3.1}Backlog du Sprint 1}{30}{section.3.1}%
-\contentsline {section}{\numberline {3.2}Analyse}{33}{section.3.2}%
-\contentsline {subsection}{\numberline {3.2.1}Diagramme de cas d'utilisation du Sprint 1}{33}{subsection.3.2.1}%
-\contentsline {subsection}{\numberline {3.2.2}Description des cas d'utilisation}{33}{subsection.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.2.1}CU-01 : S'authentifier}{33}{subsubsection.3.2.2.1}%
-\contentsline {subsubsection}{\numberline {3.2.2.2}CU-02 : Se déconnecter}{34}{subsubsection.3.2.2.2}%
-\contentsline {subsubsection}{\numberline {3.2.2.3}CU-03 : Gérer les utilisateurs internes}{35}{subsubsection.3.2.2.3}%
-\contentsline {subsubsection}{\numberline {3.2.2.4}CU-04 : Gérer les clients}{36}{subsubsection.3.2.2.4}%
-\contentsline {subsubsection}{\numberline {3.2.2.5}CU-05 : Gérer le catalogue d'équipements}{37}{subsubsection.3.2.2.5}%
-\contentsline {subsubsection}{\numberline {3.2.2.6}CU-06 : Affecter un équipement à un client (\texttt {ClientEquipement})}{38}{subsubsection.3.2.2.6}%
-\contentsline {subsubsection}{\numberline {3.2.2.7}CU-07 : Gérer les contrats de maintenance}{39}{subsubsection.3.2.2.7}%
-\contentsline {subsubsection}{\numberline {3.2.2.8}CU-08 : Générer automatiquement le planning préventif (Système)}{40}{subsubsection.3.2.2.8}%
-\contentsline {section}{\numberline {3.3}Conception}{41}{section.3.3}%
-\contentsline {subsection}{\numberline {3.3.1}Diagramme de classes du Sprint 1}{41}{subsection.3.3.1}%
-\contentsline {subsection}{\numberline {3.3.2}Diagrammes de séquence}{42}{subsection.3.3.2}%
-\contentsline {subsubsection}{\numberline {3.3.2.1}Diagramme de séquence : Connexion (email ou téléphone)}{42}{subsubsection.3.3.2.1}%
-\contentsline {subsubsection}{\numberline {3.3.2.2}Diagramme de séquence : Déconnexion}{43}{subsubsection.3.3.2.2}%
-\contentsline {subsubsection}{\numberline {3.3.2.3}Identification textuelle --- Créer un utilisateur}{43}{subsubsection.3.3.2.3}%
-\contentsline {subsubsection}{\numberline {3.3.2.4}Diagramme de séquence : Modification utilisateur}{45}{subsubsection.3.3.2.4}%
-\contentsline {subsubsection}{\numberline {3.3.2.5}Identification textuelle --- Suppression utilisateur (soft-delete)}{45}{subsubsection.3.3.2.5}%
-\contentsline {subsubsection}{\numberline {3.3.2.6}Diagramme de séquence : Contrôle d'accès}{46}{subsubsection.3.3.2.6}%
-\contentsline {subsubsection}{\numberline {3.3.2.7}Identification textuelle --- Créer un client}{46}{subsubsection.3.3.2.7}%
-\contentsline {subsubsection}{\numberline {3.3.2.8}Diagramme de séquence : Ajout équipement et gestion des images}{47}{subsubsection.3.3.2.8}%
-\contentsline {subsubsection}{\numberline {3.3.2.9}Identification textuelle --- Créer un contrat et générer le planning}{48}{subsubsection.3.3.2.9}%
-\contentsline {subsubsection}{\numberline {3.3.2.10}Diagramme de séquence : Consultation d'un contrat}{49}{subsubsection.3.3.2.10}%
-\contentsline {section}{\numberline {3.4}Réalisation}{49}{section.3.4}%
-\contentsline {chapter}{\numberline {4}Sprint 2 --- Gestion des interventions}{51}{chapter.4}%
-\contentsline {section}{\numberline {4.1}Backlog du Sprint 2}{52}{section.4.1}%
-\contentsline {section}{\numberline {4.2}Analyse}{54}{section.4.2}%
-\contentsline {subsection}{\numberline {4.2.1}Diagramme de cas d'utilisation du Sprint 2}{54}{subsection.4.2.1}%
-\contentsline {subsection}{\numberline {4.2.2}Description des cas d'utilisation}{55}{subsection.4.2.2}%
-\contentsline {subsubsection}{\numberline {4.2.2.1}CU-09 : Affecter un technicien à une intervention}{55}{subsubsection.4.2.2.1}%
-\contentsline {subsubsection}{\numberline {4.2.2.2}CU-10 : Consulter le planning}{56}{subsubsection.4.2.2.2}%
-\contentsline {subsubsection}{\numberline {4.2.2.3}CU-11 : Clôturer une intervention préventive}{57}{subsubsection.4.2.2.3}%
-\contentsline {subsubsection}{\numberline {4.2.2.4}CU-12 : Déclarer une panne}{58}{subsubsection.4.2.2.4}%
-\contentsline {subsubsection}{\numberline {4.2.2.5}CU-13 : Prendre en charge une panne}{59}{subsubsection.4.2.2.5}%
-\contentsline {subsubsection}{\numberline {4.2.2.6}CU-14 : Convertir une panne en intervention curative}{59}{subsubsection.4.2.2.6}%
-\contentsline {subsubsection}{\numberline {4.2.2.7}CU-15 : Vérifier automatiquement la couverture contractuelle (Système)}{60}{subsubsection.4.2.2.7}%
-\contentsline {section}{\numberline {4.3}Conception}{61}{section.4.3}%
-\contentsline {subsection}{\numberline {4.3.1}Diagramme de classes du Sprint 2}{61}{subsection.4.3.1}%
-\contentsline {subsection}{\numberline {4.3.2}Diagrammes de séquence}{61}{subsection.4.3.2}%
-\contentsline {subsubsection}{\numberline {4.3.2.1}Diagramme de séquence : Génération automatique du planning préventif}{61}{subsubsection.4.3.2.1}%
-\contentsline {subsubsection}{\numberline {4.3.2.2}Identification textuelle --- Affecter un technicien à une intervention}{61}{subsubsection.4.3.2.2}%
-\contentsline {subsubsection}{\numberline {4.3.2.3}Diagramme de séquence : Consultation du planning}{63}{subsubsection.4.3.2.3}%
-\contentsline {subsubsection}{\numberline {4.3.2.4}Identification textuelle --- Clôturer une intervention préventive}{63}{subsubsection.4.3.2.4}%
-\contentsline {subsubsection}{\numberline {4.3.2.5}Diagramme de séquence : Déclaration de panne}{64}{subsubsection.4.3.2.5}%
-\contentsline {subsubsection}{\numberline {4.3.2.6}Identification textuelle --- Création et affectation d'une intervention curative}{64}{subsubsection.4.3.2.6}%
-\contentsline {subsubsection}{\numberline {4.3.2.7}Diagramme de séquence : Clôture intervention curative et vérification couverture}{66}{subsubsection.4.3.2.7}%
-\contentsline {section}{\numberline {4.4}Réalisation}{66}{section.4.4}%
-\contentsline {chapter}{\numberline {5}Sprint 3 --- Facturation et tableau de bord}{67}{chapter.5}%
-\contentsline {section}{\numberline {5.1}Introduction}{68}{section.5.1}%
-\contentsline {section}{\numberline {5.2}Backlog du Sprint 3}{68}{section.5.2}%
-\contentsline {section}{\numberline {5.3}Analyse}{70}{section.5.3}%
-\contentsline {subsection}{\numberline {5.3.1}Diagramme de cas d'utilisation du Sprint 3}{70}{subsection.5.3.1}%
-\contentsline {subsection}{\numberline {5.3.2}Description des cas d'utilisation}{71}{subsection.5.3.2}%
-\contentsline {subsubsection}{\numberline {5.3.2.1}CU-16 : Générer une facture}{71}{subsubsection.5.3.2.1}%
-\contentsline {subsubsection}{\numberline {5.3.2.2}CU-17 : Consulter les factures}{72}{subsubsection.5.3.2.2}%
-\contentsline {subsubsection}{\numberline {5.3.2.3}CU-18 : Marquer une facture comme payée}{73}{subsubsection.5.3.2.3}%
-\contentsline {subsubsection}{\numberline {5.3.2.4}CU-19 : Consulter le tableau de bord administrateur}{74}{subsubsection.5.3.2.4}%
-\contentsline {subsubsection}{\numberline {5.3.2.5}CU-20 : Consulter le tableau de bord technicien}{74}{subsubsection.5.3.2.5}%
-\contentsline {subsubsection}{\numberline {5.3.2.6}CU-21 : Consulter l'espace client}{75}{subsubsection.5.3.2.6}%
-\contentsline {subsubsection}{\numberline {5.3.2.7}CU-22 : Consulter l'historique des interventions}{75}{subsubsection.5.3.2.7}%
-\contentsline {subsubsection}{\numberline {5.3.2.8}CU-23 : Filtrer les interventions}{76}{subsubsection.5.3.2.8}%
-\contentsline {section}{\numberline {5.4}Conception}{77}{section.5.4}%
-\contentsline {subsection}{\numberline {5.4.1}Diagramme de classes du Sprint 3}{77}{subsection.5.4.1}%
-\contentsline {subsection}{\numberline {5.4.2}Diagrammes de séquence}{77}{subsection.5.4.2}%
-\contentsline {subsubsection}{\numberline {5.4.2.1}a) Diagramme de séquence : Génération d'une facture}{77}{subsubsection.5.4.2.1}%
-\contentsline {subsubsection}{\numberline {5.4.2.2}b) Identification textuelle --- Consultation des factures}{77}{subsubsection.5.4.2.2}%
-\contentsline {subsubsection}{\numberline {5.4.2.3}c) Diagramme de séquence : Consultation du tableau de bord administrateur}{78}{subsubsection.5.4.2.3}%
-\contentsline {subsubsection}{\numberline {5.4.2.4}d) Identification textuelle --- Consultation de l'historique avec filtres}{79}{subsubsection.5.4.2.4}%
-\contentsline {subsubsection}{\numberline {5.4.2.5}e) Diagramme de séquence : Consultation de l'historique côté client}{80}{subsubsection.5.4.2.5}%
-\contentsline {subsubsection}{\numberline {5.4.2.6}f) Identification textuelle --- Consultation du tableau de bord technicien}{80}{subsubsection.5.4.2.6}%
-\contentsline {subsubsection}{\numberline {5.4.2.7}g) Diagramme de séquence : Consultation de l'espace client}{81}{subsubsection.5.4.2.7}%
-\contentsline {section}{\numberline {5.5}Réalisation}{81}{section.5.5}%
-\contentsline {chapter}{Conclusion Générale}{82}{section*.69}%
-\contentsline {xchapter}{}{82}{chapter*.70}%
-\contentsline {chapter}{Bibliographie}{83}{chapter*.70}%
-\contentsline {chapter}{Webographie}{83}{section*.71}%
-\contentsline {chapter}{Annexes}{84}{section*.73}%
-\contentsline {chapter}{Résumé}{84}{section*.74}%
-\contentsline {chapter}{Abstract}{85}{section*.76}%
+\contentsline {section}{\numberline {2.3}Diagramme de classes global}{21}{section.2.3}%
+\contentsline {section}{\numberline {2.4}Pilotage du projet avec Scrum}{24}{section.2.4}%
+\contentsline {subsection}{\numberline {2.4.1}Équipe et rôles}{24}{subsection.2.4.1}%
+\contentsline {subsection}{\numberline {2.4.2}Le Backlog du produit}{24}{subsection.2.4.2}%
+\contentsline {subsection}{\numberline {2.4.3}Planification des sprints}{27}{subsection.2.4.3}%
+\contentsline {section}{\numberline {2.5}Environnement de travail}{28}{section.2.5}%
+\contentsline {subsection}{\numberline {2.5.1}Environnement matériel}{28}{subsection.2.5.1}%
+\contentsline {subsection}{\numberline {2.5.2}Environnement logiciel}{29}{subsection.2.5.2}%
+\contentsline {section}{\numberline {2.6}Architecture de l'application}{29}{section.2.6}%
+\contentsline {chapter}{\numberline {3}Sprint 1 --- Authentification et référentiel métier}{31}{chapter.3}%
+\contentsline {section}{\numberline {3.1}Backlog du Sprint 1}{32}{section.3.1}%
+\contentsline {section}{\numberline {3.2}Analyse}{35}{section.3.2}%
+\contentsline {subsection}{\numberline {3.2.1}Diagramme de cas d'utilisation du Sprint 1}{35}{subsection.3.2.1}%
+\contentsline {subsection}{\numberline {3.2.2}Description des cas d'utilisation}{36}{subsection.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.2.1}CU-01 : S'authentifier}{36}{subsubsection.3.2.2.1}%
+\contentsline {subsubsection}{\numberline {3.2.2.2}CU-02 : Se déconnecter}{37}{subsubsection.3.2.2.2}%
+\contentsline {subsubsection}{\numberline {3.2.2.3}CU-03 : Gérer les utilisateurs internes}{37}{subsubsection.3.2.2.3}%
+\contentsline {subsubsection}{\numberline {3.2.2.4}CU-04 : Gérer les clients}{39}{subsubsection.3.2.2.4}%
+\contentsline {subsubsection}{\numberline {3.2.2.5}CU-05 : Gérer le catalogue d'équipements}{39}{subsubsection.3.2.2.5}%
+\contentsline {subsubsection}{\numberline {3.2.2.6}CU-06 : Affecter un équipement à un client (\texttt {ClientEquipement})}{40}{subsubsection.3.2.2.6}%
+\contentsline {subsubsection}{\numberline {3.2.2.7}CU-07 : Gérer les contrats de maintenance}{41}{subsubsection.3.2.2.7}%
+\contentsline {subsubsection}{\numberline {3.2.2.8}CU-08 : Générer automatiquement le planning préventif (Système)}{42}{subsubsection.3.2.2.8}%
+\contentsline {section}{\numberline {3.3}Conception}{43}{section.3.3}%
+\contentsline {subsection}{\numberline {3.3.1}Diagramme de classes du Sprint 1}{43}{subsection.3.3.1}%
+\contentsline {subsection}{\numberline {3.3.2}Diagrammes de séquence}{44}{subsection.3.3.2}%
+\contentsline {subsubsection}{\numberline {3.3.2.1}Diagramme de séquence : Connexion (email ou téléphone)}{44}{subsubsection.3.3.2.1}%
+\contentsline {subsubsection}{\numberline {3.3.2.2}Diagramme de séquence : Déconnexion}{45}{subsubsection.3.3.2.2}%
+\contentsline {subsubsection}{\numberline {3.3.2.3}Identification textuelle --- Créer un utilisateur}{46}{subsubsection.3.3.2.3}%
+\contentsline {subsubsection}{\numberline {3.3.2.4}Diagramme de séquence : Modification utilisateur}{47}{subsubsection.3.3.2.4}%
+\contentsline {subsubsection}{\numberline {3.3.2.5}Identification textuelle --- Suppression utilisateur (soft-delete)}{48}{subsubsection.3.3.2.5}%
+\contentsline {subsubsection}{\numberline {3.3.2.6}Diagramme de séquence : Contrôle d'accès}{49}{subsubsection.3.3.2.6}%
+\contentsline {subsubsection}{\numberline {3.3.2.7}Identification textuelle --- Créer un client}{49}{subsubsection.3.3.2.7}%
+\contentsline {subsubsection}{\numberline {3.3.2.8}Diagramme de séquence : Ajout équipement et gestion des images}{51}{subsubsection.3.3.2.8}%
+\contentsline {subsubsection}{\numberline {3.3.2.9}Identification textuelle --- Créer un contrat et générer le planning}{51}{subsubsection.3.3.2.9}%
+\contentsline {subsubsection}{\numberline {3.3.2.10}Diagramme de séquence : Consultation d'un contrat}{53}{subsubsection.3.3.2.10}%
+\contentsline {section}{\numberline {3.4}Réalisation}{54}{section.3.4}%
+\contentsline {chapter}{\numberline {4}Sprint 2 --- Gestion des interventions}{57}{chapter.4}%
+\contentsline {section}{\numberline {4.1}Backlog du Sprint 2}{58}{section.4.1}%
+\contentsline {section}{\numberline {4.2}Analyse}{61}{section.4.2}%
+\contentsline {subsection}{\numberline {4.2.1}Diagramme de cas d'utilisation du Sprint 2}{61}{subsection.4.2.1}%
+\contentsline {subsection}{\numberline {4.2.2}Description des cas d'utilisation}{62}{subsection.4.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.2.1}CU-09 : Affecter un technicien à une intervention}{62}{subsubsection.4.2.2.1}%
+\contentsline {subsubsection}{\numberline {4.2.2.2}CU-10 : Consulter le planning}{63}{subsubsection.4.2.2.2}%
+\contentsline {subsubsection}{\numberline {4.2.2.3}CU-11 : Clôturer une intervention préventive}{64}{subsubsection.4.2.2.3}%
+\contentsline {subsubsection}{\numberline {4.2.2.4}CU-12 : Déclarer une panne}{65}{subsubsection.4.2.2.4}%
+\contentsline {subsubsection}{\numberline {4.2.2.5}CU-13 : Prendre en charge une panne}{66}{subsubsection.4.2.2.5}%
+\contentsline {subsubsection}{\numberline {4.2.2.6}CU-14 : Convertir une panne en intervention curative}{66}{subsubsection.4.2.2.6}%
+\contentsline {subsubsection}{\numberline {4.2.2.7}CU-15 : Vérifier automatiquement la couverture contractuelle (Système)}{67}{subsubsection.4.2.2.7}%
+\contentsline {section}{\numberline {4.3}Conception}{68}{section.4.3}%
+\contentsline {subsection}{\numberline {4.3.1}Diagramme de classes du Sprint 2}{68}{subsection.4.3.1}%
+\contentsline {subsection}{\numberline {4.3.2}Diagrammes de séquence}{69}{subsection.4.3.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.1}Diagramme de séquence : Génération automatique du planning préventif}{69}{subsubsection.4.3.2.1}%
+\contentsline {subsubsection}{\numberline {4.3.2.2}Identification textuelle --- Affecter un technicien à une intervention}{69}{subsubsection.4.3.2.2}%
+\contentsline {subsubsection}{\numberline {4.3.2.3}Diagramme de séquence : Consultation du planning}{71}{subsubsection.4.3.2.3}%
+\contentsline {subsubsection}{\numberline {4.3.2.4}Identification textuelle --- Clôturer une intervention préventive}{71}{subsubsection.4.3.2.4}%
+\contentsline {subsubsection}{\numberline {4.3.2.5}Diagramme de séquence : Déclaration de panne}{72}{subsubsection.4.3.2.5}%
+\contentsline {subsubsection}{\numberline {4.3.2.6}Identification textuelle --- Création et affectation d'une intervention curative}{73}{subsubsection.4.3.2.6}%
+\contentsline {subsubsection}{\numberline {4.3.2.7}Diagramme de séquence : Clôture intervention curative et vérification couverture}{74}{subsubsection.4.3.2.7}%
+\contentsline {section}{\numberline {4.4}Réalisation}{75}{section.4.4}%
+\contentsline {chapter}{\numberline {5}Sprint 3 --- Facturation et tableau de bord}{77}{chapter.5}%
+\contentsline {section}{\numberline {5.1}Introduction}{78}{section.5.1}%
+\contentsline {section}{\numberline {5.2}Backlog du Sprint 3}{78}{section.5.2}%
+\contentsline {section}{\numberline {5.3}Analyse}{81}{section.5.3}%
+\contentsline {subsection}{\numberline {5.3.1}Diagramme de cas d'utilisation du Sprint 3}{81}{subsection.5.3.1}%
+\contentsline {subsection}{\numberline {5.3.2}Description des cas d'utilisation}{82}{subsection.5.3.2}%
+\contentsline {subsubsection}{\numberline {5.3.2.1}CU-16 : Générer une facture}{82}{subsubsection.5.3.2.1}%
+\contentsline {subsubsection}{\numberline {5.3.2.2}CU-17 : Consulter les factures}{83}{subsubsection.5.3.2.2}%
+\contentsline {subsubsection}{\numberline {5.3.2.3}CU-18 : Marquer une facture comme payée}{84}{subsubsection.5.3.2.3}%
+\contentsline {subsubsection}{\numberline {5.3.2.4}CU-19 : Consulter le tableau de bord administrateur}{85}{subsubsection.5.3.2.4}%
+\contentsline {subsubsection}{\numberline {5.3.2.5}CU-20 : Consulter le tableau de bord technicien}{85}{subsubsection.5.3.2.5}%
+\contentsline {subsubsection}{\numberline {5.3.2.6}CU-21 : Consulter l'espace client}{86}{subsubsection.5.3.2.6}%
+\contentsline {subsubsection}{\numberline {5.3.2.7}CU-22 : Consulter l'historique des interventions}{86}{subsubsection.5.3.2.7}%
+\contentsline {subsubsection}{\numberline {5.3.2.8}CU-23 : Filtrer les interventions}{87}{subsubsection.5.3.2.8}%
+\contentsline {section}{\numberline {5.4}Conception}{88}{section.5.4}%
+\contentsline {subsection}{\numberline {5.4.1}Diagramme de classes du Sprint 3}{88}{subsection.5.4.1}%
+\contentsline {subsection}{\numberline {5.4.2}Diagrammes de séquence}{89}{subsection.5.4.2}%
+\contentsline {subsubsection}{\numberline {5.4.2.1}a) Diagramme de séquence : Génération d'une facture}{89}{subsubsection.5.4.2.1}%
+\contentsline {subsubsection}{\numberline {5.4.2.2}b) Identification textuelle --- Consultation des factures}{89}{subsubsection.5.4.2.2}%
+\contentsline {subsubsection}{\numberline {5.4.2.3}c) Diagramme de séquence : Consultation du tableau de bord administrateur}{91}{subsubsection.5.4.2.3}%
+\contentsline {subsubsection}{\numberline {5.4.2.4}d) Identification textuelle --- Consultation de l'historique avec filtres}{91}{subsubsection.5.4.2.4}%
+\contentsline {subsubsection}{\numberline {5.4.2.5}e) Diagramme de séquence : Consultation de l'historique côté client}{92}{subsubsection.5.4.2.5}%
+\contentsline {subsubsection}{\numberline {5.4.2.6}f) Identification textuelle --- Consultation du tableau de bord technicien}{93}{subsubsection.5.4.2.6}%
+\contentsline {subsubsection}{\numberline {5.4.2.7}g) Diagramme de séquence : Consultation de l'espace client}{94}{subsubsection.5.4.2.7}%
+\contentsline {section}{\numberline {5.5}Réalisation}{94}{section.5.5}%
+\contentsline {chapter}{Conclusion Générale}{97}{section*.78}%
+\contentsline {xchapter}{}{97}{chapter*.79}%
+\contentsline {chapter}{Perspectives}{98}{section*.80}%
+\contentsline {chapter}{Webographie}{99}{section*.82}%
+\contentsline {chapter}{Résumé}{100}{section*.84}%
+\contentsline {chapter}{Abstract}{100}{section*.85}%

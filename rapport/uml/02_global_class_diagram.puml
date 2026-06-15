@@ -56,7 +56,7 @@ enum PanneStatut {
   ANNULEE
 }
 
-enum InvoiceStatut {
+enum FactureStatut {
   PAYEE
   IMPAYEE
   EN_ATTENTE
@@ -195,7 +195,7 @@ class PieceJointe {
   + previewUrl : String
 }
 
-class Invoice {
+class Facture {
   + id : String
   + numero : String
   + clientId : String
@@ -204,10 +204,10 @@ class Invoice {
   + montantHT : Float
   + tva : Float
   + montantTTC : Float
-  + statut : InvoiceStatut
+  + statut : FactureStatut
 }
 
-note bottom of Invoice
+note bottom of Facture
   Générée UNIQUEMENT si :
   Intervention.type = CURATIVE
   ET Intervention.statut = REALISEE
@@ -245,8 +245,8 @@ Contract         "0..1" -- "*" Intervention  : planifie
 Panne            "0..1" -- "1" Intervention  : convertie en
 Panne            "1"    *--  "*" PieceJointe : contient
 Client           "1"    --   "*" Panne       : déclare
-Invoice          "1"    *--  "*" LigneFacture : contient
-Intervention     "1"    --   "0..1" Invoice  : facturée par
+Facture          "1"    *--  "*" LigneFacture : contient
+Intervention     "1"    --   "0..1" Facture  : facturée par
 
 ' Enums
 User         .. UserRole
@@ -257,5 +257,5 @@ Contract     .. Periodicite
 Intervention .. InterventionType
 Intervention .. InterventionStatut
 Panne        .. PanneStatut
-Invoice      .. InvoiceStatut
+Facture      .. FactureStatut
 @enduml

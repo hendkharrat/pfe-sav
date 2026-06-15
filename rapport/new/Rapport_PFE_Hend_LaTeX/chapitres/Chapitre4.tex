@@ -5,6 +5,7 @@
 \renewcommand{\footrulewidth}{0.5pt}
 \chapter{Sprint 2 --- Gestion des interventions}\setlength{\headheight}{28pt}
 \label{ch4}
+\thispagestyle{empty}
 \minitoc
 \newpage
 
@@ -111,11 +112,7 @@ US-20
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{12\_sprint2\_use\_case.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/use_case_sprint2.png}
 \caption{Diagramme de cas d'utilisation du Sprint 2}
 \label{fig:ch4:usecase_sprint2}
 \end{figure}
@@ -458,11 +455,7 @@ et conversion panne, consultation planning global, historique.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{13\_sprint2\_class\_diagram.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/class_diagram_sprint2.png}
 \caption{Diagramme de classes du Sprint 2}
 \label{fig:ch4:class_sprint2}
 \end{figure}
@@ -476,11 +469,7 @@ Les entités impliquées dans ce sprint sont : \texttt{Intervention}, \texttt{Pa
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{14\_seq\_generation\_planning.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/seq_genererplanning_sprint2.png}
 \caption{Diagramme de séquence : Génération automatique du planning préventif}
 \label{fig:ch4:seq_generation_planning}
 \end{figure}
@@ -549,11 +538,7 @@ Règles de gestion :
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{15\_seq\_consultation\_planning.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/seq_consulterplanning_sprint2.png}
 \caption{Diagramme de séquence : Consultation du planning}
 \label{fig:ch4:seq_consultation_planning}
 \end{figure}
@@ -603,11 +588,7 @@ Règles de gestion :
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{16\_seq\_declaration\_panne.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/seq_declarerpanne_sprint2.png}
 \caption{Diagramme de séquence : Déclaration de panne}
 \label{fig:ch4:seq_declaration_panne}
 \end{figure}
@@ -665,11 +646,7 @@ Règles de gestion :
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER]} \\[0.5em]
-Diagramme : \textit{17\_seq\_cloture\_curative\_couverture.puml} \\[0.5em]
-Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
-\vspace{1cm}}}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/seq_cloturercurative_sprint2.png}
 \caption{Diagramme de séquence : Clôture intervention curative et vérification couverture}
 \label{fig:ch4:seq_cloture_curative}
 \end{figure}
@@ -679,13 +656,27 @@ Remplacer par \texttt{\textbackslash includegraphics} une fois le PNG généré.
 
 \begin{figure}[H]
 \centering
-\fbox{\parbox{0.8\textwidth}{\centering\vspace{1cm}
-\textbf{[PLACEHOLDER --- CAPTURES D'ÉCRAN]} \\[0.5em]
-Captures d'écran de réalisation du Sprint 2.
-\vspace{1cm}}}
-\caption{Captures d'écran de réalisation du Sprint 2}
-\label{fig:ch4:realisation_sprint2}
+\includegraphics[width=0.6\textwidth]{Figures/Chapitre4/gestintervention.png}
+\hfill
+\includegraphics[width=0.3\textwidth]{Figures/Chapitre4/ajoutintervention.png}
+\caption{Captures d'écran de la gestion des interventions : page de gestion des interventions et page d'ajout}
+\label{fig:ch4:realisation_sprint2_interventions}
 \end{figure}
+
+\begin{figure}[H]
+\centering
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/gestpannes.png}
+\\[0.8em]
+\includegraphics[width=0.32\textwidth]{Figures/Chapitre4/annulerpanne.png}
+\hfill
+\includegraphics[width=0.32\textwidth]{Figures/Chapitre4/convertirpanne.png}
+\hfill
+\includegraphics[width=0.32\textwidth]{Figures/Chapitre4/viewpanne.png}
+\caption{Captures d'écran de la gestion des pannes : page principale, annulation, conversion et visualisation des pannes}
+\label{fig:ch4:realisation_sprint2_pannes}
+\end{figure}
+
+
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section*{Conclusion}
