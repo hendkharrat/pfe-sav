@@ -27,81 +27,37 @@ Les caractéristiques élaborées au cours de ce sprint portent principalement s
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Backlog du Sprint 2}
 
-\begin{longtable}{|p{1.2cm}|p{4.3cm}|p{2.2cm}|p{1.5cm}|p{4.5cm}|}
+\begin{longtable}{|p{1.2cm}|p{7.5cm}|p{2.8cm}|p{1.8cm}|}
 \caption{Backlog du Sprint 2 --- US-11 à US-20}
 \label{tab:ch4:backlog_sprint2} \\
 \hline
-\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} & \textbf{Critères d'acceptation} \\
+\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} \\
 \hline
 \endfirsthead
 \caption*{Backlog du Sprint 2 (suite)} \\
 \hline
-\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} & \textbf{Critères d'acceptation} \\
+\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} \\
 \hline
 \endhead
 \hline
 \endfoot
 \hline
 \endlastfoot
-US-11
-  & En tant qu'administrateur, je veux affecter un technicien disponible à une intervention.
-  & Administrateur & Élevée
-  & Vérification disponibilité par date ; technicien indisponible signalé et non sélectionnable ;
-    statut \texttt{PLANIFIEE} après affectation. \\
+US-11 & En tant qu'administrateur, je veux affecter un technicien disponible à une intervention. & Administrateur & Élevée \\
 \hline
-US-12
-  & En tant qu'administrateur/technicien, je veux consulter le planning en vue hebdomadaire
-    ou mensuelle.
-  & Admin / Technicien & Élevée
-  & Vues 1 semaine, 2 semaines, mensuelle ; admin voit tout ; technicien voit uniquement
-    ses interventions. \\
+US-12 & En tant qu'administrateur/technicien, je veux consulter le planning en vue hebdomadaire ou mensuelle. & Admin / Technicien & Élevée \\
 \hline
-US-13
-  & En tant que technicien, je veux démarrer une intervention assignée.
-  & Technicien & Élevée
-  & Statut passe à \texttt{EN\_COURS} ; seules ses interventions sont accessibles. \\
+US-13 & En tant que technicien, je veux démarrer une intervention assignée. & Technicien & Élevée \\
 \hline
-US-14
-  & En tant que technicien, je veux clôturer une intervention préventive.
-  & Technicien & Élevée
-  & Saisie : compte rendu, actions, matériel, durée ; statut \texttt{REALISEE} ;
-    aucune facture générée. \\
+US-14 & En tant que technicien, je veux clôturer une intervention préventive. & Technicien & Élevée \\
 \hline
-US-15
-  & En tant que technicien, je veux clôturer une intervention curative.
-  & Technicien & Élevée
-  & Saisie : diagnostic, actions, matériel, durée ; statut \texttt{REALISEE} ;
-    couverture contractuelle vérifiée automatiquement. \\
+US-15 & En tant que technicien, je veux clôturer une intervention curative avec vérification de la couverture contractuelle. & Technicien & Élevée \\
 \hline
-US-16
-  & En tant que client, je veux déclarer une panne sur l'un de mes équipements, sans champ
-    de priorité, avec pièces jointes.
-  & Client & Élevée
-  & Sélection équipement affecté au client ; description obligatoire ; pièces jointes
-    (image, PDF, audio) ; aucun champ de priorité ; statut \texttt{EN\_ATTENTE}. \\
+US-16 & En tant que client, je veux déclarer une panne sur l'un de mes équipements, avec pièces jointes. & Client & Élevée \\
 \hline
-US-17
-  & En tant qu'administrateur, je veux prendre en charge une panne et la convertir en
-    intervention curative.
-  & Administrateur & Élevée
-  & \texttt{Panne} passe à \texttt{PRISE\_EN\_CHARGE} puis \texttt{CONVERTIE} ;
-    intervention curative créée ; couverture contractuelle détectée automatiquement. \\
+US-17 & En tant qu'administrateur, je veux prendre en charge une panne et la convertir en intervention curative. & Administrateur & Élevée \\
 \hline
-US-18
-  & En tant qu'administrateur, je veux créer directement une intervention curative.
-  & Administrateur & Élevée
-  & Formulaire avec client, installation \texttt{ClientEquipement}, date, description ;
-    couverture détectée automatiquement ; aucun champ de priorité. \\
-\hline
-US-19
-  & En tant qu'administrateur, je veux consulter l'historique de toutes les interventions.
-  & Administrateur & Moyenne
-  & Liste paginée ; filtres par date, type, statut, client, technicien. \\
-\hline
-US-20
-  & En tant qu'administrateur, je veux suivre les interventions en cours.
-  & Administrateur & Élevée
-  & Vue filtrée sur statuts \texttt{PLANIFIEE} et \texttt{EN\_COURS}. \\
+US-18 & En tant qu'administrateur, je veux créer directement une intervention curative. & Administrateur & Élevée \\
 \hline
 \end{longtable}
 
@@ -112,7 +68,7 @@ US-20
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/use_case_sprint2.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre4/use_case_sprint2.png}
 \caption{Diagramme de cas d'utilisation du Sprint 2}
 \label{fig:ch4:usecase_sprint2}
 \end{figure}
@@ -126,7 +82,7 @@ et conversion panne, consultation planning global, historique.
 
 \textbf{Client} : déclaration de panne avec pièces jointes.
 
-\textbf{Système} : vérification disponibilité technicien, vérification couverture contractuelle.
+\textit{Comportements automatiques du système :} vérification de disponibilité du technicien, vérification de la couverture contractuelle.
 
 \subsection{Description des cas d'utilisation}
 
@@ -158,37 +114,14 @@ et conversion panne, consultation planning global, historique.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item L'administrateur demande l'affectation d'un technicien à une intervention.
-    \item L'Interface transmet la demande au Contrôleur avec l'identifiant de l'intervention
-          et du technicien.
-    \item Le Contrôleur vérifie l'existence de l'intervention.
-    \item Le Contrôleur vérifie que le technicien est actif.
-    \item Le Contrôleur vérifie la disponibilité du technicien à la date prévue.
-    \item La base de données confirme que le technicien n'a pas d'autre intervention
-          à cette date.
-    \item Le Contrôleur met à jour l'intervention avec le technicien affecté et le statut
-          \texttt{PLANIFIEE}.
-    \item La base de données effectue la mise à jour.
-    \item L'Interface confirme l'affectation.
-\end{enumerate}
-
-\textbf{Scénarios alternatifs :}
-\begin{itemize}
-    \item SA1 : Intervention introuvable $\rightarrow$ message d'erreur.
-    \item SA2 : Technicien inactif ou introuvable $\rightarrow$ message d'erreur.
-    \item SA3 : Technicien indisponible à cette date $\rightarrow$ message
-          « Technicien indisponible à la date prévue ».
-    \item SA4 : Erreur base de données $\rightarrow$ message d'erreur.
-\end{itemize}
+\textbf{Scénario nominal :} L'administrateur sélectionne l'intervention et le technicien à affecter ; le système vérifie l'existence, le statut et la disponibilité du technicien avant d'enregistrer l'affectation.
 
 \textbf{Règles de gestion :}
 \begin{itemize}
     \item Seuls les techniciens actifs peuvent être affectés.
-    \item \textbf{Un technicien ne peut pas être affecté à deux interventions prévues
-          à la même date.}
+    \item \textbf{Un technicien ne peut pas être affecté à deux interventions prévues à la même date.}
     \item L'affectation met automatiquement le statut de l'intervention à \texttt{PLANIFIEE}.
+    \item Toute condition invalide (intervention introuvable, technicien inactif, indisponibilité à la date ou erreur technique) interrompt l'opération avec un message explicite.
 \end{itemize}
 
 \subsubsection{CU-10 : Consulter le planning}
@@ -216,16 +149,7 @@ et conversion panne, consultation planning global, historique.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item L'utilisateur ouvre le module Planning.
-    \item Le système récupère les interventions selon le rôle :
-    \begin{itemize}
-        \item Administrateur $\rightarrow$ toutes les interventions.
-        \item Technicien $\rightarrow$ uniquement ses interventions assignées.
-    \end{itemize}
-    \item Le planning est affiché en vue hebdomadaire (1 semaine ou 2 semaines) ou mensuelle.
-\end{enumerate}
+\textbf{Scénario nominal :} L'utilisateur ouvre le module Planning ; le système filtre les interventions selon le rôle et les affiche sous forme de calendrier hebdomadaire ou mensuel.
 
 \textbf{Règles de gestion :}
 \begin{itemize}
@@ -259,17 +183,7 @@ et conversion panne, consultation planning global, historique.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item Le technicien saisit les informations de clôture : compte rendu, actions réalisées,
-          matériel utilisé, durée en minutes.
-    \item L'Interface transmet les données au Contrôleur.
-    \item Le Contrôleur vérifie que le technicien est bien affecté à l'intervention.
-    \item Le Contrôleur vérifie que le statut est \texttt{PLANIFIEE} ou \texttt{EN\_COURS}.
-    \item Le Contrôleur met à jour le statut à \texttt{REALISEE}.
-    \item La base de données effectue la mise à jour.
-    \item L'Interface affiche la confirmation.
-\end{enumerate}
+\textbf{Scénario nominal :} Le technicien saisit le compte rendu, les actions réalisées, le matériel utilisé et la durée ; le contrôleur vérifie l'affectation et le statut, puis met à jour l'intervention à \texttt{REALISEE}.
 
 \textbf{Règles de gestion :}
 \begin{itemize}
@@ -303,18 +217,7 @@ et conversion panne, consultation planning global, historique.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item Le client accède au module de déclaration de panne.
-    \item Il sélectionne l'un de ses équipements affectés (parmi ses \texttt{ClientEquipement}).
-    \item Il saisit une description de la panne (\textbf{obligatoire}).
-    \item Il joint éventuellement une ou plusieurs pièces jointes (images, PDF, fichiers audio).
-    \item Il soumet la déclaration.
-    \item L'Interface transmet les données au Contrôleur.
-    \item Le Contrôleur vérifie que l'équipement appartient bien au client.
-    \item Le Contrôleur enregistre la panne avec ses \texttt{PieceJointe[]} associées.
-    \item La panne est créée avec le statut \texttt{EN\_ATTENTE}.
-\end{enumerate}
+\textbf{Scénario nominal :} Le client sélectionne un équipement affecté, saisit la description obligatoire et joint éventuellement des pièces jointes ; le système valide l'appartenance de l'équipement, enregistre la panne et lui attribue le statut \texttt{EN\_ATTENTE}.
 
 \textbf{Scénarios alternatifs :}
 \begin{itemize}
@@ -357,13 +260,7 @@ et conversion panne, consultation planning global, historique.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item L'administrateur consulte la liste des pannes.
-    \item Il sélectionne une panne \texttt{EN\_ATTENTE}.
-    \item Il clique sur « Prendre en charge ».
-    \item Le statut de la panne est mis à jour à \texttt{PRISE\_EN\_CHARGE}.
-\end{enumerate}
+\textbf{Scénario nominal :} L'administrateur sélectionne une panne \texttt{EN\_ATTENTE} et déclenche la prise en charge ; le statut est mis à jour à \texttt{PRISE\_EN\_CHARGE}.
 
 \subsubsection{CU-14 : Convertir une panne en intervention curative}
 
@@ -391,62 +288,14 @@ et conversion panne, consultation planning global, historique.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item L'administrateur consulte les pannes.
-    \item Il sélectionne une panne et clique sur « Convertir en intervention ».
-    \item Il saisit la date prévue de l'intervention.
-    \item Il affecte optionnellement un technicien disponible à cette date.
-    \item Le Contrôleur crée une intervention curative liée à la panne.
-    \item Le Système vérifie automatiquement si l'installation \texttt{ClientEquipement}
-          est couverte par un contrat actif.
-    \item L'attribut \texttt{couvertureContrat} est renseigné.
-    \item La panne passe au statut \texttt{CONVERTIE}.
-\end{enumerate}
+\textbf{Scénario nominal :} L'administrateur sélectionne la panne à convertir, saisit la date prévue et affecte optionnellement un technicien disponible ; le système crée l'intervention curative liée à la panne, vérifie automatiquement la couverture contractuelle, renseigne \texttt{couvertureContrat} et fait passer la panne au statut \texttt{CONVERTIE}.
 
 \textbf{Règles de gestion :}
 \begin{itemize}
     \item \textbf{Aucun champ de priorité n'est associé à l'intervention curative créée.}
-    \item La couverture contractuelle est vérifiée automatiquement par le Système.
+    \item La couverture contractuelle est vérifiée automatiquement par le Système : si un contrat actif couvre l'installation \texttt{ClientEquipement} à la date de l'intervention, \texttt{couvertureContrat} = true ; sinon false.
     \item Si un technicien est affecté, la disponibilité est vérifiée.
 \end{itemize}
-
-\subsubsection{CU-15 : Vérifier automatiquement la couverture contractuelle (Système)}
-
-\begin{table}[H]
-\centering
-\caption{CU-15 : Vérifier automatiquement la couverture contractuelle}
-\label{tab:ch4:cu15}
-\begin{tabular}{|p{3.5cm}|p{11cm}|}
-\hline
-\textbf{Champ} & \textbf{Contenu} \\
-\hline
-\textbf{Description}
-  & Le Système vérifie si une intervention curative est couverte par un contrat actif. \\
-\hline
-\textbf{Acteur principal}
-  & Système \\
-\hline
-\textbf{Préconditions}
-  & Une intervention curative existe avec un \texttt{clientEquipementId} renseigné. \\
-\hline
-\textbf{Postconditions}
-  & L'attribut \texttt{couvertureContrat} de l'intervention est renseigné
-    (true ou false). \\
-\hline
-\end{tabular}
-\end{table}
-
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item Le Système récupère le \texttt{clientEquipementId} de l'intervention.
-    \item Le Système recherche les contrats actifs (statut = \texttt{ACTIF}) couvrant
-          cet enregistrement \texttt{ClientEquipement}.
-    \item Si un contrat actif est trouvé dans la période :
-          \texttt{couvertureContrat} = true.
-    \item Sinon : \texttt{couvertureContrat} = false.
-    \item Le résultat est enregistré dans la base de données.
-\end{enumerate}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Conception}
@@ -455,7 +304,7 @@ et conversion panne, consultation planning global, historique.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/class_diagram_sprint2.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre4/class_diagram_sprint2.png}
 \caption{Diagramme de classes du Sprint 2}
 \label{fig:ch4:class_sprint2}
 \end{figure}
@@ -465,188 +314,13 @@ Les entités impliquées dans ce sprint sont : \texttt{Intervention}, \texttt{Pa
 
 \subsection{Diagrammes de séquence}
 
-\subsubsection{Diagramme de séquence : Génération automatique du planning préventif}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/seq_genererplanning_sprint2.png}
-\caption{Diagramme de séquence : Génération automatique du planning préventif}
-\label{fig:ch4:seq_generation_planning}
-\end{figure}
-
-\subsubsection{Identification textuelle --- Affecter un technicien à une intervention}
-
-Nom du cas d'utilisation : Affecter un technicien à une intervention.
-Acteur principal : Administrateur.
-Objectif : Permettre à l'administrateur d'affecter un technicien disponible à une intervention
-planifiée.
-
-Préconditions :
-\begin{itemize}
-    \item L'administrateur est authentifié.
-    \item L'intervention existe dans la base de données.
-    \item Le technicien existe et possède un compte actif.
-\end{itemize}
-
-Postconditions :
-\begin{itemize}
-    \item Le technicien est affecté à l'intervention.
-    \item Le statut de l'intervention devient \texttt{PLANIFIEE}.
-    \item L'intervention apparaît dans le planning du technicien.
-\end{itemize}
-
-Scénario nominal :
-\begin{enumerate}
-    \item L'administrateur demande l'affectation d'un technicien à une intervention.
-    \item L'Interface transmet la demande au Contrôleur avec l'identifiant de l'intervention
-          et du technicien.
-    \item Le Contrôleur vérifie l'existence de l'intervention.
-    \item Le Contrôleur vérifie que le technicien est actif.
-    \item Le Contrôleur vérifie la disponibilité du technicien à la date prévue.
-    \item La base de données confirme que le technicien est disponible (aucune autre
-          intervention à cette date).
-    \item Le Contrôleur met à jour l'intervention avec le technicien affecté et le statut
-          \texttt{PLANIFIEE}.
-    \item La base de données effectue la mise à jour.
-    \item La base confirme la modification.
-    \item L'Interface affiche la confirmation de l'affectation.
-\end{enumerate}
-
-Scénario alternatif 1 --- Technicien indisponible :
-\begin{itemize}
-    \item La base de données retourne que le technicien est déjà affecté à cette date.
-    \item Le Contrôleur retourne un message d'indisponibilité.
-    \item L'Interface affiche « Technicien indisponible à la date prévue ».
-\end{itemize}
-
-Scénario alternatif 2 --- Technicien introuvable ou inactif :
-\begin{itemize}
-    \item La base de données retourne que le technicien est inexistant ou inactif.
-    \item L'Interface affiche un message d'erreur.
-\end{itemize}
-
-Règles de gestion :
-\begin{itemize}
-    \item Une intervention doit exister avant toute affectation.
-    \item Seuls les techniciens actifs peuvent être affectés.
-    \item \textbf{Un technicien ne peut pas être affecté à deux interventions prévues
-          à la même date.}
-    \item L'affectation met automatiquement le statut de l'intervention à \texttt{PLANIFIEE}.
-\end{itemize}
-
-\subsubsection{Diagramme de séquence : Consultation du planning}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/seq_consulterplanning_sprint2.png}
-\caption{Diagramme de séquence : Consultation du planning}
-\label{fig:ch4:seq_consultation_planning}
-\end{figure}
-
-\subsubsection{Identification textuelle --- Clôturer une intervention préventive}
-
-Nom du cas d'utilisation : Clôturer une intervention préventive.
-Acteur principal : Technicien.
-Objectif : Permettre au technicien de valider et clôturer une intervention préventive après sa
-réalisation.
-
-Préconditions :
-\begin{itemize}
-    \item Le technicien est authentifié.
-    \item Le technicien est affecté à l'intervention.
-    \item L'intervention possède le statut \texttt{PLANIFIEE} ou \texttt{EN\_COURS}.
-\end{itemize}
-
-Postconditions :
-\begin{itemize}
-    \item Les informations de réalisation sont enregistrées.
-    \item Le statut de l'intervention devient \texttt{REALISEE}.
-    \item Aucune facture n'est générée.
-\end{itemize}
-
-Scénario nominal :
-\begin{enumerate}
-    \item Le technicien saisit les informations de clôture : compte rendu, actions réalisées,
-          matériel utilisé, durée en minutes.
-    \item L'Interface transmet les données au Contrôleur.
-    \item Le Contrôleur vérifie que le technicien est bien affecté à l'intervention.
-    \item Le Contrôleur vérifie que le statut est \texttt{PLANIFIEE} ou \texttt{EN\_COURS}.
-    \item Le Contrôleur met à jour le statut à \texttt{REALISEE}.
-    \item La base de données effectue la mise à jour.
-    \item La base confirme la modification.
-    \item L'Interface affiche la confirmation.
-\end{enumerate}
-
-Règles de gestion :
-\begin{itemize}
-    \item Seul le technicien affecté peut clôturer l'intervention.
-    \item \textbf{Une intervention préventive ne génère jamais de facture.}
-    \item La durée est obligatoire et exprimée en minutes.
-\end{itemize}
-
-\subsubsection{Diagramme de séquence : Déclaration de panne}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/seq_declarerpanne_sprint2.png}
-\caption{Diagramme de séquence : Déclaration de panne}
-\label{fig:ch4:seq_declaration_panne}
-\end{figure}
-
-\subsubsection{Identification textuelle --- Création et affectation d'une intervention curative}
-
-Nom du cas d'utilisation : Créer et affecter une intervention curative.
-Acteur principal : Administrateur.
-Objectif : Permettre à l'administrateur de créer une intervention curative et d'y affecter
-un technicien disponible.
-
-Préconditions :
-\begin{itemize}
-    \item L'administrateur est authentifié.
-    \item Le client et l'installation \texttt{ClientEquipement} existent dans le système.
-\end{itemize}
-
-Postconditions :
-\begin{itemize}
-    \item L'intervention curative est créée avec la couverture contractuelle renseignée.
-    \item Le technicien est affecté et le statut passe à \texttt{PLANIFIEE}.
-\end{itemize}
-
-Scénario nominal :
-\begin{enumerate}
-    \item L'administrateur saisit les informations de l'intervention curative (client,
-          \texttt{ClientEquipement}, date prévue, description).
-    \item L'Interface transmet les données au Contrôleur.
-    \item Le Contrôleur vérifie les informations.
-    \item Le \textbf{Système} vérifie automatiquement la couverture contractuelle pour cet
-          enregistrement \texttt{ClientEquipement}.
-    \item L'attribut \texttt{couvertureContrat} est renseigné automatiquement.
-    \item L'administrateur sélectionne un technicien.
-    \item Le Contrôleur vérifie la disponibilité du technicien à la date prévue.
-    \item La base de données enregistre l'intervention curative avec le technicien affecté
-          et le statut \texttt{PLANIFIEE}.
-    \item La base confirme la création.
-    \item L'Interface affiche une confirmation à l'administrateur.
-\end{enumerate}
-
-Scénario alternatif --- Technicien indisponible :
-\begin{itemize}
-    \item La base de données retourne que le technicien est indisponible à la date prévue.
-    \item L'Interface affiche « Technicien indisponible à la date prévue ».
-\end{itemize}
-
-Règles de gestion :
-\begin{itemize}
-    \item \textbf{Aucun champ de priorité n'est associé à l'intervention curative.}
-    \item La couverture contractuelle est vérifiée automatiquement par le Système.
-    \item Seul un technicien actif et disponible peut être affecté.
-\end{itemize}
+La génération du planning préventif est déclenchée lors de la création du contrat, comme présenté dans le Sprint 1.
 
 \subsubsection{Diagramme de séquence : Clôture intervention curative et vérification couverture}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/seq_cloturercurative_sprint2.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre4/seq_cloturercurative_sprint2.png}
 \caption{Diagramme de séquence : Clôture intervention curative et vérification couverture}
 \label{fig:ch4:seq_cloture_curative}
 \end{figure}
@@ -655,28 +329,25 @@ Règles de gestion :
 \section{Réalisation}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.6\textwidth]{Figures/Chapitre4/gestintervention.png}
-\hfill
-\includegraphics[width=0.3\textwidth]{Figures/Chapitre4/ajoutintervention.png}
-\caption{Captures d'écran de la gestion des interventions : page de gestion des interventions et page d'ajout}
-\label{fig:ch4:realisation_sprint2_interventions}
+    \centering
+    \includegraphics[width=0.74\textwidth]{Figures/Chapitre4/gestintervention.png}
+    \caption{Capture d'écran : gestion des interventions}
+    \label{fig:ch4:realisation_sprint2_interventions}
+\end{figure}
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.74\textwidth]{Figures/Chapitre4/gestpannes.png}
+    \caption{Capture d'écran : gestion des pannes}
+    \label{fig:ch4:gestion_pannes}
 \end{figure}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre4/gestpannes.png}
-\\[0.8em]
-\includegraphics[width=0.32\textwidth]{Figures/Chapitre4/annulerpanne.png}
-\hfill
-\includegraphics[width=0.32\textwidth]{Figures/Chapitre4/convertirpanne.png}
-\hfill
-\includegraphics[width=0.32\textwidth]{Figures/Chapitre4/viewpanne.png}
-\caption{Captures d'écran de la gestion des pannes : page principale, annulation, conversion et visualisation des pannes}
+\includegraphics[width=0.45\textwidth]{Figures/Chapitre4/convertirpanne.png}
+\caption{Capture d'écran : conversion d'une panne en intervention curative}
 \label{fig:ch4:realisation_sprint2_pannes}
 \end{figure}
-
-
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section*{Conclusion}

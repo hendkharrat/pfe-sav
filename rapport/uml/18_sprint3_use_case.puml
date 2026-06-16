@@ -2,51 +2,40 @@
 left to right direction
 skinparam packageStyle rectangle
 skinparam actorStyle Hollow
-
-actor "Utilisateur" as U
-actor "Technicien" as T
-actor "Administrateur" as A
-actor "Client" as C
-
-A --|> T
-T --|> U
-C --|> U
-
-rectangle "Sprint 3 — Facturation et tableau de bord" {
-
-  usecase "S'authentifier" as UC_AUTH
-  usecase "Se déconnecter" as UC_LOGOUT
-
-  usecase "Gérer les factures" as UC_FACTURES
-  usecase "Générer une facture" as UC_GEN_FACTURE
-  usecase "Marquer comme payée" as UC_PAY_FACTURE
-  usecase "Consulter toutes\nles factures" as UC_LIST_FACTURES
-
-  usecase "Consulter ses factures" as UC_CLIENT_FACTURES
-  usecase "Consulter l'historique" as UC_HISTORIQUE
-  usecase "Consulter le tableau\nde bord" as UC_DASHBOARD
-
-  note right of UC_GEN_FACTURE
-    Éligible si type = CURATIVE,
-    statut = RÉALISÉE et hors contrat.
-    TVA 19 %, monnaie TND.
-  end note
+skinparam usecase {
+  BackgroundColor #EBF5FB
+  BorderColor #2E74B5
+}
+skinparam actor {
+  BackgroundColor #FEF9E7
+  BorderColor #B7950B
 }
 
-U --> UC_AUTH
-U --> UC_LOGOUT
+actor "Administrateur" as Admin
+actor "Technicien"     as Tech
+actor "Client"         as Cli
 
-A --> UC_FACTURES
+Admin --|> Tech
 
-T --> UC_HISTORIQUE
-T --> UC_DASHBOARD
+rectangle " " {
+  usecase "S'authentifier"           as UC_AUTH
+  usecase "Générer facture"          as UC_INVOICE
+  usecase "Consulter factures"       as UC_VIEW_INV
+  usecase "Consulter historique"     as UC_HISTORY
+  usecase "Consulter tableau de bord" as UC_DASH
+}
 
-C --> UC_CLIENT_FACTURES
-C --> UC_HISTORIQUE
-C --> UC_DASHBOARD
+Admin --> UC_INVOICE
+Admin --> UC_VIEW_INV
+Cli   --> UC_VIEW_INV
+Tech  --> UC_HISTORY
+Cli   --> UC_HISTORY
+Tech  --> UC_DASH
+Cli   --> UC_DASH
 
-UC_GEN_FACTURE ..> UC_FACTURES : <<extend>>
-UC_PAY_FACTURE ..> UC_FACTURES : <<extend>>
-UC_LIST_FACTURES ..> UC_FACTURES : <<extend>>
+UC_INVOICE   ..> UC_AUTH : <<include>>
+UC_VIEW_INV  ..> UC_AUTH : <<include>>
+UC_HISTORY   ..> UC_AUTH : <<include>>
+UC_DASH      ..> UC_AUTH : <<include>>
 
 @enduml

@@ -18,7 +18,7 @@ cruciales.
 Les fonctionnalités développées pendant ce sprint sont principalement axées sur :
 
 \begin{itemize}
-    \item L'authentification par e-mail ou numéro de téléphone et la déconnexion des utilisateurs ;
+    \item L'authentification par e-mail ou numéro de téléphone ;
     \item La gestion des utilisateurs internes avec désactivation logique et restauration ;
     \item La gestion des clients (société ou personne physique) ;
     \item La gestion du catalogue d'équipements avec images multiples ;
@@ -29,93 +29,37 @@ Les fonctionnalités développées pendant ce sprint sont principalement axées 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Backlog du Sprint 1}
 
-\begin{longtable}{|p{1.2cm}|p{4.3cm}|p{2.2cm}|p{1.5cm}|p{4.5cm}|}
-\caption{Backlog du Sprint 1 --- US-01 à US-11}
+\begin{longtable}{|p{1.2cm}|p{7.5cm}|p{2.8cm}|p{1.8cm}|}
+\caption{Backlog du Sprint 1}
 \label{tab:ch3:backlog_sprint1} \\
 \hline
-\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} & \textbf{Critères d'acceptation} \\
+\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} \\
 \hline
 \endfirsthead
 \caption*{Backlog du Sprint 1 (suite)} \\
 \hline
-\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} & \textbf{Critères d'acceptation} \\
+\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} \\
 \hline
 \endhead
 \hline
 \endfoot
 \hline
 \endlastfoot
-US-01
-  & En tant qu'utilisateur, je veux me connecter avec mon e-mail ou mon numéro de téléphone
-    et mon mot de passe afin d'accéder aux fonctionnalités de mon rôle.
-  & Tout utilisateur & Élevée
-  & Connexion réussie avec e-mail OU téléphone 8 chiffres valide + mot de passe correct ;
-    erreur affichée si identifiant ou mot de passe incorrect ; compte inactif refusé. \\
+US-01 & En tant qu'utilisateur, je veux me connecter avec mon e-mail ou mon numéro de téléphone et mon mot de passe. & Tout utilisateur & Élevée \\
 \hline
-US-02
-  & En tant qu'utilisateur connecté, je veux me déconnecter afin de sécuriser ma session.
-  & Tout utilisateur & Élevée
-  & Session fermée ; redirection vers la page de connexion. \\
+US-03 & En tant qu'administrateur, je veux gérer les comptes utilisateurs internes (CRUD + désactivation + restauration). & Administrateur & Élevée \\
 \hline
-US-03
-  & En tant qu'administrateur, je veux gérer les comptes utilisateurs internes
-    (CRUD + désactivation + restauration).
-  & Administrateur & Élevée
-  & CRUD complet ; désactivation logique (\texttt{actif = false}) ;
-    utilisateur désactivé visible avec action « Restaurer ». \\
+US-04 & Le système contrôle automatiquement les accès selon le rôle de l'utilisateur connecté. & Système (auto) & Élevée \\
 \hline
-US-04
-  & En tant que système, je veux contrôler les accès selon le rôle de l'utilisateur.
-  & Système & Élevée
-  & Chaque rôle n'accède qu'aux pages et données autorisées ;
-    redirection si accès non autorisé. \\
+US-05 & En tant qu'administrateur, je veux créer une fiche client (société ou personne physique). & Administrateur & Élevée \\
 \hline
-US-05
-  & En tant qu'administrateur, je veux créer une fiche client (société ou personne physique)
-    avec ville tunisienne et mot de passe portail.
-  & Administrateur & Élevée
-  & Formulaire adapté au type ; ville sélectionnée depuis liste tunisienne ;
-    mot de passe portail renseigné ; unicité email vérifiée. \\
+US-07 & En tant qu'administrateur, je veux ajouter un équipement au catalogue global avec images multiples. & Administrateur & Élevée \\
 \hline
-US-06
-  & En tant qu'administrateur, je veux modifier et désactiver ou supprimer une fiche client
-    selon les contraintes d'intégrité.
-  & Administrateur & Moyenne
-  & Modifications enregistrées ; suppression si aucune contrainte d'intégrité active ;
-    désactivation proposée sinon. \\
+US-08 & En tant qu'administrateur, je veux affecter un équipement du catalogue à un client via \texttt{ClientEquipement}. & Administrateur & Élevée \\
 \hline
-US-07
-  & En tant qu'administrateur, je veux ajouter un équipement au catalogue global avec type,
-    référence, numéro de série et images multiples.
-  & Administrateur & Élevée
-  & Équipement ajouté au catalogue global ; type \texttt{CLIMATISEUR} ou
-    \texttt{SYSTEME\_SURPRESSION} ; plusieurs images ; une image principale désignée. \\
+US-09 & En tant qu'administrateur, je veux créer un contrat couvrant des installations \texttt{ClientEquipement}. & Administrateur & Élevée \\
 \hline
-US-08
-  & En tant qu'administrateur, je veux affecter un équipement du catalogue à un client
-    via \texttt{ClientEquipement}.
-  & Administrateur & Élevée
-  & Enregistrement \texttt{ClientEquipement} créé avec dateAchat, dateInstallation,
-    localisation optionnelle. \\
-\hline
-US-09
-  & En tant qu'administrateur, je veux créer un contrat couvrant des installations
-    \texttt{ClientEquipement} d'un client.
-  & Administrateur & Élevée
-  & Contrat lié à un client et à un ensemble de \texttt{ClientEquipement} ;
-    périodicité choisie ; dates valides. \\
-\hline
-US-10
-  & En tant que système, je veux générer automatiquement le planning préventif lors de la
-    création d'un contrat.
-  & Système & Élevée
-  & Interventions préventives créées selon périodicité et installations couvertes ;
-    prévisualisation avant validation. \\
-\hline
-US-11
-  & En tant qu'administrateur, je veux consulter un contrat et ses interventions planifiées.
-  & Administrateur & Moyenne
-  & Détail du contrat avec liste des interventions générées. \\
+US-10 & Le système génère automatiquement le planning préventif lors de la création d'un contrat. & Système (auto) & Élevée \\
 \hline
 \end{longtable}
 
@@ -126,7 +70,7 @@ US-11
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]
+\includegraphics[width=0.70\textwidth]
 {Figures/Chapitre3/use_case_sprint1.png}
 \caption{Diagramme de cas d'utilisation du Sprint 1}
 \label{fig:ch3:usecase_sprint1}
@@ -137,9 +81,9 @@ Acteurs impliqués dans ce sprint :
 \textbf{Administrateur} : gestion des utilisateurs, clients, catalogue équipements,
 affectation \texttt{ClientEquipement}, contrats.
 
-\textbf{Tout utilisateur} : connexion, déconnexion.
+\textbf{Tout utilisateur} : connexion.
 
-\textbf{Système} : contrôle d'accès par rôle, génération automatique du planning préventif.
+\textit{Comportements automatiques du système :} contrôle d'accès selon le rôle, génération du planning préventif.
 
 \subsection{Description des cas d'utilisation}
 
@@ -188,38 +132,6 @@ affectation \texttt{ClientEquipement}, contrats.
     \item Compte inactif (\texttt{actif = false}) $\rightarrow$ accès refusé avec message d'erreur.
 \end{itemize}
 
-\subsubsection{CU-02 : Se déconnecter}
-
-\begin{table}[H]
-\centering
-\caption{CU-02 : Se déconnecter}
-\label{tab:ch3:cu02}
-\begin{tabular}{|p{3.5cm}|p{11cm}|}
-\hline
-\textbf{Champ} & \textbf{Contenu} \\
-\hline
-\textbf{Description}
-  & Ce cas d'utilisation permet à un utilisateur connecté de fermer sa session. \\
-\hline
-\textbf{Acteurs}
-  & Administrateur, Technicien, Client \\
-\hline
-\textbf{Préconditions}
-  & L'utilisateur est connecté. \\
-\hline
-\textbf{Postconditions}
-  & La session est fermée ; l'utilisateur est redirigé vers la page de connexion. \\
-\hline
-\end{tabular}
-\end{table}
-
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item L'utilisateur clique sur « Déconnexion ».
-    \item Le système ferme la session.
-    \item L'utilisateur est redirigé vers la page de connexion.
-\end{enumerate}
-
 \subsubsection{CU-03 : Gérer les utilisateurs internes}
 
 \begin{table}[H]
@@ -255,26 +167,7 @@ affectation \texttt{ClientEquipement}, contrats.
     \item Consulter la liste des utilisateurs avec filtres.
 \end{itemize}
 
-\textbf{Scénario nominal (Créer) :}
-\begin{enumerate}
-    \item L'administrateur saisit les informations du nouvel utilisateur ainsi que son rôle.
-    \item L'interface transmet les données au contrôleur.
-    \item Le contrôleur valide le format de l'e-mail et du téléphone.
-    \item Le contrôleur vérifie l'unicité de l'e-mail.
-    \item La base de données confirme que l'e-mail n'existe pas.
-    \item Le contrôleur chiffre le mot de passe.
-    \item Le contrôleur demande l'enregistrement du nouvel utilisateur.
-    \item La base de données enregistre les données.
-    \item La base confirme l'insertion ; la liste des utilisateurs est mise à jour.
-\end{enumerate}
-
-\textbf{Scénario nominal (Désactiver) :}
-\begin{enumerate}
-    \item L'administrateur clique sur « Désactiver » pour un utilisateur actif.
-    \item Le système effectue une mise à jour : \texttt{actif = false}.
-    \item L'utilisateur disparaît des listes actives mais reste visible dans la liste complète
-          avec une action « Restaurer ».
-\end{enumerate}
+\textbf{Scénario nominal :} Le scénario consiste à saisir les informations requises ou à sélectionner un utilisateur existant, à valider les données côté contrôleur (unicité de l'e-mail, chiffrement du mot de passe), puis à enregistrer la modification en base et à actualiser l'affichage.
 
 \textbf{Règles de gestion :}
 \begin{itemize}
@@ -397,18 +290,7 @@ affectation \texttt{ClientEquipement}, contrats.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item L'administrateur accède au module client (ou à la fiche équipement).
-    \item Il sélectionne un équipement du catalogue et un client.
-    \item Il renseigne la date d'achat, la date d'installation et, optionnellement, la localisation.
-    \item L'interface transmet les données au contrôleur.
-    \item Le contrôleur vérifie que l'équipement et le client existent.
-    \item Le contrôleur vérifie qu'un même équipement n'est pas déjà affecté deux fois
-          au même client.
-    \item La base de données enregistre l'entrée dans la table \texttt{ClientEquipement}.
-    \item La base confirme l'enregistrement.
-\end{enumerate}
+\textbf{Scénario nominal :} L'administrateur sélectionne l'équipement et le client, renseigne la date d'installation et valide ; le contrôleur vérifie l'existence des deux entités et l'absence de doublon avant d'enregistrer le \texttt{ClientEquipement}.
 
 \textbf{Règles de gestion :}
 \begin{itemize}
@@ -446,30 +328,9 @@ affectation \texttt{ClientEquipement}, contrats.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item L'administrateur saisit les informations du contrat : client, date de début, date de fin,
-          périodicité, installations \texttt{ClientEquipement} couvertes.
-    \item L'interface transmet les données au contrôleur.
-    \item Le contrôleur vérifie que la date de fin est supérieure à la date de début.
-    \item Le contrôleur vérifie que les \texttt{ClientEquipement} sélectionnés appartiennent
-          bien au client choisi.
-    \item Le système démarre une transaction.
-    \item La base de données enregistre le contrat avec la liste \texttt{clientEquipementIds[]}.
-    \item Le \textbf{Système} génère automatiquement les interventions préventives selon
-          la périodicité et les installations couvertes.
-    \item Le système valide la transaction (COMMIT).
-    \item L'interface affiche la confirmation de création.
-\end{enumerate}
+\textbf{Scénario nominal :} L'administrateur saisit les informations du contrat (client, dates, périodicité, installations \texttt{ClientEquipement} couvertes) ; le contrôleur vérifie la cohérence des dates et l'appartenance des installations au client, enregistre le contrat dans une transaction et déclenche la génération automatique du planning préventif.
 
-\textbf{Scénarios alternatifs :}
-\begin{itemize}
-    \item Dates invalides (fin $\leq$ début) $\rightarrow$ message d'erreur affiché.
-    \item \texttt{ClientEquipement} non rattachés au client $\rightarrow$ erreur
-          « installations hors client ».
-    \item Erreur base de données $\rightarrow$ transaction annulée (ROLLBACK) ;
-          message d'erreur affiché.
-\end{itemize}
+\textbf{Scénarios alternatifs :} En cas d'erreur (dates invalides, installations non rattachées au client ou échec base de données), l'opération est interrompue, la transaction est annulée et un message explicite est affiché.
 
 \textbf{Règles de gestion :}
 \begin{itemize}
@@ -482,7 +343,7 @@ affectation \texttt{ClientEquipement}, contrats.
           de l'administrateur.
 \end{itemize}
 
-\subsubsection{CU-08 : Générer automatiquement le planning préventif (Système)}
+\subsubsection{CU-08 : Générer automatiquement le planning préventif}
 
 \begin{table}[H]
 \centering
@@ -493,11 +354,11 @@ affectation \texttt{ClientEquipement}, contrats.
 \textbf{Champ} & \textbf{Contenu} \\
 \hline
 \textbf{Description}
-  & Ce cas d'utilisation décrit le traitement automatique effectué par le Système lors
+  & Ce cas d'utilisation décrit le traitement automatique déclenché par le système lors
     de la sauvegarde d'un contrat. \\
 \hline
-\textbf{Acteur principal}
-  & \textbf{Système} \\
+\textbf{Déclencheur}
+  & Comportement automatique du système \\
 \hline
 \textbf{Préconditions}
   & Un contrat valide vient d'être enregistré avec ses \texttt{clientEquipementIds[]},
@@ -510,17 +371,7 @@ affectation \texttt{ClientEquipement}, contrats.
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-\begin{enumerate}
-    \item Le Système reçoit les données du contrat (dateDebut, dateFin, periodicite,
-          \texttt{clientEquipementIds[]}).
-    \item Le Système calcule les dates des interventions selon la périodicité choisie.
-    \item Pour chaque date calculée et chaque \texttt{ClientEquipement} couvert, le Système
-          crée une intervention préventive.
-    \item Le Système enregistre toutes les interventions dans la base de données.
-    \item La prévisualisation du planning est affichée à l'administrateur avant la confirmation
-          finale.
-\end{enumerate}
+\textbf{Scénario nominal :} Le système calcule les dates d'intervention selon la périodicité et les installations couvertes, puis génère les interventions préventives dans une transaction unique.
 
 \textbf{Règles de gestion :}
 \begin{itemize}
@@ -539,7 +390,7 @@ affectation \texttt{ClientEquipement}, contrats.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/class_diagram_sprint1.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre3/class_diagram_sprint1.png}
 \caption{Diagramme de classes du Sprint 1}
 \label{fig:ch3:class_sprint1}
 \end{figure}
@@ -554,354 +405,49 @@ Les entités impliquées dans ce sprint sont : \texttt{User}, \texttt{Client}, \
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/seq_connexion_sprint1.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre3/seq_connexion_sprint1.png}
 \caption{Diagramme de séquence : Connexion}
 \label{fig:ch3:seq_connexion}
 \end{figure}
-
-\textbf{Identification textuelle --- Connexion :}
-
-Nom : S'authentifier. Acteur principal : Tout utilisateur (Admin / Technicien / Client).
-Participants : Interface (Frontend) $\rightarrow$ Contrôleur (AuthController)
-$\rightarrow$ Base de données (MySQL).
-
-Scénario nominal :
-\begin{enumerate}
-    \item L'utilisateur saisit son identifiant et son mot de passe.
-    \item L'Interface transmet les données au Contrôleur.
-    \item Le Contrôleur détecte le type d'identifiant :
-    \begin{itemize}
-        \item Si l'identifiant contient un « @ » $\rightarrow$ recherche par e-mail
-              dans \texttt{User} puis \texttt{Client}.
-        \item Sinon (8 chiffres) $\rightarrow$ recherche par téléphone dans \texttt{User}
-              puis \texttt{Client}.
-    \end{itemize}
-    \item Le contrôleur interroge la base de données.
-    \item La base retourne l'enregistrement correspondant (ou null si non trouvé).
-    \item Le Contrôleur vérifie le mot de passe (hash comparison).
-    \item Si valide et compte actif $\rightarrow$ le Contrôleur crée la session et retourne
-          les informations de l'utilisateur.
-    \item L'Interface redirige l'utilisateur vers son tableau de bord selon le rôle.
-\end{enumerate}
-
-Scénarios alternatifs :
-\begin{itemize}
-    \item SA1 : Identifiant non reconnu $\rightarrow$ la base de données retourne null
-          $\rightarrow$ erreur « Identifiant incorrect ».
-    \item SA2 : Mot de passe incorrect $\rightarrow$ erreur « Mot de passe incorrect ».
-    \item SA3 : Compte inactif $\rightarrow$ erreur « Compte désactivé ».
-\end{itemize}
-
-\subsubsection{Diagramme de séquence : Déconnexion}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/seq_deconnexion_sprint1.png}
-\caption{Diagramme de séquence : Déconnexion}
-\label{fig:ch3:seq_deconnexion}
-\end{figure}
-
-Scénario nominal :
-\begin{enumerate}
-    \item L'utilisateur clique sur « Déconnexion ».
-    \item L'Interface envoie la demande au Contrôleur.
-    \item Le Contrôleur ferme la session.
-    \item L'Interface redirige vers la page de connexion.
-\end{enumerate}
-
-\subsubsection{Identification textuelle --- Créer un utilisateur}
-
-Nom du cas d'utilisation : Créer un utilisateur. Acteur principal : Administrateur.
-Objectif : Permettre à l'administrateur d'ajouter un nouvel utilisateur interne dans le système
-avec un rôle spécifique.
-
-Préconditions :
-\begin{itemize}
-    \item L'administrateur est authentifié.
-    \item La connexion à la base de données est disponible.
-\end{itemize}
-
-Postconditions :
-\begin{itemize}
-    \item Le nouvel utilisateur est enregistré dans la base de données.
-    \item La liste des utilisateurs est mise à jour.
-\end{itemize}
-
-Scénario nominal :
-\begin{enumerate}
-    \item L'administrateur saisit les informations du nouvel utilisateur ainsi que son rôle.
-    \item L'Interface transmet les données au Contrôleur.
-    \item Le Contrôleur valide le format de l'e-mail et du numéro de téléphone.
-    \item Le Contrôleur demande la vérification de l'unicité de l'e-mail.
-    \item Le contrôleur interroge la base de données.
-    \item La base retourne le résultat de la recherche.
-    \item Si l'e-mail n'existe pas, le Contrôleur chiffre le mot de passe.
-    \item Le Contrôleur demande l'enregistrement du nouvel utilisateur.
-    \item La base de données enregistre les données.
-    \item La base confirme l'enregistrement.
-    \item Le système rafraîchit la liste des utilisateurs.
-    \item L'Interface affiche la liste mise à jour à l'administrateur.
-\end{enumerate}
-
-Scénario alternatif 1 --- E-mail déjà utilisé :
-\begin{itemize}
-    \item La base de données indique que l'e-mail existe déjà.
-    \item Le Contrôleur envoie un message d'erreur à l'Interface.
-    \item L'Interface affiche le message « E-mail déjà utilisé ».
-\end{itemize}
-
-Scénario alternatif 2 --- Erreur base de données :
-\begin{itemize}
-    \item Une erreur survient pendant l'insertion.
-    \item La base de données retourne une erreur au contrôleur.
-    \item L'Interface affiche un message d'erreur à l'administrateur.
-\end{itemize}
-
-Règles de gestion :
-\begin{itemize}
-    \item Chaque utilisateur interne doit avoir un e-mail unique.
-    \item Le mot de passe doit être chiffré avant l'enregistrement.
-    \item Le rôle doit appartenir aux rôles autorisés : admin ou technician.
-    \item Le numéro de téléphone est stocké sur 8 chiffres sans indicatif.
-\end{itemize}
-
-\subsubsection{Diagramme de séquence : Modification utilisateur}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/seq_modification_sprint1.png}
-\caption{Diagramme de séquence : Modification utilisateur}
-\label{fig:ch3:seq_modification_utilisateur}
-\end{figure}
-
-\subsubsection{Identification textuelle --- Suppression utilisateur (soft-delete)}
-
-Nom du cas d'utilisation : Désactiver un utilisateur. Acteur principal : Administrateur.
-Objectif : Permettre à l'administrateur de retirer l'accès d'un utilisateur sans supprimer
-définitivement ses données (soft-delete).
-
-Préconditions :
-\begin{itemize}
-    \item L'administrateur est authentifié.
-    \item L'utilisateur à désactiver existe et son \texttt{actif} est \texttt{true}.
-\end{itemize}
-
-Postconditions :
-\begin{itemize}
-    \item L'utilisateur est désactivé (\texttt{actif = false}).
-    \item L'utilisateur ne peut plus se connecter.
-    \item L'utilisateur reste visible dans la liste avec une action « Restaurer ».
-\end{itemize}
-
-Scénario nominal :
-\begin{enumerate}
-    \item L'administrateur clique sur « Désactiver » dans la ligne de l'utilisateur.
-    \item L'Interface envoie la demande avec l'identifiant de l'utilisateur au Contrôleur.
-    \item Le Contrôleur vérifie que l'utilisateur existe et est actif.
-    \item Le contrôleur met à jour la base de données.
-    \item La base de données effectue la mise à jour : \texttt{actif = false}.
-    \item La base de données confirme la mise à jour.
-    \item L'Interface met à jour la liste et affiche le bouton « Restaurer »
-          pour cet utilisateur.
-\end{enumerate}
-
-Scénario alternatif --- Erreur base de données :
-\begin{itemize}
-    \item Une erreur survient lors de la mise à jour.
-    \item La base de données retourne une erreur au contrôleur.
-    \item L'Interface affiche un message d'erreur à l'administrateur.
-\end{itemize}
-
-Règles de gestion :
-\begin{itemize}
-    \item La désactivation est logique : \texttt{actif = false}.
-    \item Les utilisateurs désactivés ne peuvent pas se connecter au système.
-    \item Les données historiques de l'utilisateur sont conservées dans la base de données.
-    \item L'action « Restaurer » remet \texttt{actif = true} et permet à l'utilisateur
-          de se reconnecter.
-\end{itemize}
-
-\subsubsection{Diagramme de séquence : Contrôle d'accès}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/seq_ctrl_dacces_sprint1.png}
-\caption{Diagramme de séquence : Contrôle d'accès}
-\label{fig:ch3:seq_controle_acces}
-\end{figure}
-
-\subsubsection{Identification textuelle --- Créer un client}
-
-Nom du cas d'utilisation : Créer un client. Acteur principal : Administrateur.
-Objectif : Permettre à l'administrateur d'ajouter un nouveau client
-(société ou personne physique).
-
-Préconditions :
-\begin{itemize}
-    \item L'administrateur est authentifié.
-\end{itemize}
-
-Postconditions :
-\begin{itemize}
-    \item Le client est enregistré dans la base de données.
-    \item La liste des clients est mise à jour.
-\end{itemize}
-
-Scénario nominal :
-\begin{enumerate}
-    \item L'administrateur sélectionne le type de client (\texttt{SOCIETE} ou
-          \texttt{PERSONNE\_PHYSIQUE}).
-    \item L'administrateur saisit les informations adaptées au type choisi.
-    \item Il sélectionne la ville depuis la liste des villes tunisiennes.
-    \item Il renseigne le mot de passe d'accès au portail client.
-    \item L'Interface transmet les données au Contrôleur.
-    \item Le Contrôleur valide les informations saisies.
-    \item Le Contrôleur vérifie l'unicité de l'e-mail.
-    \item La base de données confirme que l'e-mail n'existe pas.
-    \item Le Contrôleur chiffre le mot de passe portail.
-    \item Le Contrôleur demande l'enregistrement du client.
-    \item La base de données enregistre les données.
-    \item La base confirme l'ajout ; la liste est mise à jour.
-\end{enumerate}
-
-Scénarios alternatifs :
-\begin{itemize}
-    \item SA1 : Champs obligatoires manquants $\rightarrow$ validation échoue ;
-          message d'erreur affiché.
-    \item SA2 : E-mail déjà utilisé $\rightarrow$ message « E-mail déjà utilisé ».
-    \item SA3 : Erreur base de données $\rightarrow$ message d'erreur.
-\end{itemize}
-
-Règles de gestion :
-\begin{itemize}
-    \item \texttt{SOCIETE} $\rightarrow$ champ societe obligatoire.
-    \item \texttt{PERSONNE\_PHYSIQUE} $\rightarrow$ champs prenom et nom obligatoires.
-    \item L'e-mail doit être unique dans le système.
-    \item Le mot de passe portail est chiffré avant stockage.
-\end{itemize}
 
 \subsubsection{Diagramme de séquence : Ajout équipement et gestion des images}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/seq_ajoutequip_sprint1.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre3/seq_ajoutequip_sprint1.png}
 \caption{Diagramme de séquence : Ajout équipement et gestion des images}
 \label{fig:ch3:seq_ajout_equipement}
 \end{figure}
 
-\subsubsection{Identification textuelle --- Créer un contrat et générer le planning}
-
-Nom du cas d'utilisation : Créer un contrat de maintenance. Acteur principal : Administrateur.
-Objectif : Permettre à l'administrateur de créer un contrat de maintenance et déclencher la
-génération automatique du planning préventif par le Système.
-
-Préconditions :
-\begin{itemize}
-    \item L'administrateur est authentifié.
-    \item Le client existe dans la base de données.
-    \item Des enregistrements \texttt{ClientEquipement} existent pour ce client.
-\end{itemize}
-
-Postconditions :
-\begin{itemize}
-    \item Le contrat est enregistré dans la base de données avec ses
-          \texttt{clientEquipementIds[]}.
-    \item Les interventions préventives sont générées automatiquement par le Système.
-    \item La transaction est validée avec succès.
-\end{itemize}
-
-Scénario nominal :
-\begin{enumerate}
-    \item L'administrateur saisit les informations du contrat et sélectionne les installations
-          \texttt{ClientEquipement} couvertes.
-    \item L'Interface transmet les données au Contrôleur.
-    \item Le Contrôleur valide les dates du contrat (fin > début).
-    \item Le Contrôleur vérifie que les \texttt{ClientEquipement} appartiennent au client
-          sélectionné.
-    \item Le système démarre une transaction.
-    \item La base de données enregistre le contrat.
-    \item Le \textbf{Système} analyse les \texttt{ClientEquipement} couverts et la périodicité.
-    \item Le Système calcule les dates d'intervention selon la périodicité.
-    \item Le Système crée une intervention préventive pour chaque couple
-          (date, \texttt{ClientEquipement}).
-    \item La base de données enregistre toutes les interventions générées.
-    \item Le système valide la transaction (COMMIT).
-    \item L'Interface affiche la confirmation et le planning généré.
-\end{enumerate}
-
-Scénarios alternatifs :
-\begin{itemize}
-    \item SA1 : Dates invalides (fin $\leq$ début) $\rightarrow$ message d'erreur ;
-          pas de création.
-    \item SA2 : \texttt{ClientEquipement} hors client $\rightarrow$ erreur
-          « installations hors client ».
-    \item SA3 : Erreur base de données $\rightarrow$ ROLLBACK ; message d'erreur.
-\end{itemize}
-
-Règles de gestion :
-\begin{itemize}
-    \item Un contrat couvre des installations \texttt{ClientEquipement}, non des équipements
-          du catalogue directement.
-    \item La génération est automatique ; l'administrateur n'a pas à lancer manuellement
-          cette opération.
-    \item Les opérations d'enregistrement sont exécutées dans une transaction atomique.
-\end{itemize}
-
-\subsubsection{Diagramme de séquence : Consultation d'un contrat}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/seq_consultercontrat_sprint1.png}
-\caption{Diagramme de séquence : Consultation d'un contrat}
-\label{fig:ch3:seq_consultation_contrat}
-\end{figure}
-
-% % ─────────────────────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────────────────────
-% ─────────────────────────────────────────────────────────────────────────────
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Réalisation}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/login.png}
-\caption{Capture d'écran de la page login}
-\label{fig:ch3:login}
+    \centering
+    \includegraphics[width=0.74\textwidth]{Figures/Chapitre3/login.png}
+    \caption{Capture d'écran : interface de connexion}
+    \label{fig:ch3:login}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre3/dashboardadmin.png}
-\caption{Capture d'écran de la page tableau de bord admin}
-\label{fig:ch3:dashboard_admin}
+    \centering
+    \includegraphics[width=0.74\textwidth]{Figures/Chapitre3/dashboardadmin.png}
+    \caption{Capture d'écran : tableau de bord administrateur}
+    \label{fig:ch3:dashboard_admin}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.45\textwidth]{Figures/Chapitre3/gestclient.png}
-\hfill
-\includegraphics[width=0.45\textwidth]{Figures/Chapitre3/ajoutclient.png}
-\caption{Captures d'écran de la gestion des clients}
-\label{fig:ch3:gestion_clients}
+    \centering
+    \includegraphics[width=0.74\textwidth]{Figures/Chapitre3/gestclient.png}
+    \caption{Capture d'écran : gestion des clients}
+    \label{fig:ch3:gestion_clients}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.45\textwidth]{Figures/Chapitre3/gestequip.png}
-\hfill
-\includegraphics[width=0.45\textwidth]{Figures/Chapitre3/ajoutequip.png}
-\caption{Captures d'écran de la gestion des équipements}
-\label{fig:ch3:gestion_equipements}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.5\textwidth]{Figures/Chapitre3/gestcontrat.png}
-\hfill
-\includegraphics[width=0.45\textwidth]{Figures/Chapitre3/creercontrat.png}
-\caption{Captures d'écran de la gestion des contrats}
-\label{fig:ch3:gestion_contrats}
+    \centering
+    \includegraphics[width=0.74\textwidth]{Figures/Chapitre3/gestcontrat.png}
+    \caption{Capture d'écran : gestion des contrats}
+    \label{fig:ch3:gestion_contrats}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────────────────

@@ -21,114 +21,67 @@ adoptée.
 
 \subsubsection{Exigences fonctionnelles}
 
-L'application doit permettre d'assurer les fonctionnalités suivantes :
-
-\textbf{1. Authentification et gestion des sessions}
-\begin{itemize}
-    \item Connexion par e-mail ou numéro de téléphone avec mot de passe.
-    \item Gestion des accès selon les rôles (Administrateur, Technicien, Client).
-    \item Déconnexion sécurisée.
-\end{itemize}
-
-\textbf{2. Gestion des utilisateurs internes}
-\begin{itemize}
-    \item Création, consultation, modification et désactivation des utilisateurs.
-    \item Réactivation des comptes désactivés.
-    \item Gestion des administrateurs et techniciens.
-\end{itemize}
-
-\textbf{3. Gestion des clients}
-\begin{itemize}
-    \item Création, consultation, modification et suppression des clients.
-    \item Gestion des clients société ou personne physique.
-    \item Sélection de la ville depuis une liste tunisienne.
-    \item Accès client via mot de passe.
-\end{itemize}
-
-\textbf{4. Gestion des équipements}
-\begin{itemize}
-    \item Gestion d'un catalogue global d'équipements.
-    \item Ajout, modification, consultation et suppression des équipements.
-    \item Gestion des types d'équipements (climatiseur ou système de surpression).
-    \item Gestion de plusieurs images par équipement avec image principale.
-\end{itemize}
-
-\textbf{5. Affectation des équipements aux clients}
-\begin{itemize}
-    \item Association d'un équipement à un client.
-    \item Enregistrement de la date d'achat, de la date d'installation et de la localisation.
-    \item Affectation depuis le module Client ou Équipement.
-\end{itemize}
-
-\textbf{6. Gestion des contrats}
-\begin{itemize}
-    \item Création, consultation, modification et suppression des contrats.
-    \item Association d'un contrat à un client et à ses équipements.
-    \item Définition de la périodicité (mensuelle, trimestrielle, semestrielle ou annuelle).
-    \item Calcul automatique du statut du contrat.
-\end{itemize}
-
-\textbf{7. Génération du planning préventif}
-\begin{itemize}
-    \item Génération automatique des interventions préventives.
-    \item Prévisualisation du planning avant validation du contrat.
-\end{itemize}
-
-\textbf{8. Gestion des interventions}
-\begin{itemize}
-    \item Gestion des interventions préventives et curatives.
-    \item Affectation des techniciens.
-    \item Vérification automatique de la disponibilité des techniciens.
-\end{itemize}
-
-\textbf{9. Gestion des pannes}
-\begin{itemize}
-    \item Déclaration des pannes par le client.
-    \item Ajout d'une description et de pièces jointes.
-    \item Conversion d'une \texttt{Panne} en intervention curative par l'administrateur.
-\end{itemize}
-
-\textbf{10. Gestion de la facturation}
-\begin{itemize}
-    \item Génération des factures pour les interventions curatives hors contrat.
-    \item Calcul du montant HT, de la TVA (19\,\%) et du montant TTC.
-    \item Marquage des factures comme payées.
-\end{itemize}
-
-\textbf{11. Tableaux de bord}
-\begin{itemize}
-    \item Tableau de bord global pour l'administrateur.
-    \item Tableau de bord personnel pour le technicien.
-    \item Espace personnel pour le client.
-\end{itemize}
-
-\textbf{12. Historique et planning}
-\begin{itemize}
-    \item Consultation de l'historique selon le rôle.
-    \item Consultation du planning en vue hebdomadaire ou mensuelle.
-\end{itemize}
+\begin{table}[H]
+\centering
+\caption{Exigences fonctionnelles}
+\label{tab:ch2:exigences_fonctionnelles}
+\begin{tabular}{|p{3.8cm}|p{10.7cm}|}
+\hline
+\textbf{Module} & \textbf{Description condensée} \\
+\hline
+Authentification & Connexion par e-mail ou téléphone, contrôle d'accès par rôle (RBAC), déconnexion sécurisée. \\
+\hline
+Utilisateurs & CRUD des comptes internes (administrateur, technicien) avec désactivation logique et restauration. \\
+\hline
+Clients & CRUD des fiches clients (société ou personne physique), ville tunisienne, accès portail client. \\
+\hline
+Équipements & Catalogue global (climatiseur, système de surpression) avec images multiples et image principale. \\
+\hline
+Affectation & Association équipement–client via \texttt{ClientEquipement} avec date d'achat, date d'installation et localisation. \\
+\hline
+Contrats & CRUD des contrats couvrant des installations \texttt{ClientEquipement} avec périodicité et statut calculé. \\
+\hline
+Planning préventif & Génération automatique des interventions préventives lors de la création d'un contrat. \\
+\hline
+Interventions & Cycle de vie complet (préventives et curatives), affectation technicien avec vérification de disponibilité. \\
+\hline
+Pannes & Déclaration par le client avec pièces jointes ; conversion en intervention curative par l'administrateur. \\
+\hline
+Facturation & Génération des factures pour interventions curatives hors contrat (TVA 19\,\%, TND) ; marquage payée. \\
+\hline
+Tableaux de bord & Dashboard global administrateur, dashboard personnel technicien, espace client différencié. \\
+\hline
+Historique & Consultation de l'historique des interventions filtrée selon le rôle de l'utilisateur connecté. \\
+\hline
+\end{tabular}
+\end{table}
 
 \subsubsection{Exigences non fonctionnelles}
 
-Le système doit également respecter plusieurs contraintes non fonctionnelles :
-
-\textbf{Sécurité} : authentification obligatoire, contrôle d'accès basé sur les rôles (RBAC),
-session sécurisée sans stockage du mot de passe, chiffrement des mots de passe en base de données.
-
-\textbf{Performance} : temps de réponse rapide, listes paginées pour optimiser les performances.
-
-\textbf{Ergonomie} : interface entièrement en français, intuitive, responsive (desktop, tablette,
-mobile), thème clair et thème sombre.
-
-\textbf{Maintenabilité} : code TypeScript avec typage statique strict, architecture modulaire,
-composants réutilisables, séparation des responsabilités.
-
-\textbf{Disponibilité} : accessibilité à tout moment depuis un navigateur web moderne, sans
-installation préalable.
-
-\textbf{Localisation} : monnaie TND, TVA 19\,\%, villes tunisiennes.
-
-\textbf{Fiabilité} : validation des données saisies côté client, messages d'erreur explicites.
+\begin{table}[H]
+\centering
+\caption{Exigences non fonctionnelles}
+\label{tab:ch2:exigences_nf}
+\begin{tabular}{|p{3cm}|p{11.5cm}|}
+\hline
+\textbf{Exigence} & \textbf{Description} \\
+\hline
+Sécurité & Authentification obligatoire, contrôle d'accès RBAC, mots de passe chiffrés, session sans stockage en clair. \\
+\hline
+Performance & Temps de réponse rapide, listes paginées pour limiter le volume de données chargées. \\
+\hline
+Ergonomie & Interface en français, intuitive, responsive (desktop, tablette, mobile), thèmes clair et sombre. \\
+\hline
+Maintenabilité & TypeScript avec typage strict, architecture modulaire, composants réutilisables. \\
+\hline
+Disponibilité & Accessible depuis tout navigateur web moderne sans installation préalable. \\
+\hline
+Localisation & Monnaie TND, TVA 19\,\%, liste de villes tunisiennes intégrée. \\
+\hline
+Fiabilité & Validation des données côté client, messages d'erreur explicites. \\
+\hline
+\end{tabular}
+\end{table}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Modélisation des besoins}
@@ -141,96 +94,35 @@ Le système fait intervenir quatre acteurs ayant des rôles distincts :
 \centering
 \caption{Identification des acteurs}
 \label{tab:ch2:acteurs}
-\begin{tabular}{|p{2.8cm}|p{4.5cm}|p{7.5cm}|}
+\begin{tabular}{|p{3.2cm}|p{7.5cm}|}
 \hline
-\textbf{Acteur} & \textbf{Description} & \textbf{Permissions principales} \\
+\textbf{Acteur} & \textbf{Permissions principales} \\
 \hline
 \textbf{Administrateur}
-  & Gestionnaire principal du système SAV
-  & CRUD complet sur toutes les entités ; génération des factures et du planning ;
-    consultation de tous les dashboards et historiques \\
+  & Gère les utilisateurs, les clients, les équipements, les contrats, les interventions, les factures et le suivi global du système. \\
 \hline
 \textbf{Technicien}
-  & Agent de maintenance terrain
-  & Consultation de ses interventions assignées uniquement ; démarrage et clôture
-    d'interventions ; consultation de son planning et de son historique personnel \\
+  & Réalise les interventions, consulte son planning et son historique. \\
 \hline
 \textbf{Client}
-  & Bénéficiaire du service après-vente
-  & Déclaration de pannes avec pièces jointes ; consultation de ses équipements,
-    interventions, pannes, factures et historique ; accès à son espace personnel \\
-\hline
-\textbf{Système}
-  & Entité automatique déclenchée par des événements métier
-  & Génération automatique du planning préventif ; calcul du statut des contrats ;
-    vérification de disponibilité des techniciens ; vérification de la couverture
-    contractuelle ; calcul des montants des factures \\
+  & Déclare les pannes, consulte ses factures, ses interventions et son historique. \\
 \hline
 \end{tabular}
 \end{table}
 
 \subsection{Identification des cas d'utilisation}
 
-Les principaux cas d'utilisation du système sont :
-
-\textbf{Administrateur}
-\begin{itemize}
-    \item Se connecter
-    \item Gérer les utilisateurs internes (CRUD + soft-delete + restauration)
-    \item Gérer les clients (CRUD, SOCIETE / PERSONNE\_PHYSIQUE)
-    \item Gérer le catalogue d'équipements (CRUD + images multiples)
-    \item Affecter un équipement à un client via \texttt{ClientEquipement}
-    \item Gérer les contrats de maintenance
-    \item Affecter un technicien à une intervention (avec vérification disponibilité)
-    \item Planifier une intervention préventive
-    \item Créer une intervention curative
-    \item Prendre en charge une panne et la convertir en intervention curative
-    \item Générer une facture (curative + réalisée + hors contrat)
-    \item Marquer une facture comme payée
-    \item Consulter le planning (hebdomadaire / mensuel)
-    \item Consulter l'historique global des interventions
-    \item Consulter le tableau de bord global
-\end{itemize}
-
-\textbf{Technicien}
-\begin{itemize}
-    \item Se connecter
-    \item Consulter ses interventions assignées
-    \item Démarrer une intervention
-    \item Clôturer une intervention préventive
-    \item Clôturer une intervention curative (avec vérification automatique de la couverture)
-    \item Consulter son planning
-    \item Consulter son historique d'interventions
-    \item Consulter son tableau de bord personnel
-\end{itemize}
-
-\textbf{Client}
-\begin{itemize}
-    \item Se connecter
-    \item Déclarer une panne avec pièces jointes
-    \item Consulter ses pannes
-    \item Consulter ses interventions
-    \item Consulter ses factures
-    \item Consulter son historique
-    \item Consulter son espace personnel (dashboard)
-\end{itemize}
-
-\textbf{Système}
-\begin{itemize}
-    \item Générer automatiquement le planning préventif à la création d'un contrat
-    \item Calculer dynamiquement le statut des contrats
-    \item Vérifier la disponibilité d'un technicien par date
-    \item Vérifier automatiquement la couverture contractuelle à la clôture d'une intervention curative
-    \item Calculer le montant TTC des factures (TVA 19\,\%)
-\end{itemize}
+Les associations entre acteurs et cas d'utilisation sont représentées dans le diagramme global.
+L'administrateur hérite des fonctionnalités du technicien, tandis que le client dispose d'un accès
+limité aux fonctions de déclaration et de consultation.
 
 \subsection{Diagramme de cas d'utilisation global}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.43\textwidth]{Figures/Chapitre1/global_use_case_diagram.png}
+\includegraphics[width=0.7\textwidth]{Figures/Chapitre1/globaluasecase.png}
 \caption{Diagramme de cas d'utilisation global}
-\label{fig:ch2:class_global}
+\label{fig:ch2:usecase_global}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -241,7 +133,7 @@ entre les onze entités principales.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre1/global_class_diagram.png}
+\includegraphics[width=0.8\textwidth]{Figures/Chapitre1/globaldiagramclass.png}
 \caption{Diagramme de classes global}
 \label{fig:ch2:class_global}
 \end{figure}
@@ -265,86 +157,50 @@ entre les onze entités principales.
 \hline
 \endlastfoot
 \texttt{User}
-  & Utilisateur interne : administrateur ou technicien.
-    Attributs : id, prenom, nom, email, telephone, password, role (admin/technician),
-    actif, dateCreation. \\
+  & Utilisateur interne (administrateur ou technicien).
+    Attributs : prenom, nom, email, role (\texttt{admin}/\texttt{technician}), actif. \\
 \hline
 \texttt{Client}
-  & Client métier : société ou personne physique.
-    Attributs : id, typeClient (\texttt{SOCIETE}/\texttt{PERSONNE\_PHYSIQUE}), societe,
-    contact, prenom, nom, email, telephone, password, adresse, ville, dateCreation. \\
+  & Client métier (société ou personne physique).
+    Attributs : typeClient, societe, prenom, nom, email, adresse, ville. \\
 \hline
 \texttt{Equipment}
   & Équipement du catalogue global, indépendant de tout client.
-    Attributs : id, reference, type (\texttt{CLIMATISEUR}/\texttt{SYSTEME\_SURPRESSION}),
-    marque, modele, numeroSerie, description. \\
+    Attributs : reference, type (\texttt{CLIMATISEUR}/\texttt{SYSTEME\_SURPRESSION}), marque, modele, numeroSerie. \\
 \hline
 \texttt{EquipmentImage}
   & Image associée à un équipement.
-    Attributs : id, filename, previewUrl, isMain. \\
+    Attribut notable : isMain (désigne l'image principale). \\
 \hline
 \texttt{ClientEquipement}
-  & Table de jonction entre \texttt{Client} et \texttt{Equipment}. Matérialise l'installation
-    d'un équipement chez un client.
-    Attributs : id, clientId, equipementId, dateAchat, dateInstallation,
-    localisation (optionnel), notes. \\
+  & Table de jonction \texttt{Client}–\texttt{Equipment} matérialisant une installation.
+    Attributs : dateAchat, dateInstallation, localisation (optionnel). \\
 \hline
 \texttt{Contract}
   & Contrat de maintenance couvrant des installations \texttt{ClientEquipement}.
-    Attributs : id, reference, clientId, dateDebut, dateFin, periodicite,
-    statut (\texttt{ACTIF}/\texttt{BIENTOT\_EXPIRE}/\texttt{EXPIRE}),
-    clientEquipementIds[]. \\
+    Attributs : reference, dateDebut, dateFin, periodicite, statut (\texttt{ACTIF}/\texttt{BIENTOT\_EXPIRE}/\texttt{EXPIRE}). \\
 \hline
 \texttt{Intervention}
   & Intervention préventive ou curative, sans champ de priorité.
-    Attributs : id, reference, type (\texttt{PREVENTIVE}/\texttt{CURATIVE}), clientId,
-    equipementId, clientEquipementId, technicienId, contractId, datePrevue, dateRealisation,
-    statut (\texttt{PLANIFIEE}/\texttt{EN\_COURS}/\texttt{REALISEE}/\texttt{ANNULEE}),
-    couvertureContrat, description, diagnostic, actionsRealisees, materielUtilise,
-    dureeMinutes. \\
+    Attributs : type (\texttt{PREVENTIVE}/\texttt{CURATIVE}), datePrevue, statut (\texttt{PLANIFIEE}/\texttt{EN\_COURS}/\texttt{REALISEE}/\texttt{ANNULEE}), couvertureContrat. \\
 \hline
 \texttt{Panne}
   & Déclaration de panne par un client, sans champ de priorité.
-    Attributs : id, reference, clientId, equipementId, clientEquipementId, dateDeclaration,
-    description, statut (\texttt{EN\_ATTENTE}/\texttt{PRISE\_EN\_CHARGE}/\texttt{CONVERTIE}/\texttt{ANNULEE}),
-    interventionId, piecesJointes[]. \\
+    Attributs : dateDeclaration, description, statut (\texttt{EN\_ATTENTE}/\texttt{PRISE\_EN\_CHARGE}/\texttt{CONVERTIE}/\texttt{ANNULEE}). \\
 \hline
 \texttt{PieceJointe}
   & Pièce jointe associée à une panne.
-    Attributs : id, filename, size, type, previewUrl. \\
+    Attributs : filename, size, type (image, PDF ou audio). \\
 \hline
 \texttt{Facture}
-  & Facture générée pour une intervention curative réalisée hors contrat.
-    Attributs : id, numero, clientId, interventionId, dateEmission, montantHT, tva,
-    montantTTC, statut (\texttt{PAYEE}/\texttt{IMPAYEE}/\texttt{EN\_ATTENTE}),
-    lignes[]. \\
+  & Facture pour une intervention curative réalisée hors contrat.
+    Attributs : numero, dateEmission, montantHT, tva (19\,\%), montantTTC, statut (\texttt{PAYEE}/\texttt{IMPAYEE}/\texttt{EN\_ATTENTE}). \\
 \hline
 \texttt{LigneFacture}
   & Ligne de détail d'une facture.
     Attributs : description, quantite, prixUnitaire, montant. \\
 \hline
 \end{longtable}
-
-\textbf{Relations entre les entités :}
-
-Les relations entre les entités du dictionnaire de données sont les suivantes :
-
-\begin{itemize}
-    \item \texttt{Client} $1 \rightarrow *$ \texttt{ClientEquipement}
-    \item \texttt{Equipment} $1 \rightarrow *$ \texttt{ClientEquipement}
-    \item \texttt{Equipment} $1 \rightarrow *$ \texttt{EquipmentImage}
-    \item \texttt{Contract} couvre $*$ \texttt{ClientEquipement} (via \texttt{clientEquipementIds[]}) ---
-          un contrat peut couvrir plusieurs installations \texttt{ClientEquipement} ;
-          une installation peut être couverte par plusieurs contrats dans le temps,
-          mais par un seul contrat actif à la fois
-    \item \texttt{Intervention} $* \rightarrow 1$ \texttt{ClientEquipement}
-    \item \texttt{Intervention} $* \rightarrow 0..1$ \texttt{Contract}
-    \item \texttt{Panne} $1 \rightarrow *$ \texttt{PieceJointe}
-    \item \texttt{Panne} $0..1 \rightarrow 1$ \texttt{Intervention} (conversion)
-    \item \texttt{Facture} $* \rightarrow 1$ \texttt{Intervention}
-    \item \texttt{Facture} $1 \rightarrow *$ \texttt{LigneFacture}
-    \item \texttt{Intervention} $* \rightarrow 0..1$ \texttt{User} (technicien affecté)
-\end{itemize}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Pilotage du projet avec Scrum}
@@ -375,149 +231,39 @@ Le projet est organisé selon la méthodologie Scrum. Les rôles principaux sont
 
 \subsection{Le Backlog du produit}
 
-Le Product Backlog regroupe l'ensemble des fonctionnalités du système sous forme d'User Stories.
+Le backlog complet comporte 28 user stories. Le tableau suivant présente les user stories représentatives couvrant les principaux modules du système.
 
-\begin{longtable}{|p{1.3cm}|p{2.6cm}|p{9cm}|p{1.8cm}|}
-\caption{Product Backlog --- 28 User Stories}
+\begin{longtable}{|p{1.2cm}|p{7.5cm}|p{2.3cm}|p{1.5cm}|p{1.2cm}|}
+\caption{Product Backlog --- sélection représentative (28 user stories au total)}
 \label{tab:ch2:backlog} \\
 \hline
-\textbf{ID} & \textbf{Acteur} & \textbf{User Story} & \textbf{Priorité} \\
+\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} & \textbf{Sprint} \\
 \hline
 \endfirsthead
 \caption*{Product Backlog (suite)} \\
 \hline
-\textbf{ID} & \textbf{Acteur} & \textbf{User Story} & \textbf{Priorité} \\
+\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} & \textbf{Sprint} \\
 \hline
 \endhead
 \hline
 \endfoot
 \hline
 \endlastfoot
-US-01 & Tout utilisateur
-  & En tant qu'utilisateur, je veux me connecter avec mon e-mail ou mon numéro de téléphone
-    et mon mot de passe, afin d'accéder aux fonctionnalités de mon rôle.
-  & Haute \\
+US-01 & En tant qu'utilisateur, je veux me connecter avec mon e-mail ou mon numéro de téléphone et mon mot de passe. & Tout utilisateur & Haute & S1 \\
 \hline
-US-02 & Tout utilisateur
-  & En tant qu'utilisateur connecté, je veux me déconnecter afin de sécuriser ma session.
-  & Haute \\
+US-04 & Le système restreint automatiquement l'accès aux pages selon le rôle de l'utilisateur. & Système (auto) & Haute & S1 \\
 \hline
-US-03 & Administrateur
-  & En tant qu'administrateur, je veux gérer les comptes des utilisateurs internes
-    (CRUD + désactivation + restauration).
-  & Haute \\
+US-08 & En tant qu'administrateur, je veux affecter un équipement du catalogue à un client via \texttt{ClientEquipement}. & Administrateur & Haute & S1 \\
 \hline
-US-04 & Système
-  & En tant que système, je veux restreindre l'accès aux pages selon le rôle de l'utilisateur.
-  & Haute \\
+US-09 & En tant qu'administrateur, je veux créer un contrat couvrant des installations \texttt{ClientEquipement}. & Administrateur & Haute & S1 \\
 \hline
-US-05 & Administrateur
-  & En tant qu'administrateur, je veux créer une fiche client (société ou personne physique).
-  & Haute \\
+US-11 & En tant qu'administrateur, je veux affecter un technicien disponible à une intervention. & Administrateur & Haute & S2 \\
 \hline
-US-06 & Administrateur
-  & En tant qu'administrateur, je veux modifier et désactiver ou supprimer une fiche client
-    selon les contraintes d'intégrité.
-  & Haute \\
+US-16 & En tant que client, je veux déclarer une panne avec pièces jointes. & Client & Haute & S2 \\
 \hline
-US-07 & Administrateur
-  & En tant qu'administrateur, je veux ajouter un équipement au catalogue global avec
-    images multiples.
-  & Haute \\
+US-19 & En tant qu'administrateur, je veux générer une facture pour une intervention curative réalisée hors contrat (TVA 19\,\%, TND). & Administrateur & Haute & S3 \\
 \hline
-US-08 & Administrateur
-  & En tant qu'administrateur, je veux affecter un équipement du catalogue à un client
-    via \texttt{ClientEquipement}.
-  & Haute \\
-\hline
-US-09 & Administrateur
-  & En tant qu'administrateur, je veux créer un contrat couvrant des installations
-    \texttt{ClientEquipement}.
-  & Haute \\
-\hline
-US-10 & Système
-  & En tant que système, je veux générer automatiquement le planning préventif à la
-    création d'un contrat.
-  & Haute \\
-\hline
-US-11 & Administrateur
-  & En tant qu'administrateur, je veux affecter un technicien disponible à une intervention.
-  & Haute \\
-\hline
-US-12 & Administrateur
-  & En tant qu'administrateur, je veux consulter le planning en vue hebdomadaire ou mensuelle.
-  & Haute \\
-\hline
-US-13 & Technicien
-  & En tant que technicien, je veux démarrer une intervention assignée.
-  & Haute \\
-\hline
-US-14 & Technicien
-  & En tant que technicien, je veux clôturer une intervention préventive sans générer
-    de facture.
-  & Haute \\
-\hline
-US-15 & Technicien
-  & En tant que technicien, je veux clôturer une intervention curative avec vérification
-    de la couverture contractuelle.
-  & Haute \\
-\hline
-US-16 & Client
-  & En tant que client, je veux déclarer une panne avec pièces jointes, sans champ de priorité.
-  & Haute \\
-\hline
-US-17 & Administrateur
-  & En tant qu'administrateur, je veux prendre en charge une panne et la convertir en
-    intervention curative.
-  & Haute \\
-\hline
-US-18 & Administrateur
-  & En tant qu'administrateur, je veux créer directement une intervention curative.
-  & Haute \\
-\hline
-US-19 & Administrateur
-  & En tant qu'administrateur, je veux générer une facture pour une intervention curative
-    réalisée hors contrat (TVA 19\,\%, TND).
-  & Haute \\
-\hline
-US-20 & Administrateur
-  & En tant qu'administrateur, je veux marquer une facture comme payée.
-  & Haute \\
-\hline
-US-21 & Administrateur
-  & En tant qu'administrateur, je veux consulter toutes les factures du système.
-  & Haute \\
-\hline
-US-22 & Client
-  & En tant que client, je veux consulter mes factures.
-  & Moyenne \\
-\hline
-US-23 & Technicien
-  & En tant que technicien, je veux consulter l'historique de mes interventions.
-  & Moyenne \\
-\hline
-US-24 & Client
-  & En tant que client, je veux consulter l'historique des interventions sur mes équipements.
-  & Moyenne \\
-\hline
-US-25 & Administrateur
-  & En tant qu'administrateur, je veux consulter un tableau de bord global avec KPIs et
-    graphiques.
-  & Haute \\
-\hline
-US-26 & Technicien
-  & En tant que technicien, je veux consulter mon tableau de bord personnel (interventions
-    assignées, planning semaine).
-  & Haute \\
-\hline
-US-27 & Client
-  & En tant que client, je veux consulter mon espace personnel (équipements, interventions,
-    pannes, factures).
-  & Haute \\
-\hline
-US-28 & Tous
-  & En tant qu'utilisateur, je veux filtrer, rechercher et paginer les listes de données.
-  & Moyenne \\
+US-25 & En tant qu'administrateur, je veux consulter un tableau de bord global avec KPIs et graphiques. & Administrateur & Haute & S3 \\
 \hline
 \end{longtable}
 
@@ -540,31 +286,27 @@ US-28 & Tous
 \endlastfoot
 \textbf{Sprint 1}
   & Authentification et référentiel métier
-  & Connexion (email ou téléphone), déconnexion, contrôle d'accès,
-    CRUD utilisateurs (soft-delete + restauration), CRUD clients,
-    catalogue équipements + images, affectation \texttt{ClientEquipement},
-    gestion contrats, génération automatique planning préventif
+  & Connexion (email ou téléphone), contrôle d'accès RBAC ;
+    CRUD utilisateurs (soft-delete), clients et équipements ;
+    affectation \texttt{ClientEquipement} ; contrats et planning préventif automatique.
   & \texttt{User}, \texttt{Client}, \texttt{Equipment},
     \texttt{EquipmentImage}, \texttt{ClientEquipement},
     \texttt{Contract} \\
 \hline
 \textbf{Sprint 2}
   & Gestion des interventions et des pannes
-  & Planning (hebdomadaire/mensuel), affectation technicien
-    (vérification disponibilité), démarrage/clôture interventions,
-    déclaration panne avec pièces jointes,
-    conversion panne $\rightarrow$ curative,
-    vérification couverture contractuelle, historique admin
+  & Affectation technicien (vérification disponibilité) ;
+    démarrage et clôture interventions ;
+    déclaration panne avec pièces jointes ;
+    conversion panne $\rightarrow$ curative ; vérification couverture contractuelle.
   & \texttt{Intervention}, \texttt{Panne}, \texttt{PieceJointe},
     \texttt{Contract}, \texttt{ClientEquipement} \\
 \hline
 \textbf{Sprint 3}
   & Facturation, historique et tableaux de bord
-  & Génération facture (curative + réalisée + hors contrat,
-    TVA 19\,\%, TND, lignes), marquage payée, consultation factures,
-    historique technicien, historique client,
-    dashboard admin (KPIs + graphiques), dashboard technicien,
-    dashboard client
+  & Génération factures (curative + hors contrat, TVA 19\,\%) ;
+    marquage payée ; historique par rôle ;
+    dashboards administrateur, technicien et client.
   & \texttt{Facture}, \texttt{LigneFacture}, \texttt{Intervention},
     \texttt{Client}, \texttt{User} \\
 \hline
@@ -652,8 +394,8 @@ l'intégrité des données via la gestion des transactions (COMMIT/ROLLBACK).
 \section*{Conclusion}
 
 Dans ce chapitre, nous avons établi les exigences fonctionnelles et non fonctionnelles de
-l'application en précisant leurs règles métier. Nous avons repéré quatre protagonistes
-(Administrateur, Technicien, Client, Système) et représenté leurs interactions à travers 28
+l'application en précisant leurs règles métier. Nous avons identifié trois acteurs
+(Administrateur, Technicien et Client) et représenté leurs interactions à travers 28
 User Stories réparties sur 3 sprints. Le schéma de classes global présente les 11 entités du
 modèle, incluant l'entité intermédiaire \texttt{ClientEquipement} qui associe les clients aux
 équipements du catalogue. Le prochain chapitre traitera du Sprint 1 --- Authentification et

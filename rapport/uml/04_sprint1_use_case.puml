@@ -2,73 +2,33 @@
 left to right direction
 skinparam packageStyle rectangle
 skinparam actorStyle Hollow
-
-actor "Utilisateur" as U
-actor "Administrateur" as A
-
-A --|> U
-
-rectangle "Sprint 1 — Authentification et référentiel métier" {
-
-  usecase "S'authentifier" as UC_AUTH
-  usecase "Se déconnecter" as UC_LOGOUT
-
-  usecase "Gérer les utilisateurs" as UC_USERS
-  usecase "Ajouter un utilisateur" as UC_ADD_USER
-  usecase "Modifier un utilisateur" as UC_MOD_USER
-  usecase "Supprimer un utilisateur" as UC_DEL_USER
-  usecase "Consulter la liste\ndes utilisateurs" as UC_LIST_USERS
-
-  usecase "Gérer les clients" as UC_CLIENTS
-  usecase "Ajouter un client" as UC_ADD_CLIENT
-  usecase "Modifier un client" as UC_MOD_CLIENT
-  usecase "Supprimer un client" as UC_DEL_CLIENT
-  usecase "Consulter la liste\ndes clients" as UC_LIST_CLIENTS
-
-  usecase "Gérer les équipements" as UC_EQ
-  usecase "Ajouter un équipement" as UC_ADD_EQ
-  usecase "Modifier un équipement" as UC_MOD_EQ
-  usecase "Supprimer un équipement" as UC_DEL_EQ
-  usecase "Consulter le catalogue" as UC_LIST_EQ
-  usecase "Affecter à un client" as UC_ASSIGN_EQ
-
-  usecase "Gérer les contrats" as UC_CONTRACTS
-  usecase "Créer un contrat" as UC_CREATE_CONTRACT
-  usecase "Modifier un contrat" as UC_MOD_CONTRACT
-  usecase "Consulter un contrat" as UC_VIEW_CONTRACT
-
-  note right of UC_CONTRACTS
-    La création d'un contrat génère
-    automatiquement le planning préventif.
-  end note
+skinparam usecase {
+  BackgroundColor #EBF5FB
+  BorderColor #2E74B5
+}
+skinparam actor {
+  BackgroundColor #FEF9E7
+  BorderColor #B7950B
 }
 
-U --> UC_AUTH
-U --> UC_LOGOUT
+actor "Administrateur" as Admin
 
-A --> UC_USERS
-A --> UC_CLIENTS
-A --> UC_EQ
-A --> UC_CONTRACTS
+rectangle " " {
+  usecase "S'authentifier"     as UC_AUTH
+  usecase "Gérer utilisateurs" as UC_USERS
+  usecase "Gérer clients"      as UC_CLIENTS
+  usecase "Gérer équipements"  as UC_EQUIP
+  usecase "Gérer contrats"     as UC_CONTRACTS
+}
 
-UC_ADD_USER ..> UC_USERS : <<extend>>
-UC_MOD_USER ..> UC_USERS : <<extend>>
-UC_DEL_USER ..> UC_USERS : <<extend>>
-UC_LIST_USERS ..> UC_USERS : <<extend>>
+Admin --> UC_USERS
+Admin --> UC_CLIENTS
+Admin --> UC_EQUIP
+Admin --> UC_CONTRACTS
 
-UC_ADD_CLIENT ..> UC_CLIENTS : <<extend>>
-UC_MOD_CLIENT ..> UC_CLIENTS : <<extend>>
-UC_DEL_CLIENT ..> UC_CLIENTS : <<extend>>
-UC_LIST_CLIENTS ..> UC_CLIENTS : <<extend>>
-
-UC_ADD_EQ ..> UC_EQ : <<extend>>
-UC_MOD_EQ ..> UC_EQ : <<extend>>
-UC_DEL_EQ ..> UC_EQ : <<extend>>
-UC_LIST_EQ ..> UC_EQ : <<extend>>
-UC_ASSIGN_EQ ..> UC_EQ : <<extend>>
-
-UC_CREATE_CONTRACT ..> UC_CONTRACTS : <<extend>>
-UC_MOD_CONTRACT ..> UC_CONTRACTS : <<extend>>
-UC_VIEW_CONTRACT ..> UC_CONTRACTS : <<extend>>
+UC_USERS     ..> UC_AUTH : <<include>>
+UC_CLIENTS   ..> UC_AUTH : <<include>>
+UC_EQUIP     ..> UC_AUTH : <<include>>
+UC_CONTRACTS ..> UC_AUTH : <<include>>
 
 @enduml

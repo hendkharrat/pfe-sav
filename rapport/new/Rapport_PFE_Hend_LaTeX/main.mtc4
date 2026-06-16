@@ -1,26 +1,17 @@
-{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {3.1}Backlog du Sprint 1}{\reset@font\mtcSfont 32}{section.3.1}}
-{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {3.2}Analyse}{\reset@font\mtcSfont 35}{section.3.2}}
-{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.2.1}Diagramme de cas d'utilisation du Sprint 1}{\reset@font\mtcSSfont 35}{subsection.3.2.1}}
-{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.2.2}Description des cas d'utilisation}{\reset@font\mtcSSfont 36}{subsection.3.2.2}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.1}CU-01 : S'authentifier}{\reset@font\mtcSSSfont 36}{subsubsection.3.2.2.1}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.2}CU-02 : Se déconnecter}{\reset@font\mtcSSSfont 37}{subsubsection.3.2.2.2}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.3}CU-03 : Gérer les utilisateurs internes}{\reset@font\mtcSSSfont 37}{subsubsection.3.2.2.3}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.4}CU-04 : Gérer les clients}{\reset@font\mtcSSSfont 39}{subsubsection.3.2.2.4}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.5}CU-05 : Gérer le catalogue d'équipements}{\reset@font\mtcSSSfont 39}{subsubsection.3.2.2.5}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.6}CU-06 : Affecter un équipement à un client (\texttt {ClientEquipement})}{\reset@font\mtcSSSfont 40}{subsubsection.3.2.2.6}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.7}CU-07 : Gérer les contrats de maintenance}{\reset@font\mtcSSSfont 41}{subsubsection.3.2.2.7}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.8}CU-08 : Générer automatiquement le planning préventif (Système)}{\reset@font\mtcSSSfont 42}{subsubsection.3.2.2.8}}
-{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {3.3}Conception}{\reset@font\mtcSfont 43}{section.3.3}}
-{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.3.1}Diagramme de classes du Sprint 1}{\reset@font\mtcSSfont 43}{subsection.3.3.1}}
-{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.3.2}Diagrammes de séquence}{\reset@font\mtcSSfont 44}{subsection.3.3.2}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.1}Diagramme de séquence : Connexion (email ou téléphone)}{\reset@font\mtcSSSfont 44}{subsubsection.3.3.2.1}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.2}Diagramme de séquence : Déconnexion}{\reset@font\mtcSSSfont 45}{subsubsection.3.3.2.2}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.3}Identification textuelle --- Créer un utilisateur}{\reset@font\mtcSSSfont 46}{subsubsection.3.3.2.3}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.4}Diagramme de séquence : Modification utilisateur}{\reset@font\mtcSSSfont 47}{subsubsection.3.3.2.4}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.5}Identification textuelle --- Suppression utilisateur (soft-delete)}{\reset@font\mtcSSSfont 48}{subsubsection.3.3.2.5}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.6}Diagramme de séquence : Contrôle d'accès}{\reset@font\mtcSSSfont 49}{subsubsection.3.3.2.6}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.7}Identification textuelle --- Créer un client}{\reset@font\mtcSSSfont 49}{subsubsection.3.3.2.7}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.8}Diagramme de séquence : Ajout équipement et gestion des images}{\reset@font\mtcSSSfont 51}{subsubsection.3.3.2.8}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.9}Identification textuelle --- Créer un contrat et générer le planning}{\reset@font\mtcSSSfont 51}{subsubsection.3.3.2.9}}
-{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.10}Diagramme de séquence : Consultation d'un contrat}{\reset@font\mtcSSSfont 53}{subsubsection.3.3.2.10}}
-{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {3.4}Réalisation}{\reset@font\mtcSfont 54}{section.3.4}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {3.1}Backlog du Sprint 1}{\reset@font\mtcSfont 22}{section.3.1}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {3.2}Analyse}{\reset@font\mtcSfont 23}{section.3.2}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.2.1}Diagramme de cas d'utilisation du Sprint 1}{\reset@font\mtcSSfont 23}{subsection.3.2.1}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.2.2}Description des cas d'utilisation}{\reset@font\mtcSSfont 24}{subsection.3.2.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.1}CU-01 : S'authentifier}{\reset@font\mtcSSSfont 24}{subsubsection.3.2.2.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.2}CU-03 : Gérer les utilisateurs internes}{\reset@font\mtcSSSfont 25}{subsubsection.3.2.2.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.3}CU-04 : Gérer les clients}{\reset@font\mtcSSSfont 26}{subsubsection.3.2.2.3}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.4}CU-05 : Gérer le catalogue d'équipements}{\reset@font\mtcSSSfont 26}{subsubsection.3.2.2.4}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.5}CU-06 : Affecter un équipement à un client (\texttt {ClientEquipement})}{\reset@font\mtcSSSfont 27}{subsubsection.3.2.2.5}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.6}CU-07 : Gérer les contrats de maintenance}{\reset@font\mtcSSSfont 28}{subsubsection.3.2.2.6}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.2.2.7}CU-08 : Générer automatiquement le planning préventif}{\reset@font\mtcSSSfont 29}{subsubsection.3.2.2.7}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {3.3}Conception}{\reset@font\mtcSfont 30}{section.3.3}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.3.1}Diagramme de classes du Sprint 1}{\reset@font\mtcSSfont 30}{subsection.3.3.1}}
+{\reset@font\mtcSSfont\mtc@string\contentsline{subsection}{\noexpand \leavevmode \numberline {3.3.2}Diagrammes de séquence}{\reset@font\mtcSSfont 31}{subsection.3.3.2}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.1}Diagramme de séquence : Connexion (email ou téléphone)}{\reset@font\mtcSSSfont 31}{subsubsection.3.3.2.1}}
+{\reset@font\mtcSSSfont\mtc@string\contentsline{subsubsection}{\noexpand \leavevmode \numberline {3.3.2.2}Diagramme de séquence : Ajout équipement et gestion des images}{\reset@font\mtcSSSfont 32}{subsubsection.3.3.2.2}}
+{\reset@font\mtcSfont\mtc@string\contentsline{section}{\noexpand \leavevmode \numberline {3.4}Réalisation}{\reset@font\mtcSfont 33}{section.3.4}}

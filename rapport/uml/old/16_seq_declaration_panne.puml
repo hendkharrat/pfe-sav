@@ -1,0 +1,55 @@
+@startuml 16_seq_declaration_panne
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Client"                        as Cli
+participant "Interface\n(Frontend)"         as UI
+participant "Contrôleur\n(PanneCtrl)"       as CTRL
+database    "Base de données\n(MySQL)"      as DB
+
+Cli  -> UI   : Ouvre le formulaire de déclaration de panne
+UI   -> CTRL : GET /api/client/{id}/equipements
+CTRL -> DB   : SELECT ce.*, e.* FROM client_equipements ce\nJOIN equipments e ON ce.equipementId = e.id\nWHERE ce.clientId = ?
+DB   --> CTRL : liste des installations
+CTRL --> UI   : 200 — { clientEquipements[] }
+UI   --> Cli  : Affiche la liste des équipements affectés
+
+Cli  -> UI   : Sélectionne un équipement affecté\net saisit la description (obligatoire)
+
+opt Pièces jointes
+  loop Pour chaque pièce jointe (image, PDF, audio)
+    Cli -> UI : Sélectionne un fichier
+    UI  -> UI : Stocke temporairement le fichier
+  end
+end
+
+Cli -> UI   : Soumet la déclaration
+UI  -> CTRL : POST /api/pannes\n{ clientId, clientEquipementId,\n  description, piecesJointes[] }
+
+CTRL -> CTRL : Valide que la description est présente
+CTRL -> DB   : SELECT id FROM client_equipements\nWHERE id = ? AND clientId = ?
+DB   --> CTRL : enregistrement ou null
+
+alt ClientEquipement n'appartient pas au client
+  CTRL --> UI  : 403 — Équipement introuvable
+  UI   --> Cli : Affiche message d'erreur
+else Données valides
+  CTRL -> DB  : INSERT INTO pannes VALUES (...)
+  DB   --> CTRL : panneId
+
+  opt Pièces jointes présentes
+    loop Pour chaque pièce jointe
+      CTRL -> DB  : INSERT INTO pieces_jointes VALUES (...)
+      DB   --> CTRL : OK
+    end
+  end
+
+  CTRL --> UI   : 201 — { panne créée, statut: EN_ATTENTE }
+  UI   --> Cli  : Confirmation : panne enregistrée
+end
+@enduml

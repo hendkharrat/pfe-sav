@@ -27,59 +27,37 @@ Ce sprint a pour objectif de compléter l'application en y intégrant :
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Backlog du Sprint 3}
 
-\begin{center}
-\begin{longtable}{|p{1.2cm}|p{4.3cm}|p{2.2cm}|p{1.5cm}|p{4.5cm}|}
+\begin{longtable}{|p{1.2cm}|p{7.5cm}|p{2.8cm}|p{1.8cm}|}
 \caption{Backlog du Sprint 3}
 \label{tab:ch5:backlog_sprint3} \\
 \hline
-\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} & \textbf{Critères d'acceptation} \\
+\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} \\
 \hline
 \endfirsthead
+\caption*{Backlog du Sprint 3 (suite)} \\
 \hline
-\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} & \textbf{Critères d'acceptation} \\
+\textbf{ID} & \textbf{User Story} & \textbf{Acteur} & \textbf{Priorité} \\
 \hline
 \endhead
 \hline
 \endfoot
 \hline
 \endlastfoot
-
-US-19 & En tant qu'administrateur, je veux générer une facture pour une intervention curative réalisée
-et hors contrat (TVA 19\,\%, TND, lignes de détail). & Administrateur & Élevée & Éligibilité
-vérifiée : type = \texttt{CURATIVE} + statut = \texttt{REALISEE} + \texttt{couvertureContrat} = false ;
-lignes de détail (main-d'œuvre, matériel) ; \texttt{montantTTC} = \texttt{montantHT} $\times$ 1,19. \\
+US-19 & En tant qu'administrateur, je veux générer une facture pour une intervention curative réalisée hors contrat (TVA 19\,\%, TND). & Administrateur & Élevée \\
 \hline
-US-20 & En tant qu'administrateur, je veux marquer une facture comme payée. & Administrateur & Élevée &
-Statut de la facture mis à jour à \texttt{PAYEE}. \\
+US-20 & En tant qu'administrateur, je veux marquer une facture comme payée. & Administrateur & Élevée \\
 \hline
-US-21 & En tant qu'administrateur, je veux consulter toutes les factures avec filtres (statut, client, date). &
-Administrateur & Élevée & Liste paginée ; filtres fonctionnels. \\
+US-21 & En tant qu'administrateur, je veux consulter toutes les factures avec filtres (statut, client, date). & Administrateur & Élevée \\
 \hline
-US-22 & En tant que client, je veux consulter mes factures. & Client & Moyenne & Seules les factures liées
-au client connecté sont affichées ; lecture seule. \\
+US-24 & En tant que client, je veux consulter l'historique des interventions sur mes équipements. & Client & Moyenne \\
 \hline
-US-23 & En tant que technicien, je veux consulter l'historique de mes interventions réalisées ou annulées. &
-Technicien & Moyenne & Seules les interventions assignées au technicien connecté sont affichées. \\
+US-25 & En tant qu'administrateur, je veux consulter un tableau de bord global avec KPIs et graphiques. & Administrateur & Élevée \\
 \hline
-US-24 & En tant que client, je veux consulter l'historique des interventions sur mes équipements. & Client &
-Moyenne & Seules les interventions liées aux équipements du client connecté sont affichées. \\
+US-26 & En tant que technicien, je veux consulter mon tableau de bord personnel. & Technicien & Élevée \\
 \hline
-US-25 & En tant qu'administrateur, je veux consulter un tableau de bord global avec KPIs et graphiques. &
-Administrateur & Élevée & KPIs : interventions totales / en attente / réalisées, contrats actifs/expirés,
-clients, équipements, CA mensuel, factures impayées ; graphiques mensuels. \\
+US-27 & En tant que client, je veux consulter mon espace personnel. & Client & Élevée \\
 \hline
-US-26 & En tant que technicien, je veux consulter mon tableau de bord personnel. & Technicien & Élevée &
-Affichage : interventions assignées, taux de réalisation, planning de la semaine. \\
-\hline
-US-27 & En tant que client, je veux consulter mon espace personnel. & Client & Élevée & Affichage :
-équipements affectés, interventions en cours, pannes ouvertes, factures en attente. \\
-\hline
-US-28 & En tant qu'utilisateur, je veux filtrer, rechercher et paginer les listes de données. & Tous &
-Moyenne & Filtres disponibles sur toutes les listes ; pagination fonctionnelle. \\
-\hline
-
 \end{longtable}
-\end{center}
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Analyse}
@@ -88,7 +66,7 @@ Moyenne & Filtres disponibles sur toutes les listes ; pagination fonctionnelle. 
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/use_case_sprint3.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre5/use_case_sprint3.png}
 \caption{Diagramme de cas d'utilisation du Sprint 3}
 \label{fig:ch5:use_case_sprint3}
 \end{figure}
@@ -149,15 +127,6 @@ Postconditions & La facture est créée et enregistrée dans la base de données
     \item L'Interface affiche la facture générée.
 \end{enumerate}
 
-\textbf{Scénario alternatif --- Intervention non éligible :}
-
-\begin{itemize}
-    \item L'une des trois conditions n'est pas satisfaite (intervention préventive, ou non réalisée,
-          ou couverte par contrat).
-    \item Le Contrôleur retourne une erreur.
-    \item L'Interface affiche « Intervention non éligible à la facturation ».
-\end{itemize}
-
 \textbf{Règles de gestion :}
 
 \begin{itemize}
@@ -167,6 +136,8 @@ Postconditions & La facture est créée et enregistrée dans la base de données
     \item La monnaie est le \textbf{Dinar Tunisien (TND)}.
     \item La facture est créée avec le statut \texttt{IMPAYEE} ou \texttt{EN\_ATTENTE}.
 \end{itemize}
+
+\textit{Mise à jour du statut de paiement :} Après génération, l'administrateur peut mettre à jour l'état de paiement de la facture (passage au statut \texttt{PAYEE}).
 
 \subsubsection{CU-17 : Consulter les factures}
 
@@ -189,18 +160,7 @@ Postconditions & Les factures accessibles à l'utilisateur sont affichées en le
 \end{tabular}
 \end{table}
 
-\textbf{Scénario nominal :}
-
-\begin{enumerate}
-    \item L'utilisateur accède au module des factures.
-    \item Le Contrôleur filtre les factures selon le rôle :
-    \begin{itemize}
-        \item Administrateur $\rightarrow$ toutes les factures.
-        \item Client $\rightarrow$ uniquement ses factures.
-    \end{itemize}
-    \item Le contrôleur interroge la base de données avec le filtre approprié.
-    \item Les factures sont affichées avec les filtres disponibles.
-\end{enumerate}
+\textbf{Scénario nominal :} L'utilisateur accède au module des factures ; le système filtre selon le rôle (toutes pour l'administrateur, uniquement les siennes pour le client) et affiche les résultats avec les filtres disponibles.
 
 \textbf{Règles de gestion :}
 
@@ -208,44 +168,6 @@ Postconditions & Les factures accessibles à l'utilisateur sont affichées en le
     \item Le client ne peut consulter que ses propres factures.
     \item La consultation est en lecture seule pour le client.
     \item L'administrateur peut appliquer des filtres par statut, client et date d'émission.
-\end{itemize}
-
-\subsubsection{CU-18 : Marquer une facture comme payée}
-
-\begin{table}[H]
-\centering
-\caption{CU-18 : Marquer une facture comme payée}
-\label{tab:ch5:cu18}
-\begin{tabular}{|p{3.5cm}|p{11cm}|}
-\hline
-\textbf{Champ} & \textbf{Contenu} \\
-\hline
-Description & Permet à l'administrateur de mettre à jour le statut de paiement d'une facture. \\
-\hline
-Acteur principal & Administrateur \\
-\hline
-Préconditions & La facture existe avec le statut \texttt{IMPAYEE} ou \texttt{EN\_ATTENTE}. \\
-\hline
-Postconditions & Le statut de la facture est mis à jour à \texttt{PAYEE}. \\
-\hline
-\end{tabular}
-\end{table}
-
-\textbf{Scénario nominal :}
-
-\begin{enumerate}
-    \item L'administrateur sélectionne une facture impayée.
-    \item Il clique sur « Marquer comme payée ».
-    \item Le Contrôleur met à jour le statut à \texttt{PAYEE}.
-    \item La base de données effectue la mise à jour.
-    \item L'Interface confirme la modification.
-\end{enumerate}
-
-\textbf{Règles de gestion :}
-
-\begin{itemize}
-    \item Seul l'administrateur peut effectuer cette action.
-    \item Le statut \texttt{PAYEE} est définitif.
 \end{itemize}
 
 \subsubsection{CU-19 : Consulter le tableau de bord administrateur}
@@ -269,17 +191,7 @@ Postconditions & Les statistiques et graphiques sont affichés. \\
 \end{tabular}
 \end{table}
 
-\textbf{Contenu du tableau de bord :}
-
-\begin{itemize}
-    \item Nombre total d'interventions (toutes, en cours, réalisées, annulées) ;
-    \item Contrats actifs et expirés ;
-    \item Nombre de clients et d'équipements dans le catalogue ;
-    \item Chiffre d'affaires mensuel (somme des factures payées du mois en cours) ;
-    \item Nombre de factures impayées ;
-    \item Graphiques d'activité mensuelle (interventions par mois) ;
-    \item Répartition par type d'intervention (préventive / curative).
-\end{itemize}
+\textbf{Contenu du tableau de bord :} KPIs globaux (interventions, contrats, clients, équipements), chiffre d'affaires mensuel, factures impayées, graphiques d'activité mensuelle et répartition préventif/curatif.
 
 \subsubsection{CU-20 : Consulter le tableau de bord technicien}
 
@@ -302,14 +214,7 @@ Postconditions & Les indicateurs personnels et le planning du technicien sont af
 \end{tabular}
 \end{table}
 
-\textbf{Contenu du tableau de bord :}
-
-\begin{itemize}
-    \item Nombre d'interventions assignées (en cours et planifiées) ;
-    \item Taux de réalisation (interventions réalisées / total assignées) ;
-    \item Planning de la semaine en cours (interventions à venir) ;
-    \item Dernières interventions réalisées.
-\end{itemize}
+\textbf{Contenu du tableau de bord :} Nombre d'interventions assignées, taux de réalisation, planning de la semaine en cours et dernières interventions réalisées.
 
 \subsubsection{CU-21 : Consulter l'espace client}
 
@@ -332,14 +237,7 @@ Postconditions & L'espace personnel du client est affiché. \\
 \end{tabular}
 \end{table}
 
-\textbf{Contenu de l'espace client :}
-
-\begin{itemize}
-    \item Équipements affectés (liste des \texttt{ClientEquipement} du client) ;
-    \item Interventions en cours (statut \texttt{EN\_COURS}) sur ses équipements ;
-    \item Pannes ouvertes (statut \texttt{EN\_ATTENTE} ou \texttt{PRISE\_EN\_CHARGE}) ;
-    \item Factures en attente de paiement.
-\end{itemize}
+\textbf{Contenu de l'espace client :} Équipements affectés, interventions en cours, pannes ouvertes et factures en attente de paiement.
 
 \subsubsection{CU-22 : Consulter l'historique des interventions}
 
@@ -375,34 +273,7 @@ Postconditions & L'historique filtré selon le rôle est affiché. \\
     \item Les résultats sont affichés avec filtres (date, type, statut, client, technicien selon le rôle).
 \end{enumerate}
 
-\subsubsection{CU-23 : Filtrer les interventions}
-
-\begin{table}[H]
-\centering
-\caption{CU-23 : Filtrer les interventions}
-\label{tab:ch5:cu23}
-\begin{tabular}{|p{3.5cm}|p{11cm}|}
-\hline
-\textbf{Champ} & \textbf{Contenu} \\
-\hline
-Description & Permet de rechercher et filtrer les interventions selon différents critères. \\
-\hline
-Acteurs & Administrateur, Technicien, Client \\
-\hline
-Préconditions & Des interventions existent dans le système. \\
-\hline
-Postconditions & Les résultats filtrés sont affichés avec pagination. \\
-\hline
-\end{tabular}
-\end{table}
-
-\textbf{Scénario nominal :}
-
-\begin{enumerate}
-    \item L'utilisateur saisit les critères de recherche disponibles selon son rôle.
-    \item Le système applique les filtres.
-    \item Les interventions correspondantes sont affichées avec pagination.
-\end{enumerate}
+Des filtres permettent de faciliter la consultation de l'historique et des tableaux de bord.
 
 % ─────────────────────────────────────────────────────────────────────────────
 \section{Conception}
@@ -411,180 +282,31 @@ Postconditions & Les résultats filtrés sont affichés avec pagination. \\
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/class_diagram_sprint3.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre5/class_diagram_sprint3.png}
 \caption{Diagramme de classes du Sprint 3}
 \label{fig:ch5:class_sprint3}
 \end{figure}
 
-Les entités impliquées dans ce sprint sont : \texttt{Invoice}, \texttt{LigneFacture},
+Les entités impliquées dans ce sprint sont : \texttt{Facture}, \texttt{LigneFacture},
 \texttt{Intervention}, \texttt{Contract}, Client, User.
 
 \subsection{Diagrammes de séquence}
 
-\subsubsection{a) Diagramme de séquence : Génération d'une facture}
+\subsubsection{Diagramme de séquence : Génération d'une facture}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/seq_genererfacture_sprint3.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre5/seq_genererfacture_sprint3.png}
 \caption{Diagramme de séquence : Génération d'une facture}
 \label{fig:ch5:seq_generation_facture}
 \end{figure}
-\subsubsection{b) Identification textuelle --- Consultation des factures}
-
-\textbf{Nom du cas d'utilisation :} Consulter les factures \quad
-\textbf{Acteur principal :} Administrateur / Client
-
-\textbf{Objectif :} Permettre à l'utilisateur de consulter les factures enregistrées dans le système
-selon ses droits d'accès.
-
-\textbf{Préconditions :}
-
-\begin{itemize}
-    \item L'utilisateur est authentifié.
-    \item Des factures existent dans la base de données.
-\end{itemize}
-
-\textbf{Postconditions :}
-
-\begin{itemize}
-    \item Les factures accessibles à l'utilisateur sont affichées en lecture seule.
-\end{itemize}
-
-\textbf{Scénario nominal :}
-
-\begin{enumerate}
-    \item L'utilisateur ouvre le module des factures.
-    \item L'Interface transmet la demande au Contrôleur avec l'identifiant et le rôle de l'utilisateur.
-    \item Le Contrôleur vérifie le rôle :
-    \begin{itemize}
-        \item Si rôle = admin $\rightarrow$ la base de données retourne toutes les factures.
-        \item Si rôle = client $\rightarrow$ la base de données retourne uniquement les factures dont
-              le \texttt{clientId} correspond à l'utilisateur connecté.
-    \end{itemize}
-    \item La base de données retourne les enregistrements.
-    \item Le Contrôleur retourne les données à l'Interface.
-    \item L'Interface affiche les factures avec les filtres et la pagination.
-\end{enumerate}
-
-\textbf{Règles de gestion :}
-
-\begin{itemize}
-    \item L'administrateur voit toutes les factures ; le client ne voit que les siennes.
-    \item La consultation est en lecture seule pour le client.
-    \item Des filtres sont disponibles : statut (\texttt{PAYEE}, \texttt{IMPAYEE}, \texttt{EN\_ATTENTE}),
-          date d'émission.
-\end{itemize}
-
-\subsubsection{c) Diagramme de séquence : Consultation du tableau de bord administrateur}
+\subsubsection{Diagramme de séquence : Consultation de l'historique côté client}
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/seq_dashboardadmin_sprint3.png}
-\caption{Diagramme de séquence : Consultation du tableau de bord administrateur}
-\label{fig:ch5:seq_dashboard_admin}
-\end{figure}
-
-\subsubsection{d) Identification textuelle --- Consultation de l'historique avec filtres}
-
-\textbf{Nom du cas d'utilisation :} Consulter l'historique avec filtres \quad
-\textbf{Acteur principal :} Administrateur / Technicien / Client
-
-\textbf{Objectif :} Permettre à l'utilisateur de consulter l'historique des interventions selon son
-rôle et des critères de filtrage.
-
-\textbf{Préconditions :}
-
-\begin{itemize}
-    \item L'utilisateur est authentifié.
-    \item Des interventions avec statut \texttt{REALISEE} ou \texttt{ANNULEE} existent dans le système.
-\end{itemize}
-
-\textbf{Postconditions :}
-
-\begin{itemize}
-    \item L'historique filtré selon le rôle est affiché avec pagination.
-\end{itemize}
-
-\textbf{Scénario nominal :}
-
-\begin{enumerate}
-    \item L'utilisateur ouvre le module Historique.
-    \item L'Interface transmet la demande au Contrôleur avec l'identifiant, le rôle et les filtres.
-    \item Le Contrôleur détermine le périmètre visible selon le rôle :
-    \begin{itemize}
-        \item Admin $\rightarrow$ toutes les interventions \texttt{REALISEE} ou \texttt{ANNULEE}.
-        \item Technicien $\rightarrow$ ses interventions assignées avec ces statuts.
-        \item Client $\rightarrow$ les interventions liées à ses \texttt{ClientEquipement}.
-    \end{itemize}
-    \item Le contrôleur interroge la base de données avec les filtres appropriés.
-    \item La base retourne les enregistrements.
-    \item L'Interface affiche les résultats avec pagination.
-\end{enumerate}
-
-\textbf{Règles de gestion :}
-
-\begin{itemize}
-    \item Seules les interventions avec statut \texttt{REALISEE} ou \texttt{ANNULEE} apparaissent
-          dans l'historique.
-    \item Le technicien ne voit que ses propres interventions.
-    \item Le client ne voit que les interventions liées à ses équipements affectés.
-\end{itemize}
-
-\subsubsection{e) Diagramme de séquence : Consultation de l'historique côté client}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/seq_historiqueclient_sprint3.png}
+\includegraphics[width=0.70\textwidth]{Figures/Chapitre5/seq_historiqueclient_sprint3.png}
 \caption{Diagramme de séquence : Consultation de l'historique côté client}
 \label{fig:ch5:seq_historique_client}
-\end{figure}
-
-\subsubsection{f) Identification textuelle --- Consultation du tableau de bord technicien}
-
-\textbf{Nom du cas d'utilisation :} Consulter le tableau de bord technicien \quad
-\textbf{Acteur principal :} Technicien
-
-\textbf{Objectif :} Permettre au technicien de consulter ses indicateurs personnels.
-
-\textbf{Préconditions :}
-
-\begin{itemize}
-    \item Le technicien est authentifié.
-\end{itemize}
-
-\textbf{Postconditions :}
-
-\begin{itemize}
-    \item Le tableau de bord personnel du technicien est affiché.
-\end{itemize}
-
-\textbf{Scénario nominal :}
-
-\begin{enumerate}
-    \item Le technicien accède à son tableau de bord.
-    \item L'Interface transmet la demande au Contrôleur avec l'identifiant du technicien.
-    \item Le contrôleur récupère les interventions assignées au technicien depuis la base de données.
-    \item Le Contrôleur calcule les indicateurs : nombre total d'interventions assignées, nombre en cours,
-          nombre réalisées, taux de réalisation.
-    \item Le Contrôleur récupère les interventions planifiées pour la semaine en cours.
-    \item L'Interface affiche le tableau de bord.
-\end{enumerate}
-
-\textbf{Règles de gestion :}
-
-\begin{itemize}
-    \item Le tableau de bord est filtré sur le technicien connecté uniquement.
-    \item Le taux de réalisation = interventions \texttt{REALISEE} / total interventions assignées
-          $\times$ 100.
-\end{itemize}
-
-\subsubsection{g) Diagramme de séquence : Consultation de l'espace client}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/seq_espaceclient_sprint3.png}
-\caption{Diagramme de séquence : Consultation de l'espace client}
-\label{fig:ch5:seq_espace_client}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────────────────
@@ -592,32 +314,23 @@ rôle et des critères de filtrage.
 
 \begin{figure}[H]
 \centering
-\includegraphics[width=0.55\textwidth]{Figures/Chapitre5/gestfacture.png}
-\hfill
-\includegraphics[width=0.4\textwidth]{Figures/Chapitre5/viewfact.png}
-\caption{Captures d'écran de la gestion des factures : page de gestion du facture et page de visualisation}
+\includegraphics[width=0.65\textwidth]{Figures/Chapitre5/gestfacture.png}
+\caption{Capture d'écran de la gestion des factures}
 \label{fig:ch4:gestion_factures}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/dashboardtech.png}
-\caption{Capture d'écran de la page tableau de bord technicien}
-\label{fig:ch5:dashboard_technicien}
+    \centering
+    \includegraphics[width=0.74\textwidth]{Figures/Chapitre5/dashboardtech.png}
+    \caption{Capture d'écran : tableau de bord technicien}
+    \label{fig:ch5:dashboard_technicien}
 \end{figure}
 
 \begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/dashboardclientpart.png}
-\caption{Capture d'écran de la page tableau de bord d'un client particulier}
-\label{fig:ch5:dashboard_client_particulier}
-\end{figure}
-
-\begin{figure}[H]
-\centering
-\includegraphics[width=0.8\textwidth]{Figures/Chapitre5/dashboardclientsociete.png}
-\caption{Capture d'écran de la page tableau de bord d'un client société}
-\label{fig:ch5:dashboard_client_societe}
+    \centering
+    \includegraphics[width=0.74\textwidth]{Figures/Chapitre5/dashboardclientpart.png}
+    \caption{Capture d'écran : tableau de bord client}
+    \label{fig:ch5:dashboard_client}
 \end{figure}
 
 % ─────────────────────────────────────────────────────────────────────────────

@@ -29,7 +29,7 @@ package "Couche Présentation\n(Frontend)" {
 package "Couche Logique Métier\n(Backend / API)" {
   component [Routes API REST\n(Next.js API Routes)] as API
   component [Contrôleurs\n(AuthController, ClientController,\nContractController, InterventionController...)] as Controllers
-  component [Services Métier\n(PlanningService, InvoiceService,\nContractService...)] as Services
+  component [Services Métier\n(PlanningService, FactureService,\nContractService...)] as Services
   component [Middleware\n(Auth, RBAC, Validation)] as Middleware
 
   API --> Middleware
@@ -38,14 +38,14 @@ package "Couche Logique Métier\n(Backend / API)" {
 }
 
 package "Couche Accès aux Données\n(Repository)" {
-  component [Repository / Accès aux données\n(UserRepository, ClientRepository, EquipementRepository,\nContractRepository, InterventionRepository, InvoiceRepository...)] as REPO
+  component [Repository / Accès aux données\n(UserRepository, ClientRepository, EquipementRepository,\nContractRepository, InterventionRepository, FactureRepository...)] as REPO
   component [Prisma ORM\n(Modèles, Migrations, Transactions)] as Prisma
 
   REPO --> Prisma
 }
 
 database "Base de données\nMySQL" as DB {
-  collections "Tables métier\n(users, clients, equipments,\nclient_equipements, contracts,\ninterventions, pannes, invoices...)" as Tables
+  collections "Tables métier\n(users, clients, equipments,\nclient_equipements, contracts,\ninterventions, pannes, factures...)" as Tables
 }
 
 ' Flux entre couches
@@ -59,18 +59,4 @@ Services --> REPO : appels métier
 
 Prisma --> DB : SQL / Transactions\n(COMMIT / ROLLBACK)
 
-note right of Services
-  Logique automatique :
-  - Génération planning préventif
-  - Calcul statut contrats
-  - Vérification disponibilité technicien
-  - Vérification couverture contractuelle
-  - Calcul TVA 19 % / TND
-end note
-
-note bottom of Middleware
-  Contrôle d'accès basé sur les rôles
-  (RBAC : admin / technician / client)
-  Validation des données entrantes
-end note
 @enduml

@@ -2,63 +2,36 @@
 left to right direction
 skinparam packageStyle rectangle
 skinparam actorStyle Hollow
-
-actor "Utilisateur" as U
-actor "Technicien" as T
-actor "Administrateur" as A
-actor "Client" as C
-
-A --|> T
-T --|> U
-C --|> U
-
-rectangle "Sprint 2 — Gestion des interventions" {
-
-  usecase "S'authentifier" as UC_AUTH
-  usecase "Se déconnecter" as UC_LOGOUT
-
-  usecase "Gérer le planning" as UC_PLANNING
-  usecase "Affecter un technicien" as UC_AFFECTER_TECH
-  usecase "Consulter le planning" as UC_CONSULT_PLANNING
-
-  usecase "Gérer les interventions" as UC_INTERVENTIONS
-  usecase "Démarrer une intervention" as UC_START_INTER
-  usecase "Clôturer une intervention\npréventive" as UC_CLOSE_PREV
-  usecase "Clôturer une intervention\ncurative" as UC_CLOSE_CUR
-
-  usecase "Gérer les pannes" as UC_PANNES
-  usecase "Déclarer une panne" as UC_DECL_PANNE
-  usecase "Consulter ses pannes" as UC_LIST_PANNES
-  usecase "Prendre en charge\nune panne" as UC_TAKE_PANNE
-  usecase "Convertir en intervention" as UC_CONVERT_PANNE
-  usecase "Créer une intervention\ncurative" as UC_CREATE_CUR
-
-  note right of UC_INTERVENTIONS
-    La disponibilité du technicien
-    et la couverture contractuelle
-    sont vérifiées automatiquement.
-  end note
+skinparam usecase {
+  BackgroundColor #EBF5FB
+  BorderColor #2E74B5
+}
+skinparam actor {
+  BackgroundColor #FEF9E7
+  BorderColor #B7950B
 }
 
-U --> UC_AUTH
-U --> UC_LOGOUT
+actor "Administrateur" as Admin
+actor "Technicien"     as Tech
+actor "Client"         as Cli
 
-A --> UC_PLANNING
-A --> UC_PANNES
-T --> UC_INTERVENTIONS
-C --> UC_PANNES
+Admin --|> Tech
 
-UC_AFFECTER_TECH ..> UC_PLANNING : <<extend>>
-UC_CONSULT_PLANNING ..> UC_PLANNING : <<extend>>
+rectangle " " {
+  usecase "S'authentifier"      as UC_AUTH
+  usecase "Gérer interventions" as UC_INTERV
+  usecase "Gérer pannes"        as UC_PANNE
+  usecase "Consulter planning"  as UC_PLANNING
+}
 
-UC_START_INTER ..> UC_INTERVENTIONS : <<extend>>
-UC_CLOSE_PREV ..> UC_INTERVENTIONS : <<extend>>
-UC_CLOSE_CUR ..> UC_INTERVENTIONS : <<extend>>
+Tech  --> UC_INTERV
+Tech  --> UC_PLANNING
+Admin --> UC_INTERV
+Admin --> UC_PLANNING
+Cli   --> UC_PANNE
 
-UC_DECL_PANNE ..> UC_PANNES : <<extend>>
-UC_LIST_PANNES ..> UC_PANNES : <<extend>>
-UC_TAKE_PANNE ..> UC_PANNES : <<extend>>
-UC_CONVERT_PANNE ..> UC_PANNES : <<extend>>
-UC_CREATE_CUR ..> UC_PANNES : <<extend>>
+UC_INTERV   ..> UC_AUTH : <<include>>
+UC_PANNE    ..> UC_AUTH : <<include>>
+UC_PLANNING ..> UC_AUTH : <<include>>
 
 @enduml

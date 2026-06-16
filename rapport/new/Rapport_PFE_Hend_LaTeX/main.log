@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.5)  15 JUN 2026 17:34
+This is pdfTeX, Version 3.141592653-2.6-1.40.29 (MiKTeX 26.5) (preloaded format=pdflatex 2026.6.5)  16 JUN 2026 04:41
 entering extended mode
  restricted \write18 enabled.
  %&-line parsing enabled.
@@ -1039,13 +1039,6 @@ LaTeX Warning: Unused global option(s):
 (main.aux
 Package babel Info: 'french' activates 'french' shorthands.
 (babel)             Reported on input line 12.
-
-
-LaTeX Warning: Label `fig:ch2:class_global' multiply defined.
-
-
-LaTeX Warning: Label `fig:ch2:class_global@cref' multiply defined.
-
 )
 \openout1 = `main.aux'.
 
@@ -1182,7 +1175,7 @@ Package hyperref Info: Link coloring OFF on input line 162.
 
 pdfTeX warning: pdflatex.exe (file ./page-de-garde.pdf): PDF inclusion: found P
 DF version <1.7>, but at most version <1.5> allowed
-<page-de-garde.pdf, id=510, 597.53236pt x 845.05714pt>
+<page-de-garde.pdf, id=370, 597.53236pt x 845.05714pt>
 File: page-de-garde.pdf Graphic file (type pdf)
 <use page-de-garde.pdf>
 Package pdftex.def Info: page-de-garde.pdf  used on input line 170.
@@ -1195,7 +1188,7 @@ DF version <1.7>, but at most version <1.5> allowed
 
 pdfTeX warning: pdflatex.exe (file ./page-de-garde.pdf): PDF inclusion: found P
 DF version <1.7>, but at most version <1.5> allowed
-<page-de-garde.pdf, id=512, page=1, 597.53236pt x 845.05714pt>
+<page-de-garde.pdf, id=372, page=1, 597.53236pt x 845.05714pt>
 File: page-de-garde.pdf Graphic file (type pdf)
 <use page-de-garde.pdf, page 1>
 Package pdftex.def Info: page-de-garde.pdf , page1 used on input line 170.
@@ -1283,34 +1276,34 @@ LaTeX Font Info:    External font `cmex10' loaded for size
 
 
 ]
-Underfull \hbox (badness 10000) in paragraph at lines 59--59
+Underfull \hbox (badness 10000) in paragraph at lines 46--46
  [][] [][]\T1/cmr/m/n/12 CU-06 : Af-fec-ter un équi-pe-ment à un client 
  []
 
-[5] [6] [7])
+[5] [6])
 \tf@toc=\write6
 \openout6 = `main.toc'.
 
- [8] (main.lof [9
-
-
-])
+ [7] (main.lof)
 \tf@lof=\write7
 \openout7 = `main.lof'.
 
- [10] (main.lot [11
+ [8
+
+
+] (main.lot [9
 
 
 ])
 \tf@lot=\write8
 \openout8 = `main.lot'.
 
- [12]
-(introduction_generale.tex [1
+ [10] (introduction_generale.tex
+[1
 
 
 
-] [2]) (chapitres/Chapitre1.tex
+]) (chapitres/Chapitre1.tex
 Chapitre 1.
 
 Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
@@ -1323,114 +1316,114 @@ Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
 
 LaTeX Font Info:    External font `cmex10' loaded for size
 (Font)              <10.95> on input line 10.
-(main.mtc2) [3
+(main.mtc2) [2
 
 ]
-<Figures/logo_societe.png, id=958, 308.15125pt x 228.855pt>
+<Figures/logo_societe.png, id=720, 308.15125pt x 228.855pt>
 File: Figures/logo_societe.png Graphic file (type png)
 <use Figures/logo_societe.png>
-Package pdftex.def Info: Figures/logo_societe.png  used on input line 30.
+Package pdftex.def Info: Figures/logo_societe.png  used on input line 28.
 (pdftex.def)             Requested size: 91.04742pt x 67.6164pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 31.
+(Font)              using `T1/cmr/m/scsl' instead on input line 29.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 31.
+(Font)              using `T1/cmr/m/scsl' instead on input line 29.
 
-[4 <./Figures/logo_societe.png>] [5] [6] [7]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 178.
-
+[3 <./Figures/logo_societe.png>]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 178.
+(Font)              using `T1/cmr/m/scsl' instead on input line 91.
 
 
-Underfull \hbox (badness 7925) in paragraph at lines 186--187
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 91.
+
+
+Underfull \hbox (badness 7925) in paragraph at lines 99--100
 []|\T1/cmr/m/n/12 Informations dis-per-sées sur
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 189--190
+Underfull \hbox (badness 10000) in paragraph at lines 102--103
 []|\T1/cmr/m/n/12 Existence d'un suivi des
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 198--199
+Underfull \hbox (badness 10000) in paragraph at lines 111--112
 []|\T1/cmr/m/n/12 Manque d'au-to-ma-ti-sa-tion
  []
 
 
-Underfull \hbox (badness 3460) in paragraph at lines 200--201
+Underfull \hbox (badness 3460) in paragraph at lines 113--114
 []|\T1/cmr/m/n/12 Suivi des in-ter-ven-
  []
 
 
-Underfull \hbox (badness 4699) in paragraph at lines 201--202
+Underfull \hbox (badness 4699) in paragraph at lines 114--115
 []|\T1/cmr/m/n/12 Un his-to-rique est conservé
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 204--205
+Underfull \hbox (badness 10000) in paragraph at lines 117--118
 []|\T1/cmr/m/n/12 Communication
  []
 
 
-Overfull \hbox (3.4567pt too wide) in paragraph at lines 180--217
+Overfull \hbox (3.4567pt too wide) in paragraph at lines 93--130
  [][] 
  []
 
-[8]
+[4]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 260.
+(Font)              using `T1/cmr/m/scsl' instead on input line 136.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 260.
+(Font)              using `T1/cmr/m/scsl' instead on input line 136.
 
 
-Underfull \hbox (badness 3199) in paragraph at lines 267--270
+Underfull \hbox (badness 3199) in paragraph at lines 143--146
 \T1/cmr/m/n/12 ni-ciens ; dis-po-ni-bi-lité d'un his-to-
  []
 
 
-Overfull \hbox (0.66669pt too wide) in paragraph at lines 274--275
+Overfull \hbox (0.66669pt too wide) in paragraph at lines 150--151
 []|\T1/cmr/bx/n/12 Externes| 
  []
 
 
-Underfull \hbox (badness 2469) in paragraph at lines 277--280
+Underfull \hbox (badness 2469) in paragraph at lines 153--156
 \T1/cmr/m/n/12 ment des uti-li-sa-teurs ; risque de
  []
 
 
-Overfull \hbox (3.45671pt too wide) in paragraph at lines 262--282
+Overfull \hbox (3.45671pt too wide) in paragraph at lines 138--158
  [][] 
  []
 
-[9] [10] [11]
-<Figures/Chapitre1/sprintarr.png, id=996, 331.2375pt x 660.4675pt>
+[5] [6]
+<Figures/Chapitre1/sprintarr.png, id=742, 331.2375pt x 660.4675pt>
 File: Figures/Chapitre1/sprintarr.png Graphic file (type png)
 <use Figures/Chapitre1/sprintarr.png>
-Package pdftex.def Info: Figures/Chapitre1/sprintarr.png  used on input line 34
-8.
+Package pdftex.def Info: Figures/Chapitre1/sprintarr.png  used on input line 18
+9.
 (pdftex.def)             Requested size: 227.62206pt x 453.85864pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 349.
+(Font)              using `T1/cmr/m/scsl' instead on input line 190.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 349.
+(Font)              using `T1/cmr/m/scsl' instead on input line 190.
 
-[12 <./Figures/Chapitre1/sprintarr.png (PNG copy)>]) (chapitres/Chapitre2.tex
-[13]
+[7 <./Figures/Chapitre1/sprintarr.png (PNG copy)>]) (chapitres/Chapitre2.tex
+[8]
 Chapitre 2.
 
 Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
@@ -1441,560 +1434,391 @@ Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
 
 \openout4 = `main.mtc'.
 
-(main.mtc3) [14
+(main.mtc3) [9
 
-] [15] [16]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 142.
-
+]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 142.
-
-
-Overfull \hbox (10.95447pt too wide) in paragraph at lines 148--149
-[]|\T1/cmr/bx/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 149--150
-[]|\T1/cmr/m/n/12 Gestionnaire prin-ci-pal
- []
-
-
-Underfull \hbox (badness 4096) in paragraph at lines 154--155
-[]|\T1/cmr/m/n/12 Agent de main-te-nance
- []
-
-
-Underfull \hbox (badness 1062) in paragraph at lines 155--157
-[]|\T1/cmr/m/n/12 Consultation de ses in-ter-ven-tions as-si-
- []
-
-
-Underfull \hbox (badness 4181) in paragraph at lines 159--160
-[]|\T1/cmr/m/n/12 Bénéficiaire du ser-vice
- []
-
-
-Overfull \hbox (3.45673pt too wide) in paragraph at lines 144--170
- [][] 
- []
-
-[17] [18] [19]
-<Figures/Chapitre1/global_use_case_diagram.png, id=1047, 933.4875pt x 2504.3562
-5pt>
-File: Figures/Chapitre1/global_use_case_diagram.png Graphic file (type png)
-<use Figures/Chapitre1/global_use_case_diagram.png>
-Package pdftex.def Info: Figures/Chapitre1/global_use_case_diagram.png  used on
- input line 231.
-(pdftex.def)             Requested size: 195.75163pt x 525.12785pt.
+(Font)              using `T1/cmr/m/scsl' instead on input line 26.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 232.
+(Font)              using `T1/cmr/m/scsl' instead on input line 26.
 
 
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 232.
-
-<Figures/Chapitre1/global_class_diagram.png, id=1048, 1620.0525pt x 1567.8575pt
->
-File: Figures/Chapitre1/global_class_diagram.png Graphic file (type png)
-<use Figures/Chapitre1/global_class_diagram.png>
-Package pdftex.def Info: Figures/Chapitre1/global_class_diagram.png  used on in
-put line 244.
-(pdftex.def)             Requested size: 364.19667pt x 352.46564pt.
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 245.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 245.
-
-[20 <./Figures/Chapitre1/global_use_case_diagram.png>]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 252.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 252.
-
-
-Underfull \hbox (badness 2134) in paragraph at lines 268--271
-[]|\T1/cmr/m/n/12 Utilisateur in-terne : ad-mi-nis-tra-teur ou tech-ni-cien. At
--tri-
+Underfull \hbox (badness 10000) in paragraph at lines 42--43
+[]|\T1/cmr/m/n/12 CRUD des contrats cou-vrant des ins-tal-la-tions
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 278--281
-[]|\T1/cmr/m/n/12 Équipement du ca-ta-logue glo-bal, in-dé-pen-dant
+Underfull \hbox (badness 2237) in paragraph at lines 52--53
+[]|\T1/cmr/m/n/12 Dashboard glo-bal ad-mi-nis-tra-teur, da-sh-board per-son-nel
+
+ []
+
+[10]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 63.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 63.
+
+[11]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 95.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 95.
+
+
+Underfull \hbox (badness 1762) in paragraph at lines 105--106
+[]|\T1/cmr/m/n/12 Réalise les in-ter-ven-tions, consulte son
+ []
+
+[12]
+<Figures/Chapitre1/globaluasecase.png, id=784, 862.22125pt x 821.0675pt>
+File: Figures/Chapitre1/globaluasecase.png Graphic file (type png)
+<use Figures/Chapitre1/globaluasecase.png>
+Package pdftex.def Info: Figures/Chapitre1/globaluasecase.png  used on input li
+ne 123.
+(pdftex.def)             Requested size: 318.66948pt x 303.45195pt.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 124.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 124.
+
+<Figures/Chapitre1/globaldiagramclass.png, id=785, 808.01875pt x 1644.1425pt>
+File: Figures/Chapitre1/globaldiagramclass.png Graphic file (type png)
+<use Figures/Chapitre1/globaldiagramclass.png>
+Package pdftex.def Info: Figures/Chapitre1/globaldiagramclass.png  used on inpu
+t line 136.
+(pdftex.def)             Requested size: 364.19667pt x 741.06151pt.
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 137.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 137.
+
+[13 <./Figures/Chapitre1/globaluasecase.png (PNG copy)>]
+Overfull \vbox (61.87842pt too high) has occurred while \output is active []
+
+
+[14 <./Figures/Chapitre1/globaldiagramclass.png (PNG copy)>]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 144.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 144.
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 168--170
+[]|\T1/cmr/m/n/12 Équipement du ca-ta-logue glo-bal, in-dé-pen-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 278--281
-\T1/cmr/m/n/12 de tout client. At-tri-buts : id, re-fe-rence, type
+Underfull \hbox (badness 10000) in paragraph at lines 168--170
+\T1/cmr/m/n/12 dant de tout client. At-tri-buts : re-fe-rence, type
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 278--281
+Underfull \hbox (badness 10000) in paragraph at lines 168--170
 \T1/cmr/m/n/12 (\T1/cmtt/m/n/12 CLIMATISEUR\T1/cmr/m/n/12 /\T1/cmtt/m/n/12 SYST
 EME_SURPRESSION\T1/cmr/m/n/12 ), marque, mo-dele,
  []
 
 
-Overfull \hbox (7.72716pt too wide) in paragraph at lines 286--287
+Overfull \hbox (7.72716pt too wide) in paragraph at lines 175--176
 []|\T1/cmtt/m/n/12 ClientEquipement| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 293--297
-[]|\T1/cmr/m/n/12 Contrat de main-te-nance cou-vrant des ins-tal-la-
+Underfull \hbox (badness 10000) in paragraph at lines 180--182
+[]|\T1/cmr/m/n/12 Contrat de main-te-nance cou-vrant des ins-tal-la-tions
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 293--297
-\T1/cmr/m/n/12 tions \T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 . At-tri-bu
-ts : id, re-fe-rence,
+Underfull \hbox (badness 2035) in paragraph at lines 180--182
+\T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 . At-tri-buts : re-fe-rence, da-
+te-De-but, da-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 293--297
-\T1/cmr/m/n/12 clien-tId, da-te-De-but, da-te-Fin, per-io-di-cite, sta-tut
+Underfull \hbox (badness 1189) in paragraph at lines 184--186
+[]|\T1/cmr/m/n/12 Intervention pré-ven-tive ou cu-ra-tive, sans champ de prio-
  []
 
 
-Underfull \hbox (badness 5563) in paragraph at lines 299--305
-\T1/cmr/m/n/12 At-tri-buts : id, re-fe-rence, type (\T1/cmtt/m/n/12 PREVENTIVE\
-T1/cmr/m/n/12 /\T1/cmtt/m/n/12 CURATIVE\T1/cmr/m/n/12 ),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 299--305
-\T1/cmr/m/n/12 clien-tId, equi-pe-men-tId, clien-tE-qui-pe-men-tId, tech-ni-cie
--
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 299--305
-\T1/cmr/m/n/12 nId, contrac-tId, da-te-Pre-vue, da-te-Rea-li-sa-tion, sta-tut
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 299--305
-\T1/cmr/m/n/12 (\T1/cmtt/m/n/12 PLANIFIEE\T1/cmr/m/n/12 /\T1/cmtt/m/n/12 EN_COU
-RS\T1/cmr/m/n/12 /\T1/cmtt/m/n/12 REALISEE\T1/cmr/m/n/12 /\T1/cmtt/m/n/12 ANNUL
-EE\T1/cmr/m/n/12 ), cou-ver-tu-re-Con-
- []
-
-
-Underfull \hbox (badness 5756) in paragraph at lines 307--311
+Underfull \hbox (badness 5756) in paragraph at lines 188--190
 []|\T1/cmr/m/n/12 Déclaration de panne par un client, sans champ de
  []
 
 
-Underfull \hbox (badness 5161) in paragraph at lines 307--311
-\T1/cmr/m/n/12 prio-rité. At-tri-buts : id, re-fe-rence, clien-tId, equi-pe-men
--
+Underfull \hbox (badness 4556) in paragraph at lines 188--190
+\T1/cmr/m/n/12 prio-rité. At-tri-buts : da-te-De-cla-ra-tion, des-crip-tion, st
+a-tut
  []
 
 
-Underfull \hbox (badness 1803) in paragraph at lines 307--311
-\T1/cmr/m/n/12 tId, clien-tE-qui-pe-men-tId, da-te-De-cla-ra-tion, des-crip-tio
-n, sta-
- []
-
-
-Underfull \hbox (badness 3849) in paragraph at lines 317--321
-[]|\T1/cmr/m/n/12 Facture gé-né-rée pour une in-ter-ven-tion cu-ra-tive réa-li-
-sée
- []
-
-
-Underfull \hbox (badness 1571) in paragraph at lines 317--321
-\T1/cmr/m/n/12 nId, da-teE-mis-sion, mon-tan-tHT, tva, mon-tantTTC, sta-tut
- []
-
-
-ignored: Infinite glue shrinkage found in box being split [21 <./Figures/Chapitre1/globa
-l_class_diagram.png (PNG copy)>]
-ignored: Infinite glue shrinkage found in box being spli
-t [22] [23]
+ignored: Infinite glue shrinkage found in box being split [15]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 358.
+(Font)              using `T1/cmr/m/scsl' instead on input line 214.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 358.
+(Font)              using `T1/cmr/m/scsl' instead on input line 214.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 381.
+(Font)              using `T1/cmr/m/scsl' instead on input line 237.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 381.
+(Font)              using `T1/cmr/m/scsl' instead on input line 237.
 
 
-Overfull \hbox (13.01169pt too wide) in alignment at lines 380--386
- [] [] [] [] 
+Overfull \hbox (3.21933pt too wide) in paragraph at lines 240--240
+[]|\T1/cmr/bx/n/12 Priorité| 
  []
 
 
-Overfull \hbox (13.01169pt too wide) in alignment at lines 386--391
- [] [] [] [] 
+Overfull \hbox (2.48671pt too wide) in paragraph at lines 240--241
+[]|\T1/cmr/bx/n/12 Sprint| 
  []
 
 
-Overfull \hbox (13.01169pt too wide) in alignment at lines 391--393
- [] [] [] [] 
+Overfull \hbox (3.21933pt too wide) in paragraph at lines 245--245
+[]|\T1/cmr/bx/n/12 Priorité| 
  []
 
 
-Overfull \hbox (13.01169pt too wide) in alignment at lines 393--395
- [] [] [] [] 
+Overfull \hbox (2.48671pt too wide) in paragraph at lines 245--246
+[]|\T1/cmr/bx/n/12 Sprint| 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 396--397
-[]|\T1/cmr/m/n/12 Tout uti-li-sa-
+Underfull \hbox (badness 1997) in paragraph at lines 254--254
+[]|\T1/cmr/m/n/12 Le sys-tème res-treint au-to-ma-ti-que-ment
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 401--402
-[]|\T1/cmr/m/n/12 Tout uti-li-sa-
+Underfull \hbox (badness 10000) in paragraph at lines 254--254
+[]|\T1/cmr/m/n/12 Système
  []
 
 
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 405--406
+Overfull \hbox (12.93385pt too wide) in paragraph at lines 256--256
 []|\T1/cmr/m/n/12 Administrateur| 
  []
 
 
-Underfull \hbox (badness 1769) in paragraph at lines 406--408
-[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux gé-rer les
- []
-
-
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 414--415
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 418--419
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 423--424
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 428--429
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 4792) in paragraph at lines 429--431
-[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux af-fec-ter
- []
-
-
-Underfull \hbox (badness 1418) in paragraph at lines 429--431
-\T1/cmr/m/n/12 un équi-pe-ment du ca-ta-logue à un client via
- []
-
-
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 433--434
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 434--436
-[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux créer
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 434--436
+Underfull \hbox (badness 2970) in paragraph at lines 258--258
 \T1/cmr/m/n/12 un contrat cou-vrant des ins-tal-la-tions
  []
 
 
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 443--444
+Overfull \hbox (12.93385pt too wide) in paragraph at lines 258--258
 []|\T1/cmr/m/n/12 Administrateur| 
  []
 
 
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 447--448
+Overfull \hbox (12.93385pt too wide) in paragraph at lines 260--260
 []|\T1/cmr/m/n/12 Administrateur| 
  []
 
 
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 469--470
+Overfull \hbox (12.93385pt too wide) in paragraph at lines 264--264
 []|\T1/cmr/m/n/12 Administrateur| 
  []
 
 
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 474--475
+Overfull \hbox (12.93385pt too wide) in paragraph at lines 266--266
 []|\T1/cmr/m/n/12 Administrateur| 
  []
 
 
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 478--479
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 483--484
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 487--488
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 2027) in paragraph at lines 488--489
-[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux consul-ter
- []
-
-
-Overfull \hbox (4.39795pt too wide) in paragraph at lines 503--504
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 2134) in paragraph at lines 514--516
-\T1/cmr/m/n/12 per-son-nel (équi-pe-ments, in-ter-ven-tions, pannes,
- []
-
-
-Overfull \hbox (13.01169pt too wide) in alignment at lines 395--522
- [] [] [] [] 
- []
-
-
-ignored: Infinite glue shrinkage found in box being split [24]
-ignored: Infinite glue shrinkage fo
-und in box being split [25]
-ignored: Infinite glue shrinkage found in box being split [26
-]
+ignored: Infinite glue shrinkage found in box being split [16]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 527.
+(Font)              using `T1/cmr/m/scsl' instead on input line 273.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 527.
+(Font)              using `T1/cmr/m/scsl' instead on input line 273.
 
 
-Overfull \hbox (13.01125pt too wide) in alignment at lines 526--532
+Overfull \hbox (13.01125pt too wide) in alignment at lines 272--278
  [] [] [] [] 
  []
 
 
-Overfull \hbox (13.01125pt too wide) in alignment at lines 532--536
+Overfull \hbox (13.01125pt too wide) in alignment at lines 278--282
  [] [] [] [] 
  []
 
 
-Overfull \hbox (13.01125pt too wide) in alignment at lines 536--538
+Overfull \hbox (13.01125pt too wide) in alignment at lines 282--284
  [] [] [] [] 
  []
 
 
-Overfull \hbox (13.01125pt too wide) in alignment at lines 538--540
+Overfull \hbox (13.01125pt too wide) in alignment at lines 284--286
  [] [] [] [] 
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 542--543
+Underfull \hbox (badness 10000) in paragraph at lines 288--289
 []|\T1/cmr/m/n/12 Authentification
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 542--543
+Underfull \hbox (badness 10000) in paragraph at lines 288--289
 \T1/cmr/m/n/12 et ré-fé-ren-tiel
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 543--547
-[]|\T1/cmr/m/n/12 Connexion (email ou té-lé-
+Underfull \hbox (badness 10000) in paragraph at lines 289--292
+\T1/cmr/m/n/12 et équi-pe-ments ; af-fec-ta-tion
  []
 
 
-Underfull \hbox (badness 2635) in paragraph at lines 543--547
-\T1/cmr/m/n/12 phone), dé-con-nexion, contrôle
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 543--547
-\T1/cmr/m/n/12 d'ac-cès, CRUD uti-li-sa-teurs
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 543--547
-\T1/cmr/m/n/12 (soft-delete + res-tau-ra-tion),
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 543--547
-\T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 , ges-tion
- []
-
-
-Underfull \hbox (badness 7451) in paragraph at lines 543--547
-\T1/cmr/m/n/12 contrats, gé-né-ra-tion au-to-ma-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 547--550
+Underfull \hbox (badness 10000) in paragraph at lines 292--295
 []|\T1/cmtt/m/n/12 User\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 Client\T1/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 547--550
+Underfull \hbox (badness 10000) in paragraph at lines 292--295
 \T1/cmtt/m/n/12 Equipment\T1/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 547--550
+Underfull \hbox (badness 10000) in paragraph at lines 292--295
 \T1/cmtt/m/n/12 EquipmentImage\T1/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 547--550
+Underfull \hbox (badness 10000) in paragraph at lines 292--295
 \T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 4391) in paragraph at lines 552--553
+Underfull \hbox (badness 4391) in paragraph at lines 297--298
 []|\T1/cmr/m/n/12 Gestion des in-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 553--558
-[]|\T1/cmr/m/n/12 Planning (heb-do-ma-
+Underfull \hbox (badness 1810) in paragraph at lines 298--302
+\T1/cmr/m/n/12 clô-ture in-ter-ven-tions ; dé-cla-ra-
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 553--558
-\T1/cmr/m/n/12 daire/mensuel), af-fec-ta-tion
- []
-
-
-Underfull \hbox (badness 4144) in paragraph at lines 553--558
-\T1/cmr/m/n/12 tech-ni-cien (vé-ri-fi-ca-tion dis-po-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 553--558
-\T1/cmr/m/n/12 ni-bi-lité), dé-mar-rage/clôture
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 553--558
-\T1/cmr/m/n/12 panne $\OMS/cmsy/m/n/12 !$ \T1/cmr/m/n/12 cu-ra-tive, vé-ri-fi-c
-a-
- []
-
-
-Underfull \hbox (badness 4505) in paragraph at lines 553--558
-\T1/cmr/m/n/12 tion cou-ver-ture contrac-tuelle,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 558--560
+Underfull \hbox (badness 10000) in paragraph at lines 302--304
 []|\T1/cmtt/m/n/12 Intervention\T1/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 1286) in paragraph at lines 558--560
+Underfull \hbox (badness 1286) in paragraph at lines 302--304
 \T1/cmtt/m/n/12 Panne\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 PieceJointe\T1/cmr/m/n/12
  ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 558--560
+Underfull \hbox (badness 10000) in paragraph at lines 302--304
 \T1/cmtt/m/n/12 Contract\T1/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 562--563
+Underfull \hbox (badness 10000) in paragraph at lines 306--307
 []|\T1/cmr/m/n/12 Facturation,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 562--563
+Underfull \hbox (badness 10000) in paragraph at lines 306--307
 \T1/cmr/m/n/12 his-to-rique et
  []
 
 
-Underfull \hbox (badness 6608) in paragraph at lines 563--568
-\T1/cmr/m/n/12 to-rique tech-ni-cien, his-to-rique
+Underfull \hbox (badness 5022) in paragraph at lines 307--310
+[]|\T1/cmr/m/n/12 Génération fac-tures (cu-ra-tive
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 568--570
+Underfull \hbox (badness 1769) in paragraph at lines 307--310
+\T1/cmr/m/n/12 + hors contrat, TVA 19%) ;
+ []
+
+
+Underfull \hbox (badness 7722) in paragraph at lines 307--310
+\T1/cmr/m/n/12 rôle ; da-sh-boards ad-mi-nis-tra-
+ []
+
+
+Underfull \hbox (badness 10000) in paragraph at lines 310--312
 []|\T1/cmtt/m/n/12 Facture\T1/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 568--570
+Underfull \hbox (badness 10000) in paragraph at lines 310--312
 \T1/cmtt/m/n/12 LigneFacture\T1/cmr/m/n/12 ,
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 568--570
+Underfull \hbox (badness 10000) in paragraph at lines 310--312
 \T1/cmtt/m/n/12 Intervention\T1/cmr/m/n/12 ,
  []
 
 
-Overfull \hbox (13.01125pt too wide) in alignment at lines 540--571
+Overfull \hbox (13.01125pt too wide) in alignment at lines 286--313
  [] [] [] [] 
  []
 
 
-ignored: Infinite glue shrinkage found in box being split [27]
+ignored: Infinite glue shrinkage found in box being split [17]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 582.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 582.
+(Font)              using `T1/cmr/m/scsl' instead on input line 324.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 603.
+(Font)              using `T1/cmr/m/scsl' instead on input line 324.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 603.
+(Font)              using `T1/cmr/m/scsl' instead on input line 345.
 
-[28]
-<Figures/Chapitre2/architecture.png, id=1090, 1741.50626pt x 1296.845pt>
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 345.
+
+[18]
+<Figures/Chapitre2/architecture.png, id=812, 1109.14375pt x 1309.89375pt>
 File: Figures/Chapitre2/architecture.png Graphic file (type png)
 <use Figures/Chapitre2/architecture.png>
 Package pdftex.def Info: Figures/Chapitre2/architecture.png  used on input line
- 646.
-(pdftex.def)             Requested size: 364.19667pt x 271.19777pt.
+ 388.
+(pdftex.def)             Requested size: 364.19667pt x 430.10765pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 647.
+(Font)              using `T1/cmr/m/scsl' instead on input line 389.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 647.
+(Font)              using `T1/cmr/m/scsl' instead on input line 389.
 
-[29]) (chapitres/Chapitre3.tex [30 <./Figures/Chapitre2/architecture.png (PNG c
+[19]) (chapitres/Chapitre3.tex [20 <./Figures/Chapitre2/architecture.png (PNG c
 opy)>]
 Chapitre 3.
 
@@ -2006,7 +1830,7 @@ Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
 
 \openout4 = `main.mtc'.
 
-(main.mtc4) [31
+(main.mtc4) [21
 
 ]
 
@@ -2018,343 +1842,54 @@ LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
 (Font)              using `T1/cmr/m/scsl' instead on input line 33.
 
 
-Overfull \hbox (3.21933pt too wide) in paragraph at lines 36--36
-[]|\T1/cmr/bx/n/12 Priorité| 
+Underfull \hbox (badness 2970) in paragraph at lines 60--60
+\T1/cmr/m/n/12 un contrat cou-vrant des ins-tal-la-tions
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 36--37
-[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
- []
-
-
-Overfull \hbox (3.21933pt too wide) in paragraph at lines 41--41
-[]|\T1/cmr/bx/n/12 Priorité| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 41--42
-[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
- []
-
-
-Underfull \hbox (badness 1354) in paragraph at lines 49--51
-\T1/cmr/m/n/12 je veux me connec-ter
- []
-
-
-Underfull \hbox (badness 1558) in paragraph at lines 52--54
-[]|\T1/cmr/m/n/12 Connexion réus-sie avec
- []
-
-
-Underfull \hbox (badness 1796) in paragraph at lines 52--54
-\T1/cmr/m/n/12 fi-chée si iden-ti-fiant ou
- []
-
-
-Underfull \hbox (badness 1939) in paragraph at lines 56--57
-[]|\T1/cmr/m/n/12 En tant qu'uti-li-sa-teur
- []
-
-
-Underfull \hbox (badness 4303) in paragraph at lines 58--59
-\T1/cmr/m/n/12 tion vers la page de
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 61--63
-[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-
- []
-
-
-Underfull \hbox (badness 1173) in paragraph at lines 61--63
-\T1/cmr/m/n/12 tra-teur, je veux gé-rer
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 61--63
-\T1/cmr/m/n/12 les comptes uti-li-sa-
- []
-
-
-Underfull \hbox (badness 1490) in paragraph at lines 61--63
-\T1/cmr/m/n/12 teurs in-ternes (CRUD
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 61--63
-\T1/cmr/m/n/12 + désac-ti-va-tion +
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 63--63
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 1038) in paragraph at lines 64--66
-[]|\T1/cmr/m/n/12 CRUD com-plet ; désac-
- []
-
-
-Underfull \hbox (badness 1237) in paragraph at lines 64--66
-\T1/cmr/m/n/12 ti-va-tion lo-gique (\T1/cmtt/m/n/12 actif
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 64--66
-\T1/cmtt/m/n/12 = false\T1/cmr/m/n/12 ) ; uti-li-sa-teur
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 64--66
-\T1/cmr/m/n/12 désac-tivé vi-sible avec
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 70--72
-[]|\T1/cmr/m/n/12 Chaque rôle n'ac-cède
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 76--76
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 77--79
-[]|\T1/cmr/m/n/12 Formulaire adapté au
- []
-
-
-Underfull \hbox (badness 1924) in paragraph at lines 77--79
-\T1/cmr/m/n/12 type ; ville sé-lec-tion-née
- []
-
-
-Underfull \hbox (badness 1237) in paragraph at lines 77--79
-\T1/cmr/m/n/12 de-puis liste tu-ni-sienne ;
- []
-
-
-Underfull \hbox (badness 6125) in paragraph at lines 77--79
-\T1/cmr/m/n/12 mot de passe por-tail
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 83--83
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Overfull \hbox (3.00002pt too wide) in paragraph at lines 83--84
-[]|\T1/cmr/m/n/12 Moyenne| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 84--86
-[]|\T1/cmr/m/n/12 Modifications en-re-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 84--86
-\T1/cmr/m/n/12 gis-trées ; sup-pres-sion
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 84--86
-\T1/cmr/m/n/12 si au-cune contrainte
- []
-
-
-Underfull \hbox (badness 2401) in paragraph at lines 88--90
-\T1/cmr/m/n/12 teur, je veux ajou-ter
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 90--90
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--93
-[]|\T1/cmr/m/n/12 Équipement ajouté
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--93
-\T1/cmr/m/n/12 au ca-ta-logue glo-bal ;
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--93
-\T1/cmr/m/n/12 type \T1/cmtt/m/n/12 CLIMATISEUR \T1/cmr/m/n/12 ou
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 91--93
-\T1/cmtt/m/n/12 SYSTEME_SURPRESSION \T1/cmr/m/n/12 ;
- []
-
-
-Underfull \hbox (badness 8019) in paragraph at lines 91--93
-\T1/cmr/m/n/12 plu-sieurs images ; une
- []
-
-
-Underfull \hbox (badness 7291) in paragraph at lines 91--93
-\T1/cmr/m/n/12 image prin-ci-pale dé-si-
- []
-
-
-Underfull \hbox (badness 2134) in paragraph at lines 95--97
-\T1/cmr/m/n/12 teur, je veux af-fec-ter
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 97--97
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--100
-[]|\T1/cmr/m/n/12 Enregistrement
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--100
-\T1/cmtt/m/n/12 ClientEquipement
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--100
-\T1/cmr/m/n/12 créé avec da-teA-chat,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 98--100
-\T1/cmr/m/n/12 da-teIns-tal-la-tion, lo-ca-li-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 102--104
-[]|\T1/cmr/m/n/12 En tant qu'ad-mi-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 102--104
-\T1/cmr/m/n/12 nis-tra-teur, je veux
- []
-
-
-Underfull \hbox (badness 1454) in paragraph at lines 102--104
-\T1/cmr/m/n/12 créer un contrat cou-
- []
-
-
-Underfull \hbox (badness 1052) in paragraph at lines 102--104
-\T1/cmr/m/n/12 vrant des ins-tal-la-tions
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 102--104
-\T1/cmtt/m/n/12 ClientEquipement
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 104--104
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 3579) in paragraph at lines 105--107
-\T1/cmr/m/n/12 et à un en-semble de
- []
-
-
-Underfull \hbox (badness 3168) in paragraph at lines 105--107
-\T1/cmr/m/n/12 rio-di-cité choi-sie ; dates
- []
-
-
-Underfull \hbox (badness 1184) in paragraph at lines 109--111
-[]|\T1/cmr/m/n/12 En tant que sys-tème,
- []
-
-
-Underfull \hbox (badness 1708) in paragraph at lines 109--111
-\T1/cmr/m/n/12 ti-que-ment le plan-ning
- []
-
-
-Underfull \hbox (badness 1888) in paragraph at lines 112--114
-\T1/cmr/m/n/12 créées se-lon pé-rio-di-cité
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 112--114
-\T1/cmr/m/n/12 et ins-tal-la-tions cou-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 112--114
-\T1/cmr/m/n/12 vertes ; pré-vi-sua-li-sa-tion
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 117--117
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Overfull \hbox (3.00002pt too wide) in paragraph at lines 117--118
-[]|\T1/cmr/m/n/12 Moyenne| 
- []
-
-
-Underfull \hbox (badness 1168) in paragraph at lines 118--119
-[]|\T1/cmr/m/n/12 Détail du contrat avec
- []
-
-
-ignored: Infinite glue shrinkage found in box being split [32]
-ignored: Infinite glue shrinkage fo
-und in box being split [33]
-<Figures/Chapitre3/use_case_sprint1.png, id=1121, 1617.04124pt x 1201.48875pt>
+ignored: Infinite glue shrinkage found in box being split [22]
+<Figures/Chapitre3/use_case_sprint1.png, id=839, 600.2425pt x 310.15875pt>
 File: Figures/Chapitre3/use_case_sprint1.png Graphic file (type png)
 <use Figures/Chapitre3/use_case_sprint1.png>
 Package pdftex.def Info: Figures/Chapitre3/use_case_sprint1.png  used on input 
-line 130.
-(pdftex.def)             Requested size: 364.19667pt x 270.5983pt.
+line 74.
+(pdftex.def)             Requested size: 318.66948pt x 164.66731pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 131.
+(Font)              using `T1/cmr/m/scsl' instead on input line 75.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 131.
+(Font)              using `T1/cmr/m/scsl' instead on input line 75.
 
-[34]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 150.
-
+[23 <./Figures/Chapitre3/use_case_sprint1.png (PNG copy)>]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 150.
-
-[35 <./Figures/Chapitre3/use_case_sprint1.png (PNG copy)>]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 195.
+(Font)              using `T1/cmr/m/scsl' instead on input line 94.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 195.
+(Font)              using `T1/cmr/m/scsl' instead on input line 94.
 
-[36]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 139.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 139.
+
+[24]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 185.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 185.
+
+[25]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
 (Font)              using `T1/cmr/m/scsl' instead on input line 227.
@@ -2363,314 +1898,179 @@ LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
 (Font)              using `T1/cmr/m/scsl' instead on input line 227.
 
-[37]
 
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 292.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 292.
-
-[38]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 334.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 334.
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 358--360
+Underfull \hbox (badness 10000) in paragraph at lines 251--253
 []\T1/cmr/m/n/12 Créer un équi-pe-ment avec : ré-fé-rence, type (\T1/cmtt/m/n/1
 2 CLIMATISEUR \T1/cmr/m/n/12 ou
  []
 
-[39]
+[26]
 LaTeX Font Info:    Font shape `T1/cmtt/bx/n' in size <12> not available
-(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 373.
+(Font)              Font shape `T1/cmtt/m/n' tried instead on input line 266.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 377.
+(Font)              using `T1/cmr/m/scsl' instead on input line 270.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 377.
+(Font)              using `T1/cmr/m/scsl' instead on input line 270.
 
-[40]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 425.
-
+[27]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 425.
+(Font)              using `T1/cmr/m/scsl' instead on input line 307.
 
 
-Underfull \hbox (badness 1496) in paragraph at lines 432--434
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 307.
+
+
+Underfull \hbox (badness 1496) in paragraph at lines 314--316
 []|\T1/cmr/m/n/12 Ce cas d'uti-li-sa-tion per-met à l'ad-mi-nis-tra-teur de cré
 er
  []
 
 
-Underfull \hbox (badness 3942) in paragraph at lines 432--434
+Underfull \hbox (badness 3942) in paragraph at lines 314--316
 \T1/cmr/m/n/12 un contrat de main-te-nance cou-vrant des ins-tal-la-tions
  []
 
-[41]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 489.
+(Font)              using `T1/cmr/m/scsl' instead on input line 350.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 489.
+(Font)              using `T1/cmr/m/scsl' instead on input line 350.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 503--505
+Underfull \hbox (badness 10000) in paragraph at lines 364--366
 []|\T1/cmr/m/n/12 Un contrat va-lide vient d'être en-re-gis-tré avec ses
  []
 
-
-Underfull \hbox (badness 1297) in paragraph at lines 515--517
-[]\T1/cmr/m/n/12 Le Sys-tème re-çoit les don-nées du contrat (da-te-De-but, da-
-te-Fin, per-io-di-cite,
- []
-
-[42]
-Underfull \hbox (badness 10000) in paragraph at lines 529--531
+[28]
+Underfull \hbox (badness 10000) in paragraph at lines 380--382
 []\T1/cmr/m/n/12 Une in-ter-ven-tion pré-ven-tive est gé-né-rée pour chaque cou
 ple (date,
  []
 
-<Figures/Chapitre3/class_diagram_sprint1.png, id=1197, 1247.66125pt x 735.74875
-pt>
+<Figures/Chapitre3/class_diagram_sprint1.png, id=872, 563.10374pt x 809.0225pt>
+
 File: Figures/Chapitre3/class_diagram_sprint1.png Graphic file (type png)
 <use Figures/Chapitre3/class_diagram_sprint1.png>
 Package pdftex.def Info: Figures/Chapitre3/class_diagram_sprint1.png  used on i
-nput line 542.
-(pdftex.def)             Requested size: 364.19667pt x 214.765pt.
+nput line 393.
+(pdftex.def)             Requested size: 318.66948pt x 457.83925pt.
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 543.
+(Font)              using `T1/cmr/m/scsl' instead on input line 394.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 543.
+(Font)              using `T1/cmr/m/scsl' instead on input line 394.
 
-
-Underfull \hbox (badness 6380) in paragraph at lines 547--550
+[29]
+Underfull \hbox (badness 6380) in paragraph at lines 398--401
 []\T1/cmr/m/n/12 Les en-ti-tés im-pli-quées dans ce sprint sont : \T1/cmtt/m/n/
 12 User\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 Client\T1/cmr/m/n/12 , \T1/cmtt/m/n/12 
 Equipment\T1/cmr/m/n/12 ,
  []
 
-[43 <./Figures/Chapitre3/class_diagram_sprint1.png (PNG copy)>]
-<Figures/Chapitre3/seq_connexion_sprint1.png, id=1208, 1258.7025pt x 1433.355pt
->
+<Figures/Chapitre3/seq_connexion_sprint1.png, id=877, 978.65625pt x 1156.32pt>
 File: Figures/Chapitre3/seq_connexion_sprint1.png Graphic file (type png)
 <use Figures/Chapitre3/seq_connexion_sprint1.png>
 Package pdftex.def Info: Figures/Chapitre3/seq_connexion_sprint1.png  used on i
-nput line 557.
-(pdftex.def)             Requested size: 364.19667pt x 414.72185pt.
+nput line 408.
+(pdftex.def)             Requested size: 318.66948pt x 376.52295pt.
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 409.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 558.
+(Font)              using `T1/cmr/m/scsl' instead on input line 409.
 
+[30 <./Figures/Chapitre3/class_diagram_sprint1.png (PNG copy)>]
+<Figures/Chapitre3/seq_ajoutequip_sprint1.png, id=882, 1252.68pt x 924.45375pt>
 
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 558.
-
-[44 <./Figures/Chapitre3/seq_connexion_sprint1.png (PNG copy)>]
-<Figures/Chapitre3/seq_deconnexion_sprint1.png, id=1213, 624.3325pt x 382.42876
-pt>
-File: Figures/Chapitre3/seq_deconnexion_sprint1.png Graphic file (type png)
-<use Figures/Chapitre3/seq_deconnexion_sprint1.png>
-Package pdftex.def Info: Figures/Chapitre3/seq_deconnexion_sprint1.png  used on
- input line 599.
-(pdftex.def)             Requested size: 364.19667pt x 223.08678pt.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 600.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 600.
-
-[45 <./Figures/Chapitre3/seq_deconnexion_sprint1.png (PNG copy)>] [46]
-<Figures/Chapitre3/seq_modification_sprint1.png, id=1245, 1046.91125pt x 659.46
-375pt>
-File: Figures/Chapitre3/seq_modification_sprint1.png Graphic file (type png)
-<use Figures/Chapitre3/seq_modification_sprint1.png>
-Package pdftex.def Info: Figures/Chapitre3/seq_modification_sprint1.png  used o
-n input line 672.
-(pdftex.def)             Requested size: 364.19667pt x 229.407pt.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 673.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 673.
-
-[47 <./Figures/Chapitre3/seq_modification_sprint1.png (PNG copy)>]
-<Figures/Chapitre3/seq_ctrl_dacces_sprint1.png, id=1251, 1234.6125pt x 875.27pt
->
-File: Figures/Chapitre3/seq_ctrl_dacces_sprint1.png Graphic file (type png)
-<use Figures/Chapitre3/seq_ctrl_dacces_sprint1.png>
-Package pdftex.def Info: Figures/Chapitre3/seq_ctrl_dacces_sprint1.png  used on
- input line 728.
-(pdftex.def)             Requested size: 364.19667pt x 258.18906pt.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 729.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 729.
-
-[48] [49 <./Figures/Chapitre3/seq_ctrl_dacces_sprint1.png (PNG copy)>]
-<Figures/Chapitre3/seq_ajoutequip_sprint1.png, id=1274, 1370.11874pt x 1020.813
-75pt>
 File: Figures/Chapitre3/seq_ajoutequip_sprint1.png Graphic file (type png)
 <use Figures/Chapitre3/seq_ajoutequip_sprint1.png>
 Package pdftex.def Info: Figures/Chapitre3/seq_ajoutequip_sprint1.png  used on 
-input line 787.
-(pdftex.def)             Requested size: 364.19667pt x 271.3399pt.
+input line 417.
+(pdftex.def)             Requested size: 318.66948pt x 235.1754pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 788.
+(Font)              using `T1/cmr/m/scsl' instead on input line 418.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 788.
+(Font)              using `T1/cmr/m/scsl' instead on input line 418.
 
-[50] [51 <./Figures/Chapitre3/seq_ajoutequip_sprint1.png (PNG copy)>]
-Underfull \hbox (badness 4303) in paragraph at lines 825--827
-[]\T1/cmr/m/n/12 Le Sys-tème crée une in-ter-ven-tion pré-ven-tive pour chaque 
-couple (date,
- []
-
-<Figures/Chapitre3/seq_consultercontrat_sprint1.png, id=1290, 1458.44875pt x 10
-64.97874pt>
-File: Figures/Chapitre3/seq_consultercontrat_sprint1.png Graphic file (type png
-)
-<use Figures/Chapitre3/seq_consultercontrat_sprint1.png>
-Package pdftex.def Info: Figures/Chapitre3/seq_consultercontrat_sprint1.png  us
-ed on input line 854.
-(pdftex.def)             Requested size: 364.19667pt x 265.93527pt.
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 855.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 855.
-
-[52]
-<Figures/Chapitre3/login.png, id=1306, 374.5995pt x 508.90125pt>
+[31 <./Figures/Chapitre3/seq_connexion_sprint1.png (PNG copy)>]
+<Figures/Chapitre3/login.png, id=887, 374.5995pt x 508.90125pt>
 File: Figures/Chapitre3/login.png Graphic file (type png)
 <use Figures/Chapitre3/login.png>
-Package pdftex.def Info: Figures/Chapitre3/login.png  used on input line 868.
-(pdftex.def)             Requested size: 364.19667pt x 494.7751pt.
+Package pdftex.def Info: Figures/Chapitre3/login.png  used on input line 427.
+(pdftex.def)             Requested size: 336.88313pt x 457.66522pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 869.
+(Font)              using `T1/cmr/m/scsl' instead on input line 428.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 869.
+(Font)              using `T1/cmr/m/scsl' instead on input line 428.
 
-[53 <./Figures/Chapitre3/seq_consultercontrat_sprint1.png (PNG copy)>]
-<Figures/Chapitre3/dashboardadmin.png, id=1311, 1154.51324pt x 520.94624pt>
+[32 <./Figures/Chapitre3/seq_ajoutequip_sprint1.png (PNG copy)>]
+<Figures/Chapitre3/dashboardadmin.png, id=892, 1154.51324pt x 520.94624pt>
 File: Figures/Chapitre3/dashboardadmin.png Graphic file (type png)
 <use Figures/Chapitre3/dashboardadmin.png>
 Package pdftex.def Info: Figures/Chapitre3/dashboardadmin.png  used on input li
-ne 875.
-(pdftex.def)             Requested size: 364.19667pt x 164.32945pt.
+ne 434.
+(pdftex.def)             Requested size: 336.88313pt x 152.00851pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 876.
+(Font)              using `T1/cmr/m/scsl' instead on input line 435.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 876.
+(Font)              using `T1/cmr/m/scsl' instead on input line 435.
 
-[54 <./Figures/Chapitre3/login.png>]
-<Figures/Chapitre3/gestclient.png, id=1317, 1153.30875pt x 507.0945pt>
+[33 <./Figures/Chapitre3/login.png>]
+<Figures/Chapitre3/gestclient.png, id=899, 1153.30875pt x 507.0945pt>
 File: Figures/Chapitre3/gestclient.png Graphic file (type png)
 <use Figures/Chapitre3/gestclient.png>
-Package pdftex.def Info: Figures/Chapitre3/gestclient.png  used on input line 8
-82.
-(pdftex.def)             Requested size: 204.85846pt x 90.07373pt.
-<Figures/Chapitre3/ajoutclient.png, id=1318, 826.287pt x 386.6445pt>
-File: Figures/Chapitre3/ajoutclient.png Graphic file (type png)
-<use Figures/Chapitre3/ajoutclient.png>
-Package pdftex.def Info: Figures/Chapitre3/ajoutclient.png  used on input line 
-884.
-(pdftex.def)             Requested size: 204.85846pt x 95.85852pt.
+Package pdftex.def Info: Figures/Chapitre3/gestclient.png  used on input line 4
+41.
+(pdftex.def)             Requested size: 336.88313pt x 148.12143pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 885.
+(Font)              using `T1/cmr/m/scsl' instead on input line 442.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 885.
+(Font)              using `T1/cmr/m/scsl' instead on input line 442.
 
-<Figures/Chapitre3/gestequip.png, id=1319, 1154.51324pt x 516.12825pt>
-File: Figures/Chapitre3/gestequip.png Graphic file (type png)
-<use Figures/Chapitre3/gestequip.png>
-Package pdftex.def Info: Figures/Chapitre3/gestequip.png  used on input line 89
-1.
-(pdftex.def)             Requested size: 204.85846pt x 91.57599pt.
-<Figures/Chapitre3/ajoutequip.png, id=1320, 495.0495pt x 443.85825pt>
-File: Figures/Chapitre3/ajoutequip.png Graphic file (type png)
-<use Figures/Chapitre3/ajoutequip.png>
-Package pdftex.def Info: Figures/Chapitre3/ajoutequip.png  used on input line 8
-93.
-(pdftex.def)             Requested size: 204.85846pt x 183.66945pt.
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 894.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 894.
-
-<Figures/Chapitre3/gestcontrat.png, id=1321, 1138.2525pt x 507.0945pt>
+<Figures/Chapitre3/gestcontrat.png, id=900, 1138.2525pt x 507.0945pt>
 File: Figures/Chapitre3/gestcontrat.png Graphic file (type png)
 <use Figures/Chapitre3/gestcontrat.png>
 Package pdftex.def Info: Figures/Chapitre3/gestcontrat.png  used on input line 
-900.
-(pdftex.def)             Requested size: 227.62206pt x 101.40161pt.
-<Figures/Chapitre3/creercontrat.png, id=1322, 660.66824pt x 495.0495pt>
-File: Figures/Chapitre3/creercontrat.png Graphic file (type png)
-<use Figures/Chapitre3/creercontrat.png>
-Package pdftex.def Info: Figures/Chapitre3/creercontrat.png  used on input line
- 902.
-(pdftex.def)             Requested size: 204.85846pt x 153.50153pt.
+448.
+(pdftex.def)             Requested size: 336.88313pt x 150.07904pt.
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 903.
+(Font)              using `T1/cmr/m/scsl' instead on input line 449.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 903.
+(Font)              using `T1/cmr/m/scsl' instead on input line 449.
 
-[55 <./Figures/Chapitre3/dashboardadmin.png> <./Figures/Chapitre3/gestclient.pn
-g> <./Figures/Chapitre3/ajoutclient.png> <./Figures/Chapitre3/gestequip.png> <.
-/Figures/Chapitre3/ajoutequip.png>]) (chapitres/Chapitre4.tex [56 <./Figures/Ch
-apitre3/gestcontrat.png> <./Figures/Chapitre3/creercontrat.png>]
+) (chapitres/Chapitre4.tex [34 <./Figures/Chapitre3/dashboardadmin.png> <./Figu
+res/Chapitre3/gestclient.png> <./Figures/Chapitre3/gestcontrat.png>] [35]
 Chapitre 4.
 
 Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
@@ -2681,7 +2081,7 @@ Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
 
 \openout4 = `main.mtc'.
 
-(main.mtc5) [57
+(main.mtc5) [36
 
 ]
 
@@ -2693,442 +2093,165 @@ LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
 (Font)              using `T1/cmr/m/scsl' instead on input line 31.
 
 
-Overfull \hbox (3.21933pt too wide) in paragraph at lines 34--34
-[]|\T1/cmr/bx/n/12 Priorité| 
+Underfull \hbox (badness 10000) in paragraph at lines 58--58
+[]|\T1/cmr/m/n/12 En tant qu'ad-mi-nis-tra-teur, je veux
  []
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 34--35
-[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
+Underfull \hbox (badness 3417) in paragraph at lines 58--58
+\T1/cmr/m/n/12 prendre en charge une panne et la
  []
 
 
-Overfull \hbox (3.21933pt too wide) in paragraph at lines 39--39
-[]|\T1/cmr/bx/n/12 Priorité| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 39--40
-[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 48--48
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 49--51
-\T1/cmr/m/n/12 par date ; tech-ni-cien
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 49--51
-\T1/cmr/m/n/12 in-dis-po-nible si-gnalé
- []
-
-
-Underfull \hbox (badness 5681) in paragraph at lines 49--51
-\T1/cmr/m/n/12 et non sé-lec-tion-nable ;
- []
-
-
-Underfull \hbox (badness 2913) in paragraph at lines 53--55
-\T1/cmr/m/n/12 vue heb-do-ma-daire ou
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 55--55
-[]|\T1/cmr/m/n/12 Admin /
- []
-
-
-Underfull \hbox (badness 1394) in paragraph at lines 56--58
-[]|\T1/cmr/m/n/12 Vues 1 se-maine, 2 se-
- []
-
-
-Underfull \hbox (badness 1888) in paragraph at lines 56--58
-\T1/cmr/m/n/12 maines, men-suelle ; ad-
- []
-
-
-Underfull \hbox (badness 1783) in paragraph at lines 62--63
-\T1/cmr/m/n/12 seules ses in-ter-ven-tions
- []
-
-
-Underfull \hbox (badness 1472) in paragraph at lines 67--69
-[]|\T1/cmr/m/n/12 Saisie : compte rendu,
- []
-
-
-Underfull \hbox (badness 1454) in paragraph at lines 73--75
-[]|\T1/cmr/m/n/12 Saisie : diag-nos-tic, ac-
- []
-
-
-Underfull \hbox (badness 4328) in paragraph at lines 73--75
-\T1/cmr/m/n/12 tions, ma-té-riel, du-rée ;
- []
-
-
-Underfull \hbox (badness 4084) in paragraph at lines 77--79
-\T1/cmr/m/n/12 pe-ments, sans champ
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--82
-[]|\T1/cmr/m/n/12 Sélection équi-pe-ment
- []
-
-
-Underfull \hbox (badness 2717) in paragraph at lines 80--82
-\T1/cmr/m/n/12 af-fecté au client ; des-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--82
-\T1/cmr/m/n/12 crip-tion obli-ga-toire ;
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--82
-\T1/cmr/m/n/12 pièces jointes (image,
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--82
-\T1/cmr/m/n/12 PDF, au-dio) ; au-cun
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 80--82
-\T1/cmr/m/n/12 champ de prio-rité ;
- []
-
-
-Underfull \hbox (badness 1552) in paragraph at lines 84--86
-\T1/cmr/m/n/12 teur, je veux prendre
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 86--86
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 87--89
-[]|\T1/cmtt/m/n/12 Panne \T1/cmr/m/n/12 passe à
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 87--89
-\T1/cmtt/m/n/12 PRISE_EN_CHARGE \T1/cmr/m/n/12 puis
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 87--89
-\T1/cmtt/m/n/12 CONVERTIE \T1/cmr/m/n/12 ; in-ter-ven-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 87--89
-\T1/cmr/m/n/12 tion cu-ra-tive créée ;
- []
-
-
-Underfull \hbox (badness 1107) in paragraph at lines 87--89
-\T1/cmr/m/n/12 cou-ver-ture contrac-tuelle
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 87--89
-\T1/cmr/m/n/12 dé-tec-tée au-to-ma-ti-que-
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 92--92
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 93--95
-[]|\T1/cmr/m/n/12 Formulaire avec
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 93--95
-\T1/cmr/m/n/12 client, ins-tal-la-tion
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 93--95
-\T1/cmtt/m/n/12 ClientEquipement\T1/cmr/m/n/12 ,
- []
-
-
-Underfull \hbox (badness 2735) in paragraph at lines 93--95
-\T1/cmr/m/n/12 date, des-crip-tion ; cou-
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 98--98
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Overfull \hbox (3.00002pt too wide) in paragraph at lines 98--99
-[]|\T1/cmr/m/n/12 Moyenne| 
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 103--103
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 2111) in paragraph at lines 104--105
-[]|\T1/cmr/m/n/12 Vue fil-trée sur sta-tuts
- []
-
-
-ignored: Infinite glue shrinkage found in box being split [58]
-ignored: Infinite glue shrinkage fo
-und in box being split [59]
-<Figures/Chapitre4/use_case_sprint2.png, id=1360, 996.72375pt x 1145.27875pt>
+ignored: Infinite glue shrinkage found in box being split [37]
+<Figures/Chapitre4/use_case_sprint2.png, id=929, 728.7225pt x 252.945pt>
 File: Figures/Chapitre4/use_case_sprint2.png Graphic file (type png)
 <use Figures/Chapitre4/use_case_sprint2.png>
 Package pdftex.def Info: Figures/Chapitre4/use_case_sprint2.png  used on input 
-line 115.
-(pdftex.def)             Requested size: 364.19667pt x 418.4689pt.
+line 71.
+(pdftex.def)             Requested size: 318.66948pt x 110.60913pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 116.
+(Font)              using `T1/cmr/m/scsl' instead on input line 72.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 116.
-
-[60]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 137.
+(Font)              using `T1/cmr/m/scsl' instead on input line 72.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 137.
-
-[61 <./Figures/Chapitre4/use_case_sprint2.png (PNG copy)>] [62]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 198.
+(Font)              using `T1/cmr/m/scsl' instead on input line 93.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 198.
+(Font)              using `T1/cmr/m/scsl' instead on input line 93.
+
+[38 <./Figures/Chapitre4/use_case_sprint2.png (PNG copy)>]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 131.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 240.
+(Font)              using `T1/cmr/m/scsl' instead on input line 131.
+
+[39]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 164.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 240.
+(Font)              using `T1/cmr/m/scsl' instead on input line 164.
 
-[63]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 285.
-
+[40]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 285.
-
-[64]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 339.
+(Font)              using `T1/cmr/m/scsl' instead on input line 199.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 339.
-
-[65]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 372.
+(Font)              using `T1/cmr/m/scsl' instead on input line 199.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 372.
-
-[66]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 418.
+(Font)              using `T1/cmr/m/scsl' instead on input line 242.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 418.
+(Font)              using `T1/cmr/m/scsl' instead on input line 242.
+
+[41]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 269.
 
 
-Underfull \hbox (badness 10000) in paragraph at lines 431--432
-[]|\T1/cmr/m/n/12 Une in-ter-ven-tion cu-ra-tive existe avec un
- []
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 269.
 
-<Figures/Chapitre4/class_diagram_sprint2.png, id=1426, 866.23625pt x 1230.5975p
-t>
+[42]
+<Figures/Chapitre4/class_diagram_sprint2.png, id=951, 654.445pt x 543.02875pt>
 File: Figures/Chapitre4/class_diagram_sprint2.png Graphic file (type png)
 <use Figures/Chapitre4/class_diagram_sprint2.png>
 Package pdftex.def Info: Figures/Chapitre4/class_diagram_sprint2.png  used on i
-nput line 458.
-(pdftex.def)             Requested size: 364.19667pt x 517.39198pt.
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 459.
+nput line 307.
+(pdftex.def)             Requested size: 318.66948pt x 264.41264pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 459.
-
-[67]
-<Figures/Chapitre4/seq_genererplanning_sprint2.png, id=1441, 1187.43625pt x 629
-.35126pt>
-File: Figures/Chapitre4/seq_genererplanning_sprint2.png Graphic file (type png)
-
-<use Figures/Chapitre4/seq_genererplanning_sprint2.png>
-Package pdftex.def Info: Figures/Chapitre4/seq_genererplanning_sprint2.png  use
-d on input line 472.
-(pdftex.def)             Requested size: 364.19667pt x 193.0226pt.
+(Font)              using `T1/cmr/m/scsl' instead on input line 308.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 473.
+(Font)              using `T1/cmr/m/scsl' instead on input line 308.
 
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 473.
-
-[68 <./Figures/Chapitre4/class_diagram_sprint2.png (PNG copy)>] [69 <./Figures/
-Chapitre4/seq_genererplanning_sprint2.png (PNG copy)>]
-<Figures/Chapitre4/seq_consulterplanning_sprint2.png, id=1452, 1208.515pt x 684
-.5575pt>
-File: Figures/Chapitre4/seq_consulterplanning_sprint2.png Graphic file (type pn
-g)
-<use Figures/Chapitre4/seq_consulterplanning_sprint2.png>
-Package pdftex.def Info: Figures/Chapitre4/seq_consulterplanning_sprint2.png  u
-sed on input line 541.
-(pdftex.def)             Requested size: 364.19667pt x 206.29848pt.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 542.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 542.
-
-[70] [71 <./Figures/Chapitre4/seq_consulterplanning_sprint2.png (PNG copy)>]
-<Figures/Chapitre4/seq_declarerpanne_sprint2.png, id=1472, 1089.06876pt x 1129.
-21875pt>
-File: Figures/Chapitre4/seq_declarerpanne_sprint2.png Graphic file (type png)
-<use Figures/Chapitre4/seq_declarerpanne_sprint2.png>
-Package pdftex.def Info: Figures/Chapitre4/seq_declarerpanne_sprint2.png  used 
-on input line 591.
-(pdftex.def)             Requested size: 364.19667pt x 377.62294pt.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 592.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 592.
-
-[72 <./Figures/Chapitre4/seq_declarerpanne_sprint2.png (PNG copy)>]
-Underfull \hbox (badness 5475) in paragraph at lines 617--619
-[]\T1/cmr/m/n/12 L'administrateur sai-sit les in-for-ma-tions de l'in-ter-ven-t
-ion cu-ra-tive (client,
- []
-
-[73]
-<Figures/Chapitre4/seq_cloturercurative_sprint2.png, id=1497, 1279.78125pt x 11
-56.32pt>
+<Figures/Chapitre4/seq_cloturercurative_sprint2.png, id=952, 1182.4175pt x 1086
+.0575pt>
 File: Figures/Chapitre4/seq_cloturercurative_sprint2.png Graphic file (type png
 )
 <use Figures/Chapitre4/seq_cloturercurative_sprint2.png>
 Package pdftex.def Info: Figures/Chapitre4/seq_cloturercurative_sprint2.png  us
-ed on input line 649.
-(pdftex.def)             Requested size: 364.19667pt x 329.0606pt.
+ed on input line 323.
+(pdftex.def)             Requested size: 318.66948pt x 292.69257pt.
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 324.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 650.
+(Font)              using `T1/cmr/m/scsl' instead on input line 324.
 
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 650.
-
-<Figures/Chapitre4/gestintervention.png, id=1498, 1132.23pt x 510.10574pt>
+[43 <./Figures/Chapitre4/class_diagram_sprint2.png (PNG copy)>]
+<Figures/Chapitre4/gestintervention.png, id=957, 1132.23pt x 510.10574pt>
 File: Figures/Chapitre4/gestintervention.png Graphic file (type png)
 <use Figures/Chapitre4/gestintervention.png>
 Package pdftex.def Info: Figures/Chapitre4/gestintervention.png  used on input 
-line 659.
-(pdftex.def)             Requested size: 273.14923pt x 123.05835pt.
-<Figures/Chapitre4/ajoutintervention.png, id=1499, 310.761pt x 404.10976pt>
-File: Figures/Chapitre4/ajoutintervention.png Graphic file (type png)
-<use Figures/Chapitre4/ajoutintervention.png>
-Package pdftex.def Info: Figures/Chapitre4/ajoutintervention.png  used on input
- line 661.
-(pdftex.def)             Requested size: 136.57462pt x 177.60535pt.
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 662.
+line 333.
+(pdftex.def)             Requested size: 336.88313pt x 151.77196pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 662.
+(Font)              using `T1/cmr/m/scsl' instead on input line 334.
 
-[74 <./Figures/Chapitre4/seq_cloturercurative_sprint2.png (PNG copy)>]
-<Figures/Chapitre4/gestpannes.png, id=1504, 1141.866pt x 503.481pt>
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 334.
+
+<Figures/Chapitre4/gestpannes.png, id=958, 1141.866pt x 503.481pt>
 File: Figures/Chapitre4/gestpannes.png Graphic file (type png)
 <use Figures/Chapitre4/gestpannes.png>
-Package pdftex.def Info: Figures/Chapitre4/gestpannes.png  used on input line 6
-68.
-(pdftex.def)             Requested size: 364.19667pt x 160.58711pt.
-<Figures/Chapitre4/annulerpanne.png, id=1505, 263.18324pt x 100.57574pt>
-File: Figures/Chapitre4/annulerpanne.png Graphic file (type png)
-<use Figures/Chapitre4/annulerpanne.png>
-Package pdftex.def Info: Figures/Chapitre4/annulerpanne.png  used on input line
- 670.
-(pdftex.def)             Requested size: 145.68144pt x 55.6744pt.
-<Figures/Chapitre4/convertirpanne.png, id=1506, 266.1945pt x 329.43076pt>
+Package pdftex.def Info: Figures/Chapitre4/gestpannes.png  used on input line 3
+40.
+(pdftex.def)             Requested size: 336.88313pt x 148.54097pt.
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 341.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 341.
+
+[44 <./Figures/Chapitre4/seq_cloturercurative_sprint2.png (PNG copy)> <./Figure
+s/Chapitre4/gestintervention.png>]
+<Figures/Chapitre4/convertirpanne.png, id=964, 266.1945pt x 329.43076pt>
 File: Figures/Chapitre4/convertirpanne.png Graphic file (type png)
 <use Figures/Chapitre4/convertirpanne.png>
 Package pdftex.def Info: Figures/Chapitre4/convertirpanne.png  used on input li
-ne 672.
-(pdftex.def)             Requested size: 145.68144pt x 180.29271pt.
-<Figures/Chapitre4/viewpanne.png, id=1507, 521.5485pt x 398.6895pt>
-File: Figures/Chapitre4/viewpanne.png Graphic file (type png)
-<use Figures/Chapitre4/viewpanne.png>
-Package pdftex.def Info: Figures/Chapitre4/viewpanne.png  used on input line 67
-4.
-(pdftex.def)             Requested size: 145.68144pt x 111.35854pt.
+ne 347.
+(pdftex.def)             Requested size: 204.85846pt x 253.52673pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 675.
+(Font)              using `T1/cmr/m/scsl' instead on input line 348.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 675.
+(Font)              using `T1/cmr/m/scsl' instead on input line 348.
 
-) (chapitres/Chapitre5.tex [75 <./Figures/Chapitre4/gestintervention.png> <./Fi
-gures/Chapitre4/ajoutintervention.png> <./Figures/Chapitre4/gestpannes.png> <./
-Figures/Chapitre4/annulerpanne.png> <./Figures/Chapitre4/convertirpanne.png> <.
-/Figures/Chapitre4/viewpanne.png>] [76]
+) (chapitres/Chapitre5.tex [45 <./Figures/Chapitre4/gestpannes.png> <./Figures/
+Chapitre4/convertirpanne.png>]
 Chapitre 5.
 
 Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
@@ -3139,450 +2262,194 @@ Overfull \hbox (2.13368pt too wide) in paragraph at lines 6--6
 
 \openout4 = `main.mtc'.
 
-(main.mtc6) [77
+(main.mtc6) [46
 
 ]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 32.
+(Font)              using `T1/cmr/m/scsl' instead on input line 31.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 32.
+(Font)              using `T1/cmr/m/scsl' instead on input line 31.
 
 
-Overfull \hbox (3.21933pt too wide) in paragraph at lines 35--35
-[]|\T1/cmr/bx/n/12 Priorité| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 35--36
-[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
- []
-
-
-Overfull \hbox (3.21933pt too wide) in paragraph at lines 39--39
-[]|\T1/cmr/bx/n/12 Priorité| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 39--40
-[]|\T1/cmr/bx/n/12 Critères d'ac-cep-ta-
- []
-
-
-Underfull \hbox (badness 2261) in paragraph at lines 47--48
-\T1/cmr/m/n/12 teur, je veux gé-né-rer
- []
-
-
-Underfull \hbox (badness 4391) in paragraph at lines 47--48
-\T1/cmr/m/n/12 li-sée et hors contrat
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 48--48
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--51
-[]|\T1/cmr/m/n/12 Éligibilité vé-ri-fiée :
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--51
-\T1/cmr/m/n/12 type = \T1/cmtt/m/n/12 CURATIVE \T1/cmr/m/n/12 +
- []
-
-
-Underfull \hbox (badness 2818) in paragraph at lines 48--51
-\T1/cmr/m/n/12 sta-tut = \T1/cmtt/m/n/12 REALISEE \T1/cmr/m/n/12 +
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--51
-\T1/cmtt/m/n/12 couvertureContrat \T1/cmr/m/n/12 =
- []
-
-
-Underfull \hbox (badness 3514) in paragraph at lines 48--51
-\T1/cmr/m/n/12 false ; lignes de dé-tail
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--51
-\T1/cmr/m/n/12 (main-d'÷uvre, ma-té-
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 48--51
-\T1/cmr/m/n/12 riel) ; \T1/cmtt/m/n/12 montantTTC \T1/cmr/m/n/12 =
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 52--52
-\T1/cmr/m/n/12 une fac-ture comme
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 52--52
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 7030) in paragraph at lines 55--55
-\T1/cmr/m/n/12 filtres (sta-tut, client,
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 56--56
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 56--57
-[]|\T1/cmr/m/n/12 Liste pa-gi-née ; filtres
- []
-
-
-Overfull \hbox (3.00002pt too wide) in paragraph at lines 58--58
-[]|\T1/cmr/m/n/12 Moyenne| 
- []
-
-
-Overfull \hbox (3.00002pt too wide) in paragraph at lines 62--62
-[]|\T1/cmr/m/n/12 Moyenne| 
- []
-
-
-Underfull \hbox (badness 1527) in paragraph at lines 62--63
-[]|\T1/cmr/m/n/12 Seules les in-ter-ven-tions
- []
-
-
-Underfull \hbox (badness 2035) in paragraph at lines 62--63
-\T1/cmr/m/n/12 as-si-gnées au tech-ni-cien
- []
-
-
-Underfull \hbox (badness 1205) in paragraph at lines 64--64
-\T1/cmr/m/n/12 veux consul-ter l'his-to-
- []
-
-
-Overfull \hbox (3.00002pt too wide) in paragraph at lines 65--65
-[]|\T1/cmr/m/n/12 Moyenne| 
- []
-
-
-Underfull \hbox (badness 1527) in paragraph at lines 65--66
-[]|\T1/cmr/m/n/12 Seules les in-ter-ven-tions
- []
-
-
-Overfull \hbox (15.77931pt too wide) in paragraph at lines 68--68
-[]|\T1/cmr/m/n/12 Administrateur| 
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 68--70
-[]|\T1/cmr/m/n/12 KPIs : in-ter-ven-tions
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 68--70
-\T1/cmr/m/n/12 to-tales / en at-tente
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 68--70
-\T1/cmr/m/n/12 / réa-li-sées, contrats
- []
-
-
-Underfull \hbox (badness 10000) in paragraph at lines 68--70
-\T1/cmr/m/n/12 ac-tifs/expirés, clients,
- []
-
-
-Underfull \hbox (badness 1931) in paragraph at lines 68--70
-\T1/cmr/m/n/12 équi-pe-ments, CA men-
- []
-
-
-Underfull \hbox (badness 1237) in paragraph at lines 74--76
-\T1/cmr/m/n/12 cours, pannes ou-vertes,
- []
-
-
-Overfull \hbox (3.00002pt too wide) in paragraph at lines 78--78
-[]|\T1/cmr/m/n/12 Moyenne| 
- []
-
-
-Underfull \hbox (badness 5288) in paragraph at lines 78--79
-[]|\T1/cmr/m/n/12 Filtres dis-po-nibles sur
- []
-
-
-ignored: Infinite glue shrinkage found in box being split [78]
-ignored: Infinite glue shrinkage fo
-und in box being split [79]
-<Figures/Chapitre5/use_case_sprint3.png, id=1545, 1043.9pt x 1267.73625pt>
+ignored: Infinite glue shrinkage found in box being split [47]
+<Figures/Chapitre5/use_case_sprint3.png, id=990, 764.8575pt x 326.21875pt>
 File: Figures/Chapitre5/use_case_sprint3.png Graphic file (type png)
 <use Figures/Chapitre5/use_case_sprint3.png>
 Package pdftex.def Info: Figures/Chapitre5/use_case_sprint3.png  used on input 
-line 91.
-(pdftex.def)             Requested size: 364.19667pt x 442.28288pt.
+line 69.
+(pdftex.def)             Requested size: 318.66948pt x 135.91583pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 92.
+(Font)              using `T1/cmr/m/scsl' instead on input line 70.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 92.
-
-[80]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 111.
+(Font)              using `T1/cmr/m/scsl' instead on input line 70.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 111.
-
-[81 <./Figures/Chapitre5/use_case_sprint3.png (PNG copy)>] [82]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 175.
+(Font)              using `T1/cmr/m/scsl' instead on input line 89.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 175.
+(Font)              using `T1/cmr/m/scsl' instead on input line 89.
 
-[83]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 217.
-
+[48 <./Figures/Chapitre5/use_case_sprint3.png (PNG copy)>] [49]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 217.
+(Font)              using `T1/cmr/m/scsl' instead on input line 146.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 255.
+(Font)              using `T1/cmr/m/scsl' instead on input line 146.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 255.
-
-[84]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 288.
+(Font)              using `T1/cmr/m/scsl' instead on input line 177.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 288.
+(Font)              using `T1/cmr/m/scsl' instead on input line 177.
 
-[85]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 318.
-
+[50]
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 318.
+(Font)              using `T1/cmr/m/scsl' instead on input line 200.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 348.
+(Font)              using `T1/cmr/m/scsl' instead on input line 200.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 348.
-
-[86]
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 382.
+(Font)              using `T1/cmr/m/scsl' instead on input line 223.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 382.
+(Font)              using `T1/cmr/m/scsl' instead on input line 223.
 
-<Figures/Chapitre5/class_diagram_sprint3.png, id=1593, 1206.5075pt x 1007.765pt
->
+[51]
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 246.
+
+
+LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
+(Font)              using `T1/cmr/m/scsl' instead on input line 246.
+
+<Figures/Chapitre5/class_diagram_sprint3.png, id=1017, 461.725pt x 774.895pt>
 File: Figures/Chapitre5/class_diagram_sprint3.png Graphic file (type png)
 <use Figures/Chapitre5/class_diagram_sprint3.png>
 Package pdftex.def Info: Figures/Chapitre5/class_diagram_sprint3.png  used on i
-nput line 414.
-(pdftex.def)             Requested size: 364.19667pt x 304.19247pt.
+nput line 285.
+(pdftex.def)             Requested size: 318.66948pt x 534.8082pt.
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 415.
+(Font)              using `T1/cmr/m/scsl' instead on input line 286.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 415.
+(Font)              using `T1/cmr/m/scsl' instead on input line 286.
 
-[87]
-<Figures/Chapitre5/seq_genererfacture_sprint3.png, id=1604, 1310.8975pt x 1312.
-905pt>
+[52]
+<Figures/Chapitre5/seq_genererfacture_sprint3.png, id=1025, 1089.06876pt x 1296
+.845pt>
 File: Figures/Chapitre5/seq_genererfacture_sprint3.png Graphic file (type png)
 <use Figures/Chapitre5/seq_genererfacture_sprint3.png>
 Package pdftex.def Info: Figures/Chapitre5/seq_genererfacture_sprint3.png  used
- on input line 428.
-(pdftex.def)             Requested size: 364.19667pt x 364.74614pt.
+ on input line 299.
+(pdftex.def)             Requested size: 318.66948pt x 379.45921pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 429.
+(Font)              using `T1/cmr/m/scsl' instead on input line 300.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 429.
+(Font)              using `T1/cmr/m/scsl' instead on input line 300.
 
-[88 <./Figures/Chapitre5/class_diagram_sprint3.png (PNG copy)>] [89 <./Figures/
-Chapitre5/seq_genererfacture_sprint3.png (PNG copy)>]
-<Figures/Chapitre5/seq_dashboardadmin_sprint3.png, id=1613, 1301.86375pt x 873.
-2625pt>
-File: Figures/Chapitre5/seq_dashboardadmin_sprint3.png Graphic file (type png)
-<use Figures/Chapitre5/seq_dashboardadmin_sprint3.png>
-Package pdftex.def Info: Figures/Chapitre5/seq_dashboardadmin_sprint3.png  used
- on input line 482.
-(pdftex.def)             Requested size: 364.19667pt x 244.28531pt.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 483.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 483.
-
-[90] [91 <./Figures/Chapitre5/seq_dashboardadmin_sprint3.png (PNG copy)>]
-<Figures/Chapitre5/seq_historiqueclient_sprint3.png, id=1632, 895.345pt x 702.6
-25pt>
+[53 <./Figures/Chapitre5/class_diagram_sprint3.png (PNG copy)>]
+<Figures/Chapitre5/seq_historiqueclient_sprint3.png, id=1030, 836.12375pt x 648
+.4225pt>
 File: Figures/Chapitre5/seq_historiqueclient_sprint3.png Graphic file (type png
 )
 <use Figures/Chapitre5/seq_historiqueclient_sprint3.png>
 Package pdftex.def Info: Figures/Chapitre5/seq_historiqueclient_sprint3.png  us
-ed on input line 537.
-(pdftex.def)             Requested size: 364.19667pt x 285.80522pt.
+ed on input line 307.
+(pdftex.def)             Requested size: 318.66948pt x 247.13527pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 538.
+(Font)              using `T1/cmr/m/scsl' instead on input line 308.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 538.
+(Font)              using `T1/cmr/m/scsl' instead on input line 308.
 
-[92 <./Figures/Chapitre5/seq_historiqueclient_sprint3.png (PNG copy)>]
-<Figures/Chapitre5/seq_espaceclient_sprint3.png, id=1640, 857.2025pt x 929.4725
-pt>
-File: Figures/Chapitre5/seq_espaceclient_sprint3.png Graphic file (type png)
-<use Figures/Chapitre5/seq_espaceclient_sprint3.png>
-Package pdftex.def Info: Figures/Chapitre5/seq_espaceclient_sprint3.png  used o
-n input line 585.
-(pdftex.def)             Requested size: 364.19667pt x 394.90004pt.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 586.
-
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 586.
-
-[93]
-<Figures/Chapitre5/gestfacture.png, id=1651, 1139.457pt x 508.90125pt>
+[54 <./Figures/Chapitre5/seq_genererfacture_sprint3.png (PNG copy)>]
+<Figures/Chapitre5/gestfacture.png, id=1035, 1139.457pt x 508.90125pt>
 File: Figures/Chapitre5/gestfacture.png Graphic file (type png)
 <use Figures/Chapitre5/gestfacture.png>
 Package pdftex.def Info: Figures/Chapitre5/gestfacture.png  used on input line 
-595.
-(pdftex.def)             Requested size: 250.38564pt x 111.82661pt.
-<Figures/Chapitre5/viewfact.png, id=1652, 542.62724pt x 395.67825pt>
-File: Figures/Chapitre5/viewfact.png Graphic file (type png)
-<use Figures/Chapitre5/viewfact.png>
-Package pdftex.def Info: Figures/Chapitre5/viewfact.png  used on input line 597
-.
-(pdftex.def)             Requested size: 182.09486pt x 132.77792pt.
+317.
+(pdftex.def)             Requested size: 295.90588pt x 132.1559pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 598.
+(Font)              using `T1/cmr/m/scsl' instead on input line 318.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 598.
+(Font)              using `T1/cmr/m/scsl' instead on input line 318.
 
-<Figures/Chapitre5/dashboardtech.png, id=1653, 1142.46825pt x 511.9125pt>
+<Figures/Chapitre5/dashboardtech.png, id=1036, 1142.46825pt x 511.9125pt>
 File: Figures/Chapitre5/dashboardtech.png Graphic file (type png)
 <use Figures/Chapitre5/dashboardtech.png>
 Package pdftex.def Info: Figures/Chapitre5/dashboardtech.png  used on input lin
-e 604.
-(pdftex.def)             Requested size: 364.19667pt x 163.19044pt.
+e 324.
+(pdftex.def)             Requested size: 336.88313pt x 150.9504pt.
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 605.
+(Font)              using `T1/cmr/m/scsl' instead on input line 325.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 605.
+(Font)              using `T1/cmr/m/scsl' instead on input line 325.
 
-[94 <./Figures/Chapitre5/seq_espaceclient_sprint3.png (PNG copy)> <./Figures/Ch
-apitre5/gestfacture.png> <./Figures/Chapitre5/viewfact.png>]
-<Figures/Chapitre5/dashboardclientpart.png, id=1660, 1144.87724pt x 506.49225pt
+[55 <./Figures/Chapitre5/seq_historiqueclient_sprint3.png (PNG copy)> <./Figure
+s/Chapitre5/gestfacture.png>]
+<Figures/Chapitre5/dashboardclientpart.png, id=1042, 1144.87724pt x 506.49225pt
 >
 File: Figures/Chapitre5/dashboardclientpart.png Graphic file (type png)
 <use Figures/Chapitre5/dashboardclientpart.png>
 Package pdftex.def Info: Figures/Chapitre5/dashboardclientpart.png  used on inp
-ut line 611.
-(pdftex.def)             Requested size: 364.19667pt x 161.1225pt.
+ut line 331.
+(pdftex.def)             Requested size: 336.88313pt x 149.03522pt.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 612.
+(Font)              using `T1/cmr/m/scsl' instead on input line 332.
 
 
 LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 612.
+(Font)              using `T1/cmr/m/scsl' instead on input line 332.
 
-<Figures/Chapitre5/dashboardclientsociete.png, id=1661, 1136.44576pt x 513.117p
-t>
-File: Figures/Chapitre5/dashboardclientsociete.png Graphic file (type png)
-<use Figures/Chapitre5/dashboardclientsociete.png>
-Package pdftex.def Info: Figures/Chapitre5/dashboardclientsociete.png  used on 
-input line 618.
-(pdftex.def)             Requested size: 364.19667pt x 164.43568pt.
-
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 619.
+) [56 <./Figures/Chapitre5/dashboardtech.png> <./Figures/Chapitre5/dashboardcli
+entpart.png>] (conclusion_generale.tex) [57
 
 
-LaTeX Font Warning: Font shape `T1/cmr/m/scit' undefined
-(Font)              using `T1/cmr/m/scsl' instead on input line 619.
-
-) [95 <./Figures/Chapitre5/dashboardtech.png> <./Figures/Chapitre5/dashboardcli
-entpart.png> <./Figures/Chapitre5/dashboardclientsociete.png>] [96]
-(conclusion_generale.tex) [97
+] (perspectives.tex) [58
 
 
-] (perspectives.tex) [98
+] [59
 
 
-] [99
-
-
-] (resume.tex
-[100
-
-])
+]
+(resume.tex)
 Package minitoc Info: I0009
 (minitoc)             Listing minitoc auxiliary files. 
 (minitoc)             Creating the main.maf file.
@@ -3599,49 +2466,46 @@ Package minitoc(hints) Warning: W0024
 (minitoc(hints))                Some hints have been written 
 (minitoc(hints))                in the main.log file.
 
-[101] 
+[60
+
+] 
 enddocument/afterlastpage (AED): lastpage setting LastPage.
 (main.aux)
  ***********
 LaTeX2e <2025-11-01>
 L3 programming layer <2026-04-28>
  ***********
-
-
-LaTeX Warning: There were multiply-defined labels.
-
 Package rerunfilecheck Info: File `main.out' has not changed.
-(rerunfilecheck)             Checksum: F6D862AC1FD8AE52F09194285B1997C5;29772.
+(rerunfilecheck)             Checksum: 93A4135F8B9FD4CF3636FD7B0894E565;19043.
  ) 
 Here is how much of TeX's memory you used:
- 33300 strings out of 467683
- 633169 string characters out of 5414722
- 1293808 words of memory out of 5000000
- 61242 multiletter control sequences out of 15000+600000
- 645739 words of font info for 72 fonts, out of 8000000 for 9000
+ 32830 strings out of 467683
+ 622980 string characters out of 5414722
+ 1270807 words of memory out of 5000000
+ 61058 multiletter control sequences out of 15000+600000
+ 644918 words of font info for 71 fonts, out of 8000000 for 9000
  1141 hyphenation exceptions out of 8191
  102i,17n,107p,560b,769s stack positions out of 10000i,1000n,20000p,200000b,200000s
  <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecti
-1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
-0\ecsc1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
-/dpi600\ecrm1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
-pen/ec/dpi600\ecbx1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour
-/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/
-ljfour/jknappen/ec/dpi600\ecxc1728.pk> <C:\Users\medam\AppData\Local\MiKTeX\fon
-ts/pk/ljfour/jknappen/ec/dpi600\ecxc2074.pk> <C:\Users\medam\AppData\Local\MiKT
-eX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1200.pk> <C:\Users\medam\AppData\Loca
-l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk> <C:\Users\medam\AppDat
-a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk> <C:\Users\medam\
-AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\Users\
-medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk> <C:\
-Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1728.pk
-><C:/Users/medam/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfonts/cm/c
-mmi12.pfb><C:/Users/medam/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsf
-onts/cm/cmr12.pfb><C:/Users/medam/AppData/Local/Programs/MiKTeX/fonts/type1/pub
-lic/amsfonts/cm/cmsy10.pfb>
-Output written on main.pdf (113 pages, 4361874 bytes).
+1200.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi60
+0\ecti1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec
+/dpi600\ecsc1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknap
+pen/ec/dpi600\ecrm1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour
+/jknappen/ec/dpi600\ecbx1095.pk> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/
+ljfour/jknappen/ec/dpi600\ecbx1440.pk> <C:\Users\medam\AppData\Local\MiKTeX\fon
+ts/pk/ljfour/jknappen/ec/dpi600\ecxc1728.pk> <C:\Users\medam\AppData\Local\MiKT
+eX\fonts/pk/ljfour/jknappen/ec/dpi600\ecxc2074.pk> <C:\Users\medam\AppData\Loca
+l\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\eccc1200.pk> <C:\Users\medam\AppDat
+a\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ectt1200.pk> <C:\Users\medam\
+AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx2488.pk> <C:\Users\
+medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1200.pk> <C:\
+Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecrm1200.pk
+> <C:\Users\medam\AppData\Local\MiKTeX\fonts/pk/ljfour/jknappen/ec/dpi600\ecbx1
+728.pk><C:/Users/medam/AppData/Local/Programs/MiKTeX/fonts/type1/public/amsfont
+s/cm/cmsy10.pfb>
+Output written on main.pdf (70 pages, 2771573 bytes).
 PDF statistics:
- 2467 PDF objects out of 2487 (max. 8388607)
- 541 named destinations out of 1000 (max. 500000)
- 1256 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 1775 PDF objects out of 2073 (max. 8388607)
+ 256 named destinations out of 1000 (max. 500000)
+ 886 words of extra memory for PDF output out of 10000 (max. 10000000)
 

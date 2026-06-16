@@ -1,0 +1,56 @@
+@startuml 11_seq_consultation_contrat
+
+skinparam sequenceMessageAlign center
+skinparam responseMessageBelowArrow true
+skinparam ParticipantBackgroundColor #EBF5FB
+skinparam ParticipantBorderColor #2E74B5
+skinparam NoteBackgroundColor #FFFDE7
+skinparam NoteBorderColor #F39C12
+
+actor       "Administrateur"               as Admin
+participant "Interface\n(Frontend)"        as UI
+participant "Contrôleur\n(ContractCtrl)"   as CTRL
+participant "Service\n(ContractService)"   as SVC
+database    "Base de données\n(MySQL)"     as DB
+
+Admin -> UI   : Remplit le formulaire\n(client, dateDebut, dateFin,\npériodicité, ClientEquipements couverts)
+UI    -> CTRL : POST /api/contracts { contractData }
+
+CTRL  -> CTRL : Valide dates (dateFin > dateDebut)
+CTRL  -> DB   : SELECT id FROM client_equipements\nWHERE id IN (?) AND clientId = ?
+DB    --> CTRL : enregistrements validés ou erreur
+
+alt ClientEquipements hors client
+  CTRL --> UI  : 400 — Installations hors client
+  UI   --> Admin : Affiche message d'erreur
+else Données valides
+  CTRL -> SVC  : createContractWithPlanning(contractData)
+
+  note over SVC
+    Début de transaction atomique
+  end note
+
+  SVC  -> DB   : INSERT INTO contracts VALUES (...)
+  DB   --> SVC  : contractId
+
+  SVC  -> SVC  : Génère le planning préventif\n(PlanningService.generate(\n  dateDebut, dateFin,\n  periodicite,\n  clientEquipementIds[]))
+
+  loop Pour chaque date calculée × chaque ClientEquipement couvert
+    SVC -> DB : INSERT INTO interventions VALUES (...)
+    DB  --> SVC : OK
+  end
+
+  SVC  -> DB   : COMMIT
+  DB   --> SVC  : Transaction validée
+  SVC  --> CTRL : { contract, interventionsCount }
+  CTRL --> UI  : 201 — { contrat créé, planning généré }
+  UI   --> Admin : Affiche confirmation\net prévisualisation du planning
+end
+
+note over Admin
+  Aucune action manuelle requise
+  pour générer le planning :
+  le Système le génère automatiquement
+  à la sauvegarde du contrat.
+end note
+@enduml

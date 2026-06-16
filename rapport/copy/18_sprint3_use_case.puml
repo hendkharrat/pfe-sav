@@ -1,0 +1,44 @@
+@startuml 18_sprint3_use_case
+left to right direction
+skinparam packageStyle rectangle
+skinparam actorStyle Hollow
+skinparam usecase {
+  BackgroundColor #EBF5FB
+  BorderColor #2E74B5
+}
+skinparam actor {
+  BackgroundColor #FEF9E7
+  BorderColor #B7950B
+}
+
+actor "Administrateur" as Admin
+actor "Technicien"     as Tech
+actor "Client"         as Cli
+
+Admin --|> Tech
+
+rectangle " " {
+
+  usecase "S'authentifier"          as UC_AUTH
+  usecase "Générer facture"         as UC_INVOICE
+  usecase "Consulter factures"      as UC_VIEW_INV
+  usecase "Consulter historique"    as UC_HISTORY
+  usecase "Consulter tableau de bord" as UC_DASH
+
+}
+
+Admin --> UC_AUTH
+Tech  --> UC_AUTH
+Cli   --> UC_AUTH
+
+Admin --> UC_INVOICE
+Admin --> UC_VIEW_INV
+Cli   --> UC_VIEW_INV
+
+Tech  --> UC_HISTORY
+Cli   --> UC_HISTORY
+
+Tech  --> UC_DASH
+Cli   --> UC_DASH
+
+@enduml

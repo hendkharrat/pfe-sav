@@ -1,0 +1,77 @@
+@startuml 13_sprint2_class_diagram
+
+skinparam classBackgroundColor #EBF5FB
+skinparam classBorderColor #2E74B5
+skinparam noteBackgroundColor #FFFDE7
+skinparam noteBorderColor #F39C12
+skinparam linetype ortho
+
+class User {
+  + id : String
+  + prenom : String
+  + nom : String
+  + role : String
+  + actif : Boolean
+}
+
+class Client {
+  + id : String
+  + prenom : String
+  + nom : String
+  + email : String
+}
+
+class Equipment {
+  + id : String
+  + reference : String
+  + type : String
+  + marque : String
+}
+
+class ClientEquipement {
+  + id : String
+  + dateInstallation : Date
+  + localisation : String
+}
+
+class Contract {
+  + id : String
+  + reference : String
+  + dateDebut : Date
+  + dateFin : Date
+  + statut : String
+}
+
+class Intervention {
+  + id : String
+  + type : String
+  + datePrevue : Date
+  + statut : String
+  + couvertureContrat : Boolean
+}
+
+class Panne {
+  + id : String
+  + dateDeclaration : Date
+  + description : String
+  + statut : String
+}
+
+class PieceJointe {
+  + id : String
+  + filename : String
+  + size : Integer
+  + type : String
+}
+
+ClientEquipement "1"   <--  "*"   Intervention   : concerne
+User             "0..1" --   "*"   Intervention  : affecté (technicien)
+Contract         "0..1" --   "*"   Intervention  : planifie
+Panne            "0..1" --   "1"   Intervention  : convertie en
+Panne            "1"    *--  "*"   PieceJointe   : contient
+Client           "1"    --   "*"   Panne         : déclare
+Client           "1"    *--  "*"   ClientEquipement : possède >
+Equipment        "1"    *--  "*"   ClientEquipement : affecté via >
+Contract         "*"    --   "*"   ClientEquipement : couvre
+
+@enduml
