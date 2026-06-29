@@ -2,15 +2,13 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Client, ClientEquipement } from '@/types';
+import { Client, ClientEquipement, Contract, Equipment } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AdminOnly } from '@/components/shared/AdminOnly';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { ClientForm, type ClientFormPayload } from '@/components/forms/ClientForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
-import { mockClients } from '@/data/mock-clients';
-import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -46,15 +44,18 @@ import { TUNISIAN_CITIES } from '@/lib/constants';
 export default function ClientsPage() {
   const router = useRouter();
   const { user: currentUser, isLoading } = useAuth();
-  const { showSuccess } = useToast();
+  const { showSuccess, showError } = useToast();
 
   const [clients, setClients] = useState<Client[]>([]);
   const [clientEquipements, setClientEquipements] = useState<ClientEquipement[]>([]);
+  const [equipements, setEquipements] = useState<Equipment[]>([]);
+  const [contracts, setContracts] = useState<Contract[]>([]);
   const [filteredClients, setFilteredClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [cityFilter, setCityFilter] = useState('all');
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [page, setPage] = useState(1);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedClient, setSelectedClient] = useState<Client | undefined>();
@@ -63,9 +64,26 @@ export default function ClientsPage() {
   const [isConfirmOpen, setIsConfirmOpen] = useState(false);
   const [clientToDelete, setClientToDelete] = useState<Client | null>(null);
 
+  // Load all data from API on mount
   useEffect(() => {
-    setClients(mockClients);
-    setClientEquipements(mockClientEquipements);
+    async function load() {
+      try {
+        const [clientsRes, ceRes, eqRes, contractsRes] = await Promise.all([
+          fetch('/api/clients'),
+          fetch('/api/client-equipements'),
+          fetch('/api/equipements'),
+          fetch('/api/contracts'),
+        ]);
+        if (clientsRes.ok) setClients(await clientsRes.json());
+        if (ceRes.ok) setClientEquipements(await ceRes.json());
+        if (eqRes.ok) setEquipements(await eqRes.json());
+        if (contractsRes.ok) setContracts(await contractsRes.json());
+      } catch {
+        showError('Erreur lors du chargement des données.');
+      }
+    }
+    load();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -90,7 +108,7 @@ export default function ClientsPage() {
   useEffect(() => { setPage(1); }, [searchTerm, cityFilter]);
 
   const getEquipementCount = useCallback(
-    (clientId: string) => clientEquipements.filter((ce) => ce.clientId === clientId).length,
+    (clientId: number) => clientEquipements.filter((ce) => ce.clientId === clientId).length,
     [clientEquipements]
   );
 
@@ -119,60 +137,160 @@ export default function ClientsPage() {
   );
 
   const handleAddClient = useCallback(
-    ({ clientData, assignments }: ClientFormPayload) => {
-      const newClientId = `client-${Date.now()}`;
-      const newClient: Client = {
-        ...clientData,
-        id: newClientId,
-        dateCreation: new Date().toISOString().split('T')[0],
-        nombreEquipements: assignments.length,
-        userId: currentUser?.id ?? 'user-admin-1',
-      };
-      // Bind the real clientId to every new assignment
-      const resolvedAssignments = assignments.map((ce) => ({
-        ...ce,
-        clientId: newClientId,
-      }));
-      setClients((prev) => [...prev, newClient]);
-      setClientEquipements((prev) => [...prev, ...resolvedAssignments]);
-      setIsFormOpen(false);
-      setSelectedClient(undefined);
-      showSuccess('Client ajouté avec succès');
+    async ({ clientData, assignments }: ClientFormPayload) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch('/api/clients', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(clientData),
+        });
+        const body = await res.json();
+        if (!res.ok) { showError(body.error ?? 'Erreur lors de la création du client.'); return; }
+
+        const newClient: Client = body;
+        const newClientId = newClient.id;
+
+        // Create CE assignments
+        const createdCEs: ClientEquipement[] = [];
+        for (const ce of assignments) {
+          const ceRes = await fetch('/api/client-equipements', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              clientId: newClientId,
+              equipementId: ce.equipementId,
+              dateInstallation: ce.dateInstallation,
+              dateAchat: ce.dateAchat,
+              localisation: ce.localisation,
+              notes: ce.notes,
+            }),
+          });
+          if (ceRes.ok) createdCEs.push(await ceRes.json());
+        }
+
+        setClients((prev) => [...prev, { ...newClient, nombreEquipements: createdCEs.length }]);
+        setClientEquipements((prev) => [...prev, ...createdCEs]);
+        setIsFormOpen(false);
+        setSelectedClient(undefined);
+        showSuccess('Client ajouté avec succès');
+      } catch {
+        showError('Impossible de contacter le serveur.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [currentUser, showSuccess]
+    [showSuccess, showError]
   );
 
   const handleUpdateClient = useCallback(
-    ({ clientData, assignments }: ClientFormPayload) => {
+    async ({ clientData, assignments }: ClientFormPayload) => {
       if (!selectedClient) return;
       const clientId = selectedClient.id;
-      setClients((prev) =>
-        prev.map((c) =>
-          c.id === clientId
-            ? { ...c, ...clientData, nombreEquipements: assignments.length }
-            : c
-        )
-      );
-      // Replace all CE records for this client with the new assignment list
-      setClientEquipements((prev) => [
-        ...prev.filter((ce) => ce.clientId !== clientId),
-        ...assignments.map((ce) => ({ ...ce, clientId })),
-      ]);
-      setIsFormOpen(false);
-      setSelectedClient(undefined);
-      showSuccess('Client modifié avec succès');
+      setIsSubmitting(true);
+      try {
+        // 1. PATCH client fields
+        const res = await fetch(`/api/clients/${clientId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(clientData),
+        });
+        const body = await res.json();
+        if (!res.ok) { showError(body.error ?? 'Erreur lors de la modification du client.'); return; }
+
+        // 2. Diff assignments
+        const originalCEs = clientEquipements.filter((ce) => ce.clientId === clientId);
+        const originalIds = new Set(originalCEs.map((ce) => ce.id));
+        const newIds = new Set(assignments.map((ce) => ce.id));
+
+        // Delete removed CEs
+        for (const ce of originalCEs.filter((ce) => !newIds.has(ce.id))) {
+          const dr = await fetch(`/api/client-equipements/${ce.id}`, { method: 'DELETE' });
+          if (!dr.ok) {
+            const eb = await dr.json().catch(() => ({})) as { error?: string };
+            showError(eb.error ?? `Impossible de retirer l'équipement.`);
+          }
+        }
+
+        // Create new CEs (IDs not in original set)
+        const createdCEs: ClientEquipement[] = [];
+        for (const ce of assignments.filter((ce) => !originalIds.has(ce.id))) {
+          const cr = await fetch('/api/client-equipements', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              clientId,
+              equipementId: ce.equipementId,
+              dateInstallation: ce.dateInstallation,
+              dateAchat: ce.dateAchat,
+              localisation: ce.localisation,
+              notes: ce.notes,
+            }),
+          });
+          if (cr.ok) createdCEs.push(await cr.json());
+        }
+
+        // Update existing CEs
+        const updatedCEs: ClientEquipement[] = [];
+        for (const ce of assignments.filter((ce) => originalIds.has(ce.id))) {
+          const ur = await fetch(`/api/client-equipements/${ce.id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              localisation: ce.localisation,
+              dateAchat: ce.dateAchat,
+              dateInstallation: ce.dateInstallation,
+              notes: ce.notes,
+            }),
+          });
+          updatedCEs.push(ur.ok ? (await ur.json() as ClientEquipement) : ce);
+        }
+
+        // 3. Update state
+        const finalCECount = updatedCEs.length + createdCEs.length;
+        setClients((prev) =>
+          prev.map((c) => c.id === clientId ? { ...body, nombreEquipements: finalCECount } : c)
+        );
+        setClientEquipements((prev) => [
+          ...prev.filter((ce) => ce.clientId !== clientId),
+          ...updatedCEs,
+          ...createdCEs,
+        ]);
+        setIsFormOpen(false);
+        setSelectedClient(undefined);
+        showSuccess('Client modifié avec succès');
+      } catch {
+        showError('Impossible de contacter le serveur.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [selectedClient, showSuccess]
+    [selectedClient, clientEquipements, showSuccess, showError]
   );
 
-  const handleDeleteClient = useCallback(() => {
+  const handleDeleteClient = useCallback(async () => {
     if (!clientToDelete) return;
-    setClients((prev) => prev.filter((c) => c.id !== clientToDelete.id));
-    setClientEquipements((prev) => prev.filter((ce) => ce.clientId !== clientToDelete.id));
-    setIsConfirmOpen(false);
-    setClientToDelete(null);
-    showSuccess('Client supprimé');
-  }, [clientToDelete, showSuccess]);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/clients/${clientToDelete.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({})) as { error?: string };
+        showError(body.error ?? 'Impossible de supprimer ce client.');
+        setIsConfirmOpen(false);
+        setClientToDelete(null);
+        return;
+      }
+      setClients((prev) => prev.filter((c) => c.id !== clientToDelete.id));
+      setClientEquipements((prev) => prev.filter((ce) => ce.clientId !== clientToDelete.id));
+      setIsConfirmOpen(false);
+      setClientToDelete(null);
+      showSuccess('Client supprimé');
+    } catch {
+      showError('Impossible de contacter le serveur.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [clientToDelete, showSuccess, showError]);
 
   const handleEditClick = (client: Client) => {
     setSelectedClient(client);
@@ -345,6 +463,9 @@ export default function ClientsPage() {
           open={isFormOpen}
           client={selectedClient}
           clientEquipements={clientEquipements}
+          equipments={equipements}
+          contracts={contracts}
+          isLoading={isSubmitting}
           onClose={() => {
             setIsFormOpen(false);
             setSelectedClient(undefined);
@@ -356,6 +477,8 @@ export default function ClientsPage() {
           open={isDetailOpen}
           client={detailClient}
           clientEquipements={clientEquipements}
+          equipments={equipements}
+          contracts={contracts}
           onClose={() => setIsDetailOpen(false)}
           onEdit={handleDetailEdit}
         />
@@ -363,7 +486,7 @@ export default function ClientsPage() {
         <ConfirmDialog
           open={isConfirmOpen}
           title="Supprimer le client"
-          description={`Êtes-vous sûr de vouloir supprimer ${clientToDelete ? getClientDisplayName(clientToDelete) : ''} ? Cette suppression est simulée et concerne uniquement l'interface.`}
+          description={`Êtes-vous sûr de vouloir supprimer ${clientToDelete ? getClientDisplayName(clientToDelete) : ''} ? Cette action est irréversible.`}
           actionLabel="Supprimer"
           actionVariant="destructive"
           onConfirm={handleDeleteClient}

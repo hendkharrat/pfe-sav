@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Client, ClientEquipement, ClientType } from '@/types';
+import { Client, ClientEquipement, ClientType, Contract, Equipment } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,12 +21,9 @@ import {
 } from '@/components/ui/select';
 import { Badge } from '@/components/ui/badge';
 import { ClientEquipementAssignForm } from '@/components/forms/ClientEquipementAssignForm';
-import { mockClientEquipements } from '@/data/mock-client-equipements';
-import { mockEquipments } from '@/data/mock-equipments';
 import { EQUIPMENT_TYPE_LABELS, TUNISIAN_CITIES } from '@/lib/constants';
 import { formatDate } from '@/lib/utils';
 import { findActiveContractForClientEquipement } from '@/lib/interventions';
-import { mockContracts } from '@/data/mock-contracts';
 import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 import { Plus, Edit2, Trash2, PackageOpen } from 'lucide-react';
 
@@ -42,9 +39,16 @@ interface ClientFormProps {
   onSubmit: (payload: ClientFormPayload) => void;
   isLoading?: boolean;
   clientEquipements?: ClientEquipement[];
+  equipments?: Equipment[];
+  contracts?: Contract[];
 }
 
-export function ClientForm({ open, client, onClose, onSubmit, isLoading = false, clientEquipements = mockClientEquipements }: ClientFormProps) {
+export function ClientForm({
+  open, client, onClose, onSubmit, isLoading = false,
+  clientEquipements = [],
+  equipments = [],
+  contracts = [],
+}: ClientFormProps) {
   const isEditing = !!client?.id;
 
   const [formData, setFormData] = useState({
@@ -136,7 +140,7 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
     });
   };
 
-  const handleRemoveAssignment = (id: string) => {
+  const handleRemoveAssignment = (id: number) => {
     if (!window.confirm('Retirer cet équipement de l\'affectation client ?')) return;
     setAssignments((prev) => prev.filter((a) => a.id !== id));
   };
@@ -403,9 +407,9 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
                   </thead>
                   <tbody>
                     {assignments.map((ce) => {
-                      const eq = mockEquipments.find((e) => e.id === ce.equipementId);
+                      const eq = equipments.find((e) => e.id === ce.equipementId);
                       const activeContract = client?.id
-                        ? findActiveContractForClientEquipement(ce.id, client.id, mockContracts)
+                        ? findActiveContractForClientEquipement(ce.id, client.id, contracts)
                         : undefined;
                       return (
                         <tr key={ce.id} className="border-b border-border last:border-0">
@@ -495,9 +499,9 @@ export function ClientForm({ open, client, onClose, onSubmit, isLoading = false,
           setIsAssignFormOpen(v);
           if (!v) setEditingAssignment(undefined);
         }}
-        clientId={client?.id ?? ''}
+        clientId={client?.id ?? 0}
         existingAssignments={assignments}
-        equipments={mockEquipments}
+        equipments={equipments}
         editingAssignment={editingAssignment}
         onSubmit={handleAssignmentSubmit}
       />

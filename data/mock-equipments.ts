@@ -2,7 +2,7 @@ import { Equipment } from '@/types';
 
 export const mockEquipments: Equipment[] = [
   {
-    id: 'eq-1',
+    id: 1,
     reference: 'EQ-001',
     type: 'CLIMATISEUR',
     marque: 'CoolMax',
@@ -12,7 +12,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-2',
+    id: 2,
     reference: 'EQ-002',
     type: 'SYSTEME_SURPRESSION',
     marque: 'Pressure Pro',
@@ -22,7 +22,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-3',
+    id: 3,
     reference: 'EQ-003',
     type: 'CLIMATISEUR',
     marque: 'CoolMax',
@@ -32,7 +32,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-4',
+    id: 4,
     reference: 'EQ-004',
     type: 'CLIMATISEUR',
     marque: 'HomeClimate',
@@ -42,7 +42,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-5',
+    id: 5,
     reference: 'EQ-005',
     type: 'CLIMATISEUR',
     marque: 'Daikin',
@@ -52,7 +52,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-6',
+    id: 6,
     reference: 'EQ-006',
     type: 'SYSTEME_SURPRESSION',
     marque: 'Grundfos',
@@ -62,7 +62,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-7',
+    id: 7,
     reference: 'EQ-007',
     type: 'CLIMATISEUR',
     marque: 'Mitsubishi Electric',
@@ -72,7 +72,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-8',
+    id: 8,
     reference: 'EQ-008',
     type: 'CLIMATISEUR',
     marque: 'Samsung',
@@ -82,7 +82,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-9',
+    id: 9,
     reference: 'EQ-009',
     type: 'SYSTEME_SURPRESSION',
     marque: 'Wilo',
@@ -92,7 +92,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-10',
+    id: 10,
     reference: 'EQ-010',
     type: 'SYSTEME_SURPRESSION',
     marque: 'Grundfos',
@@ -102,7 +102,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-11',
+    id: 11,
     reference: 'EQ-011',
     type: 'CLIMATISEUR',
     marque: 'LG',
@@ -112,7 +112,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-12',
+    id: 12,
     reference: 'EQ-012',
     type: 'CLIMATISEUR',
     marque: 'Carrier',
@@ -122,7 +122,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-13',
+    id: 13,
     reference: 'EQ-013',
     type: 'SYSTEME_SURPRESSION',
     marque: 'DAB',
@@ -132,7 +132,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-14',
+    id: 14,
     reference: 'EQ-014',
     type: 'CLIMATISEUR',
     marque: 'Trane',
@@ -142,7 +142,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-15',
+    id: 15,
     reference: 'EQ-015',
     type: 'SYSTEME_SURPRESSION',
     marque: 'Ebara',
@@ -152,7 +152,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-16',
+    id: 16,
     reference: 'EQ-016',
     type: 'CLIMATISEUR',
     marque: 'Daikin',
@@ -162,7 +162,7 @@ export const mockEquipments: Equipment[] = [
     images: [],
   },
   {
-    id: 'eq-17',
+    id: 17,
     reference: 'EQ-017',
     type: 'SYSTEME_SURPRESSION',
     marque: 'Lowara',

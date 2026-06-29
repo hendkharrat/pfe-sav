@@ -1,8 +1,7 @@
 'use client';
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
-import { Contract, Intervention } from '@/types';
+import { Contract, Intervention, Client, ClientEquipement, Equipment } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AdminOnly } from '@/components/shared/AdminOnly';
 import { useAuth } from '@/hooks/useAuth';
@@ -10,9 +9,6 @@ import { useToast } from '@/hooks/useToast';
 import { ContractForm, type ContractFormSubmitPayload } from '@/components/forms/ContractForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { mockContracts } from '@/data/mock-contracts';
-import { mockInterventions } from '@/data/mock-interventions';
-import { mockClients } from '@/data/mock-clients';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -44,18 +40,21 @@ import {
 import { Plus, Edit2, Trash2, Eye, Filter, MoreHorizontal } from 'lucide-react';
 import { CONTRACT_FREQUENCY_LABELS } from '@/lib/constants';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
-import { preventivePreviewToIntervention } from '@/lib/interventions';
 
 export default function ContratsPage() {
-  const router = useRouter();
-  const { user: currentUser, isLoading } = useAuth();
+  const { isLoading } = useAuth();
   const { showSuccess, showError } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [contracts, setContracts] = useState<Contract[]>([]);
   const [interventions, setInterventions] = useState<Intervention[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [clientEquipements, setClientEquipements] = useState<ClientEquipement[]>([]);
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
+
   const [filteredContracts, setFilteredContracts] = useState<Contract[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
-  const [clientFilter, setClientFilter] = useState('all');
+  const [clientFilter, setClientFilter] = useState<number | 'all'>('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [frequencyFilter, setFrequencyFilter] = useState('all');
 
@@ -69,11 +68,23 @@ export default function ContratsPage() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    setContracts(mockContracts);
-    setInterventions(mockInterventions);
-  }, []);
+    Promise.all([
+      fetch('/api/contracts').then((r) => r.json()),
+      fetch('/api/interventions').then((r) => r.json()),
+      fetch('/api/clients').then((r) => r.json()),
+      fetch('/api/client-equipements').then((r) => r.json()),
+      fetch('/api/equipements').then((r) => r.json()),
+    ])
+      .then(([cs, ivs, cls, ces, eqs]) => {
+        if (Array.isArray(cs)) setContracts(cs);
+        if (Array.isArray(ivs)) setInterventions(ivs);
+        if (Array.isArray(cls)) setClients(cls);
+        if (Array.isArray(ces)) setClientEquipements(ces);
+        if (Array.isArray(eqs)) setEquipments(eqs);
+      })
+      .catch(() => showError('Erreur lors du chargement des données.'));
+  }, [showError]);
 
-  // Calculate contract status based on dates
   const calculateStatus = (contract: Contract): 'ACTIF' | 'EXPIRE' | 'BIENTOT_EXPIRE' => {
     const today = new Date();
     const dateFin = new Date(contract.dateFin);
@@ -95,7 +106,10 @@ export default function ContratsPage() {
       result = result.filter(
         (c) =>
           c.reference.toLowerCase().includes(searchTerm.toLowerCase()) ||
-          (() => { const cl = mockClients.find((client) => client.id === c.clientId); return cl ? getClientDisplayName(cl).toLowerCase().includes(searchTerm.toLowerCase()) : false; })()
+          (() => {
+            const cl = clients.find((client) => client.id === c.clientId);
+            return cl ? getClientDisplayName(cl).toLowerCase().includes(searchTerm.toLowerCase()) : false;
+          })()
       );
     }
 
@@ -112,7 +126,7 @@ export default function ContratsPage() {
     }
 
     setFilteredContracts(result);
-  }, [contracts, searchTerm, clientFilter, statusFilter, frequencyFilter]);
+  }, [contracts, searchTerm, clientFilter, statusFilter, frequencyFilter, clients]);
 
   useEffect(() => { setPage(1); }, [searchTerm, clientFilter, statusFilter, frequencyFilter]);
 
@@ -125,7 +139,10 @@ export default function ContratsPage() {
       sortData(filteredContracts, sortConfig, (contract, key) => {
         switch (key) {
           case 'reference': return contract.reference;
-          case 'client': { const cl = mockClients.find((c) => c.id === contract.clientId); return cl ? getClientDisplayName(cl) : ''; }
+          case 'client': {
+            const cl = clients.find((c) => c.id === contract.clientId);
+            return cl ? getClientDisplayName(cl) : '';
+          }
           case 'dateDebut': return contract.dateDebut;
           case 'dateFin': return contract.dateFin;
           case 'periodicite': return contract.periodicite;
@@ -134,7 +151,7 @@ export default function ContratsPage() {
           default: return '';
         }
       }),
-    [filteredContracts, sortConfig]
+    [filteredContracts, sortConfig, clients]
   );
 
   const pagedContracts = useMemo(
@@ -143,50 +160,106 @@ export default function ContratsPage() {
   );
 
   const handleAddContract = useCallback(
-    ({ contract: contractData, preventiveInterventions }: ContractFormSubmitPayload) => {
-      const contractId = `contract-${Date.now()}`;
-      const newContract: Contract = { ...contractData, id: contractId };
-      const newInterventions = preventiveInterventions.map((preview, index) =>
-        preventivePreviewToIntervention(preview, { contractId, index })
-      );
-      setContracts((prev) => [...prev, newContract]);
-      if (newInterventions.length > 0) {
-        setInterventions((prev) => [...prev, ...newInterventions]);
+    async ({ contract: contractData }: ContractFormSubmitPayload) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch('/api/contracts', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reference: contractData.reference,
+            clientId: contractData.clientId,
+            dateDebut: contractData.dateDebut,
+            dateFin: contractData.dateFin,
+            periodicite: contractData.periodicite,
+            description: contractData.description,
+            clientEquipementIds: contractData.clientEquipementIds,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? 'Erreur lors de la création du contrat.');
+          return;
+        }
+        setContracts((prev) => [...prev, data]);
+        // Refresh interventions to pick up generated preventive ones
+        fetch('/api/interventions')
+          .then((r) => r.json())
+          .then((ivs) => { if (Array.isArray(ivs)) setInterventions(ivs); })
+          .catch(() => {});
+        setIsFormOpen(false);
+        setSelectedContract(undefined);
+        const count: number = data.interventionsCreated ?? 0;
+        showSuccess(
+          count > 0
+            ? `Contrat créé avec ${count} intervention${count > 1 ? 's' : ''} préventive${count > 1 ? 's' : ''} planifiée${count > 1 ? 's' : ''}`
+            : 'Contrat créé avec succès'
+        );
+      } catch {
+        showError('Erreur lors de la création du contrat.');
+      } finally {
+        setIsSubmitting(false);
       }
-      setIsFormOpen(false);
-      setSelectedContract(undefined);
-      const count = newInterventions.length;
-      showSuccess(
-        count > 0
-          ? `Contrat créé avec ${count} intervention${count > 1 ? 's' : ''} préventive${count > 1 ? 's' : ''} planifiée${count > 1 ? 's' : ''}`
-          : 'Contrat créé avec succès'
-      );
     },
-    [showSuccess]
+    [showSuccess, showError]
   );
 
   const handleUpdateContract = useCallback(
-    ({ contract: contractData }: ContractFormSubmitPayload) => {
+    async ({ contract: contractData }: ContractFormSubmitPayload) => {
       if (!selectedContract) return;
-      setContracts((prev) =>
-        prev.map((c) =>
-          c.id === selectedContract.id ? { ...c, ...contractData } : c
-        )
-      );
-      setIsFormOpen(false);
-      setSelectedContract(undefined);
-      showSuccess('Contrat modifié avec succès');
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/contracts/${selectedContract.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            reference: contractData.reference,
+            dateDebut: contractData.dateDebut,
+            dateFin: contractData.dateFin,
+            periodicite: contractData.periodicite,
+            description: contractData.description,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? 'Erreur lors de la modification du contrat.');
+          return;
+        }
+        setContracts((prev) => prev.map((c) => (c.id === selectedContract.id ? data : c)));
+        setIsFormOpen(false);
+        setSelectedContract(undefined);
+        showSuccess('Contrat modifié avec succès');
+      } catch {
+        showError('Erreur lors de la modification du contrat.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [selectedContract, showSuccess]
+    [selectedContract, showSuccess, showError]
   );
 
-  const handleDeleteContract = useCallback(() => {
+  const handleDeleteContract = useCallback(async () => {
     if (!contractToDelete) return;
-    setContracts((prev) => prev.filter((c) => c.id !== contractToDelete.id));
-    setIsConfirmOpen(false);
-    setContractToDelete(null);
-    showSuccess('Contrat supprimé');
-  }, [contractToDelete, showSuccess]);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/contracts/${contractToDelete.id}`, {
+        method: 'DELETE',
+      });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        showError((data as { error?: string }).error ?? 'Erreur lors de la suppression du contrat.');
+        return;
+      }
+      setContracts((prev) => prev.filter((c) => c.id !== contractToDelete.id));
+      setIsConfirmOpen(false);
+      setContractToDelete(null);
+      showSuccess('Contrat supprimé');
+    } catch {
+      showError('Erreur lors de la suppression du contrat.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [contractToDelete, showSuccess, showError]);
 
   const handleEditClick = (contract: Contract) => {
     setSelectedContract(contract);
@@ -203,12 +276,15 @@ export default function ContratsPage() {
     setIsConfirmOpen(true);
   };
 
-  const getClientName = (clientId: string): string => {
-    const c = mockClients.find((cl) => cl.id === clientId);
-    return c ? getClientDisplayName(c) : 'N/A';
-  };
+  const getClientName = useCallback(
+    (clientId: number): string => {
+      const c = clients.find((cl) => cl.id === clientId);
+      return c ? getClientDisplayName(c) : 'N/A';
+    },
+    [clients]
+  );
 
-  const getEquipmentCount = (ids: string[]): number => ids.length;
+  const getEquipmentCount = (ids: number[]): number => ids.length;
 
   const getContractStatus = (contract: Contract) => calculateStatus(contract);
 
@@ -273,14 +349,14 @@ export default function ContratsPage() {
               </Select>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <Select value={clientFilter} onValueChange={setClientFilter}>
+              <Select value={clientFilter === 'all' ? 'all' : String(clientFilter)} onValueChange={(v) => setClientFilter(v === 'all' ? 'all' : Number(v))}>
                 <SelectTrigger className="h-9">
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les clients</SelectItem>
-                  {mockClients.map((client) => (
-                    <SelectItem key={client.id} value={client.id}>
+                  {clients.map((client) => (
+                    <SelectItem key={client.id} value={String(client.id)}>
                       {getClientDisplayName(client)}
                     </SelectItem>
                   ))}
@@ -395,6 +471,9 @@ export default function ContratsPage() {
             setSelectedContract(undefined);
           }}
           onSubmit={selectedContract ? handleUpdateContract : handleAddContract}
+          isLoading={isSubmitting}
+          clients={clients}
+          clientEquipements={clientEquipements}
           interventions={interventions}
         />
 
@@ -403,13 +482,16 @@ export default function ContratsPage() {
           contract={detailContract}
           onClose={() => setIsDetailOpen(false)}
           interventions={interventions}
+          clients={clients}
+          clientEquipements={clientEquipements}
+          equipments={equipments}
         />
 
         {/* Delete Confirmation */}
         <ConfirmDialog
           open={isConfirmOpen}
           title="Supprimer le contrat"
-          description={`Êtes-vous sûr de vouloir supprimer ${contractToDelete?.reference}? Cette suppression est simulée et concerne uniquement l'interface.`}
+          description={`Êtes-vous sûr de vouloir supprimer le contrat ${contractToDelete?.reference} ? Cette action est irréversible.`}
           actionLabel="Supprimer"
           actionVariant="destructive"
           onConfirm={handleDeleteContract}

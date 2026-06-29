@@ -6,7 +6,8 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { authenticate } from '@/lib/auth';
+import { setAuthSession } from '@/lib/auth'
+import type { AuthSession } from '@/types';
 
 const TEST_ACCOUNTS = [
   { label: 'Administrateur', identifier: 'admin@sav.com', phone: '71100200', password: 'admin123' },
@@ -22,19 +23,31 @@ export default function LoginPage() {
   const [error, setError] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setError('');
     setIsLoading(true);
 
-    const session = authenticate(identifier, password);
-    if (session) {
-      router.push('/dashboard');
-    } else {
-      setError('Identifiant ou mot de passe incorrect.');
-    }
+    try {
+      const res = await fetch('/api/auth/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ identifier, password }),
+      });
 
-    setIsLoading(false);
+      if (res.ok) {
+        const session = (await res.json()) as AuthSession;
+        setAuthSession(session);
+        router.push('/dashboard');
+      } else {
+        const body = await res.json().catch(() => ({})) as { error?: string };
+        setError(body.error ?? 'Identifiant ou mot de passe incorrect.');
+      }
+    } catch {
+      setError('Impossible de contacter le serveur. Vérifiez votre connexion.');
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (

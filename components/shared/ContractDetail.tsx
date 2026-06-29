@@ -1,6 +1,6 @@
 'use client';
 
-import { Contract, Intervention, ClientEquipement, Equipment } from '@/types';
+import { Contract, Intervention, Client, ClientEquipement, Equipment } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -37,6 +37,7 @@ interface ContractDetailProps {
   contract: Contract | null;
   onClose: () => void;
   interventions?: Intervention[];
+  clients?: Client[];
   clientEquipements?: ClientEquipement[];
   equipments?: Equipment[];
 }
@@ -46,12 +47,13 @@ export function ContractDetail({
   contract,
   onClose,
   interventions = mockInterventions,
+  clients = mockClients,
   clientEquipements = mockClientEquipements,
   equipments = mockEquipments,
 }: ContractDetailProps) {
   if (!contract) return null;
 
-  const foundClient = mockClients.find((c) => c.id === contract.clientId);
+  const foundClient = clients.find((c) => c.id === contract.clientId);
   const clientName = foundClient ? getClientDisplayName(foundClient) : 'N/A';
 
   const coveredInstallations = contract.clientEquipementIds.map((ceId) => {
@@ -195,12 +197,10 @@ export function ContractDetail({
                     {preventiveInterventions.map((i) => {
                       const ce = i.clientEquipementId
                         ? clientEquipements.find((c) => c.id === i.clientEquipementId)
-                        : clientEquipements.find(
-                            (c) =>
-                              c.equipementId === i.equipementId &&
-                              c.clientId === contract.clientId
-                          );
-                      const eq = equipments.find((e) => e.id === i.equipementId);
+                        : undefined;
+                      const eq = ce
+                        ? equipments.find((e) => e.id === ce.equipementId)
+                        : undefined;
                       const eqLabel = eq ? `${eq.reference} — ${eq.modele}` : '—';
                       return (
                         <tr

@@ -1,6 +1,6 @@
 'use client';
 
-import { Invoice, Intervention } from '@/types';
+import { Client, Invoice, Intervention } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -45,7 +45,8 @@ interface Props {
   intervention?: Intervention;
   isAdmin: boolean;
   onClose: () => void;
-  onMarkPaid?: (invoiceId: string) => void;
+  onMarkPaid?: (invoiceId: number) => void;
+  clients?: Client[];
 }
 
 export function InvoiceDetail({
@@ -55,10 +56,11 @@ export function InvoiceDetail({
   isAdmin,
   onClose,
   onMarkPaid,
+  clients = mockClients,
 }: Props) {
   if (!invoice) return null;
 
-  const client = mockClients.find((c) => c.id === invoice.clientId);
+  const client = clients.find((c) => c.id === invoice.clientId);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>

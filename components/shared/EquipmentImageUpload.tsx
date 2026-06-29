@@ -33,7 +33,7 @@ export function EquipmentImageUpload({ images, onChange }: EquipmentImageUploadP
       files.map(async (file, index): Promise<EquipmentImage> => {
         const previewUrl = await readFileAsDataURL(file);
         return {
-          id: `img-${Date.now()}-${index}`,
+          id: -(Date.now() + index),
           filename: file.name,
           previewUrl,
           isMain: !hasMain && index === 0,
@@ -45,11 +45,11 @@ export function EquipmentImageUpload({ images, onChange }: EquipmentImageUploadP
     if (inputRef.current) inputRef.current.value = '';
   };
 
-  const handleSetMain = (id: string) => {
+  const handleSetMain = (id: number) => {
     onChange(images.map((img) => ({ ...img, isMain: img.id === id })));
   };
 
-  const handleRemove = (id: string) => {
+  const handleRemove = (id: number) => {
     const filtered = images.filter((img) => img.id !== id);
     if (filtered.length > 0 && !filtered.some((img) => img.isMain)) {
       filtered[0] = { ...filtered[0], isMain: true };

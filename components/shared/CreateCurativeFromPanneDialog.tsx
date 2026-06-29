@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useEffect } from 'react';
-import { Panne, User } from '@/types';
+import { Client, Contract, Equipment, Intervention, Panne, User } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Input } from '@/components/ui/input';
@@ -24,9 +24,10 @@ import {
 import { mockClients } from '@/data/mock-clients';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockInterventions } from '@/data/mock-interventions';
+import { mockContracts } from '@/data/mock-contracts';
 import {
   getActiveTechnicians,
-  getContractCoverage,
+  findActiveContractForClientEquipement,
   isTechnicianAvailable,
   TECHNICIAN_UNAVAILABLE_MESSAGE,
 } from '@/lib/interventions';
@@ -42,6 +43,11 @@ interface CreateCurativeFromPanneDialogProps {
     datePrevue: string;
     description: string;
   }) => void;
+  clients?: Client[];
+  equipments?: Equipment[];
+  interventions?: Intervention[];
+  users?: User[];
+  contracts?: Contract[];
 }
 
 export function CreateCurativeFromPanneDialog({
@@ -49,13 +55,20 @@ export function CreateCurativeFromPanneDialog({
   panne,
   onClose,
   onConfirm,
+  clients = mockClients,
+  equipments = mockEquipments,
+  interventions = mockInterventions,
+  users = [],
+  contracts = mockContracts,
 }: CreateCurativeFromPanneDialogProps) {
   const [technicienId, setTechnicienId] = useState<string>('none');
   const [datePrevue, setDatePrevue] = useState<string>('');
   const [description, setDescription] = useState<string>('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
-  const technicians = getActiveTechnicians();
+  const technicians = users.length > 0
+    ? users.filter((u) => u.role === 'technician' && u.actif)
+    : getActiveTechnicians();
 
   useEffect(() => {
     if (panne) {
@@ -68,14 +81,15 @@ export function CreateCurativeFromPanneDialog({
 
   if (!panne) return null;
 
-  const client = mockClients.find((c) => c.id === panne.clientId);
-  const equipment = mockEquipments.find((e) => e.id === panne.equipementId);
+  const client = clients.find((c) => c.id === panne.clientId);
+  const equipment = equipments.find((e) => e.id === panne.equipementId);
 
-  // Check contract coverage
-  const { couvertureContrat, contractId } = getContractCoverage(
-    panne.equipementId,
-    panne.clientId
-  );
+  // Compute contract coverage from CE-based lookup (preferred) with passed contracts
+  const coveringContract = panne.clientEquipementId
+    ? findActiveContractForClientEquipement(panne.clientEquipementId, panne.clientId, contracts)
+    : undefined;
+  const couvertureContrat = coveringContract !== undefined;
+  const contractId = coveringContract?.id;
 
   const validate = () => {
     const newErrors: Record<string, string> = {};
@@ -96,7 +110,7 @@ export function CreateCurativeFromPanneDialog({
     if (
       technicienId !== 'none' &&
       datePrevue &&
-      !isTechnicianAvailable(technicienId, datePrevue, mockInterventions)
+      !isTechnicianAvailable(Number(technicienId), datePrevue, interventions)
     ) {
       newErrors.technicienId = TECHNICIAN_UNAVAILABLE_MESSAGE;
     }
@@ -202,14 +216,14 @@ export function CreateCurativeFromPanneDialog({
                 disabled={!datePrevue}
               >
                 <SelectTrigger id="technicien">
-                  <SelectValue placeholder={datePrevue ? 'Choisir un technicien' : 'Sélectionnez d\'abord une date'} />
+                  <SelectValue placeholder={datePrevue ? 'Choisir un technicien' : "Sélectionnez d'abord une date"} />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="none">Non affecté</SelectItem>
                   {technicians.map((tech) => {
-                    const unavailable = datePrevue && !isTechnicianAvailable(tech.id, datePrevue, mockInterventions);
+                    const unavailable = datePrevue && !isTechnicianAvailable(tech.id, datePrevue, interventions);
                     return (
-                      <SelectItem key={tech.id} value={tech.id} disabled={!!unavailable}>
+                      <SelectItem key={tech.id} value={String(tech.id)} disabled={!!unavailable}>
                         {tech.prenom} {tech.nom}{unavailable ? ' (indisponible)' : ''}
                       </SelectItem>
                     );

@@ -1,7 +1,7 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import { Intervention, InterventionType } from '@/types';
+import { Intervention, InterventionType, Client, ClientEquipement, Equipment, User, Contract } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
@@ -21,9 +21,11 @@ import {
   DialogTitle,
 } from '@/components/ui/dialog';
 import { mockClients } from '@/data/mock-clients';
-import { getClientDisplayName } from '@/lib/utils';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
+import { mockEquipments } from '@/data/mock-equipments';
+import { mockContracts } from '@/data/mock-contracts';
 import { INTERVENTION_TYPE_LABELS } from '@/lib/constants';
+import { getClientDisplayName } from '@/lib/utils';
 import {
   getActiveTechnicians,
   getClientEquipements,
@@ -53,6 +55,11 @@ interface InterventionFormProps {
   onClose: () => void;
   onSubmit: (data: InterventionFormData) => void;
   isLoading?: boolean;
+  clients?: Client[];
+  clientEquipements?: ClientEquipement[];
+  equipments?: Equipment[];
+  users?: User[];
+  contracts?: Contract[];
 }
 
 function FormField({
@@ -80,14 +87,19 @@ export function InterventionForm({
   onClose,
   onSubmit,
   isLoading = false,
+  clients = mockClients,
+  clientEquipements = mockClientEquipements,
+  equipments = mockEquipments,
+  users = [],
+  contracts = mockContracts,
 }: InterventionFormProps) {
   const [formData, setFormData] = useState({
     type: intervention?.type ?? ('PREVENTIVE' as InterventionType),
-    clientId: intervention?.clientId ?? '',
-    clientEquipementId: intervention?.clientEquipementId ?? '',
-    equipementId: intervention?.equipementId ?? '',
-    technicienId: intervention?.technicienId,
-    contractId: intervention?.contractId,
+    clientId: intervention?.clientId ? String(intervention.clientId) : '',
+    clientEquipementId: intervention?.clientEquipementId ? String(intervention.clientEquipementId) : '',
+    equipementId: intervention?.equipementId ? String(intervention.equipementId) : '',
+    technicienId: intervention?.technicienId != null ? String(intervention.technicienId) : undefined as string | undefined,
+    contractId: intervention?.contractId != null ? String(intervention.contractId) : undefined as string | undefined,
     datePrevue: intervention?.datePrevue ?? '',
     description: intervention?.description ?? '',
     couvertureContrat: intervention?.couvertureContrat ?? false,
@@ -96,43 +108,47 @@ export function InterventionForm({
 
   useEffect(() => {
     if (open) {
-      // Derive CE id from intervention — prefer explicit field, fall back to pair lookup
-      let ceId = intervention?.clientEquipementId ?? '';
+      let ceId: string = intervention?.clientEquipementId ? String(intervention.clientEquipementId) : '';
       if (!ceId && intervention?.clientId && intervention?.equipementId) {
         const ce = getClientEquipementByEquipmentAndClient(
           intervention.clientId,
-          intervention.equipementId
+          intervention.equipementId,
+          clientEquipements
         );
-        ceId = ce?.id ?? '';
+        ceId = ce?.id ? String(ce.id) : '';
       }
       setFormData({
         type: intervention?.type ?? 'PREVENTIVE',
-        clientId: intervention?.clientId ?? '',
+        clientId: intervention?.clientId ? String(intervention.clientId) : '',
         clientEquipementId: ceId,
-        equipementId: intervention?.equipementId ?? '',
-        technicienId: intervention?.technicienId,
-        contractId: intervention?.contractId,
+        equipementId: intervention?.equipementId ? String(intervention.equipementId) : '',
+        technicienId: intervention?.technicienId != null ? String(intervention.technicienId) : undefined,
+        contractId: intervention?.contractId != null ? String(intervention.contractId) : undefined,
         datePrevue: intervention?.datePrevue ?? '',
         description: intervention?.description ?? '',
         couvertureContrat: intervention?.couvertureContrat ?? false,
       });
       setErrors({});
     }
-  }, [open, intervention]);
+  }, [open, intervention, clientEquipements]);
 
-  const availableCEs = getClientEquipements(formData.clientId);
-  const technicians = getActiveTechnicians();
+  const availableCEs = formData.clientId
+    ? getClientEquipements(Number(formData.clientId), clientEquipements)
+    : [];
+  const technicians = users.length > 0
+    ? users.filter((u) => u.role === 'technician' && u.actif)
+    : getActiveTechnicians();
 
   const updateCoverage = (ceId: string, clientId: string) => {
     if (!ceId || !clientId) {
       setFormData((prev) => ({ ...prev, couvertureContrat: false, contractId: undefined }));
       return;
     }
-    const contract = findActiveContractForClientEquipement(ceId, clientId);
+    const contract = findActiveContractForClientEquipement(Number(ceId), Number(clientId), contracts);
     setFormData((prev) => ({
       ...prev,
       couvertureContrat: contract !== undefined,
-      contractId: contract?.id,
+      contractId: contract?.id ? String(contract.id) : undefined,
     }));
   };
 
@@ -155,7 +171,7 @@ export function InterventionForm({
       formData.technicienId &&
       formData.datePrevue &&
       !isTechnicianAvailable(
-        formData.technicienId,
+        Number(formData.technicienId),
         formData.datePrevue,
         interventions,
         intervention?.id
@@ -237,8 +253,8 @@ export function InterventionForm({
                 <SelectValue placeholder="Sélectionner un client" />
               </SelectTrigger>
               <SelectContent>
-                {mockClients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
+                {clients.map((client) => (
+                  <SelectItem key={client.id} value={String(client.id)}>
                     {getClientDisplayName(client)}
                   </SelectItem>
                 ))}
@@ -251,8 +267,8 @@ export function InterventionForm({
               value={formData.clientEquipementId}
               disabled={!formData.clientId}
               onValueChange={(ceId) => {
-                const ce = mockClientEquipements.find((c) => c.id === ceId);
-                const eqId = ce?.equipementId ?? '';
+                const ce = clientEquipements.find((c) => String(c.id) === ceId);
+                const eqId = ce?.equipementId ? String(ce.equipementId) : '';
                 setFormData({ ...formData, clientEquipementId: ceId, equipementId: eqId });
                 updateCoverage(ceId, formData.clientId);
               }}
@@ -273,12 +289,12 @@ export function InterventionForm({
                   </SelectItem>
                 ) : (
                   availableCEs.map((ce) => {
-                    const eq = getEquipementForClientEquipement(ce.id);
+                    const eq = getEquipementForClientEquipement(ce.id, clientEquipements, equipments);
                     const label = eq
                       ? `${eq.reference} — ${eq.marque} ${eq.modele} (${ce.localisation})`
-                      : ce.equipementId;
+                      : String(ce.equipementId);
                     return (
-                      <SelectItem key={ce.id} value={ce.id}>
+                      <SelectItem key={ce.id} value={String(ce.id)}>
                         {label}
                       </SelectItem>
                     );
@@ -338,7 +354,7 @@ export function InterventionForm({
                     ? isTechnicianAvailable(tech.id, formData.datePrevue, interventions, intervention?.id)
                     : true;
                   return (
-                    <SelectItem key={tech.id} value={tech.id} disabled={!available}>
+                    <SelectItem key={tech.id} value={String(tech.id)} disabled={!available}>
                       {tech.prenom} {tech.nom} — {available ? 'Disponible' : 'Occupé ce jour'}
                     </SelectItem>
                   );

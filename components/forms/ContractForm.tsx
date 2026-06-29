@@ -3,6 +3,7 @@
 import { useState, useEffect, useMemo } from 'react';
 import {
   Contract,
+  Client,
   ClientEquipement,
   Intervention,
   PreventiveInterventionPreview,
@@ -46,6 +47,7 @@ interface ContractFormProps {
   onClose: () => void;
   onSubmit: (payload: ContractFormSubmitPayload) => void;
   isLoading?: boolean;
+  clients?: Client[];
   clientEquipements?: ClientEquipement[];
   interventions?: Intervention[];
 }
@@ -56,13 +58,14 @@ export function ContractForm({
   onClose,
   onSubmit,
   isLoading = false,
+  clients = mockClients,
   clientEquipements = mockClientEquipements,
   interventions,
 }: ContractFormProps) {
   const [formData, setFormData] = useState({
     reference: contract?.reference ?? '',
-    clientId: contract?.clientId ?? '',
-    clientEquipementIds: contract?.clientEquipementIds ?? [],
+    clientId: contract?.clientId ? String(contract.clientId) : '',
+    clientEquipementIds: contract?.clientEquipementIds ?? ([] as number[]),
     dateDebut: contract?.dateDebut ?? '',
     dateFin: contract?.dateFin ?? '',
     periodicite: contract?.periodicite ?? ('MENSUELLE' as const),
@@ -72,9 +75,11 @@ export function ContractForm({
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [previewRows, setPreviewRows] = useState<PreventiveInterventionPreview[]>([]);
 
+  const clientIdNum = formData.clientId ? Number(formData.clientId) : 0;
+
   const availableCEs = useMemo(
-    () => clientEquipements.filter((ce) => ce.clientId === formData.clientId),
-    [clientEquipements, formData.clientId]
+    () => clientEquipements.filter((ce) => ce.clientId === clientIdNum),
+    [clientEquipements, clientIdNum]
   );
 
   // Stable string key capturing all preview-relevant fields
@@ -109,7 +114,7 @@ export function ContractForm({
       return;
     }
     const generated = generatePreventiveInterventionPreviews({
-      clientId,
+      clientId: Number(clientId),
       clientEquipementIds,
       dateDebut,
       dateFin,
@@ -152,7 +157,7 @@ export function ContractForm({
     onSubmit({
       contract: {
         reference: formData.reference,
-        clientId: formData.clientId,
+        clientId: Number(formData.clientId),
         clientEquipementIds: formData.clientEquipementIds,
         dateDebut: formData.dateDebut,
         dateFin: formData.dateFin,
@@ -175,7 +180,7 @@ export function ContractForm({
     setPreviewRows([]);
   };
 
-  const toggleCE = (ceId: string) => {
+  const toggleCE = (ceId: number) => {
     setFormData((prev) => ({
       ...prev,
       clientEquipementIds: prev.clientEquipementIds.includes(ceId)
@@ -225,8 +230,8 @@ export function ContractForm({
                 <SelectValue placeholder="Sélectionner un client" />
               </SelectTrigger>
               <SelectContent>
-                {mockClients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
+                {clients.map((client) => (
+                  <SelectItem key={client.id} value={String(client.id)}>
                     {getClientDisplayName(client)}
                   </SelectItem>
                 ))}
@@ -310,13 +315,13 @@ export function ContractForm({
                   return (
                     <div key={ce.id} className="flex items-center gap-2">
                       <Checkbox
-                        id={ce.id}
+                        id={String(ce.id)}
                         checked={formData.clientEquipementIds.includes(ce.id)}
                         onCheckedChange={() => toggleCE(ce.id)}
                         disabled={isLoading}
                       />
                       <Label
-                        htmlFor={ce.id}
+                        htmlFor={String(ce.id)}
                         className="text-sm font-normal cursor-pointer flex-1"
                       >
                         {label}

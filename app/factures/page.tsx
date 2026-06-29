@@ -2,16 +2,13 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { Invoice, Intervention } from '@/types';
+import { Client, Invoice, Intervention, LigneFacture } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { InvoiceDetail } from '@/components/shared/InvoiceDetail';
 import { GenerateInvoiceDialog } from '@/components/shared/GenerateInvoiceDialog';
-import { mockInvoices } from '@/data/mock-invoices';
-import { mockInterventions } from '@/data/mock-interventions';
-import { mockClients } from '@/data/mock-clients';
 import { getClientIdForUser } from '@/lib/interventions';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -44,7 +41,6 @@ import {
 import { SortableHeader } from '@/components/shared/SortableHeader';
 import { TablePagination } from '@/components/shared/TablePagination';
 import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
-
 import { formatDate, getClientDisplayName } from '@/lib/utils';
 
 function formatTND(amount: number): string {
@@ -54,14 +50,16 @@ function formatTND(amount: number): string {
 export default function FacturesPage() {
   const router = useRouter();
   const { user: currentUser, isLoading } = useAuth();
-  const { showSuccess } = useToast();
+  const { showSuccess, showError } = useToast();
 
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [interventions, setInterventions] = useState<Intervention[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [clientFilter, setClientFilter] = useState('all');
+  const [clientFilter, setClientFilter] = useState<number | 'all'>('all');
 
   const [selectedInvoice, setSelectedInvoice] = useState<Invoice | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -70,22 +68,34 @@ export default function FacturesPage() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    setInvoices(mockInvoices);
-    setInterventions(mockInterventions);
-  }, []);
+    Promise.all([
+      fetch('/api/factures').then((r) => r.json()),
+      fetch('/api/interventions').then((r) => r.json()),
+      fetch('/api/clients').then((r) => r.json()),
+    ])
+      .then(([facs, ivs, cls]) => {
+        if (Array.isArray(facs)) setInvoices(facs);
+        if (Array.isArray(ivs)) setInterventions(ivs);
+        if (Array.isArray(cls)) setClients(cls);
+      })
+      .catch(() => showError('Erreur lors du chargement des données.'));
+  }, [showError]);
 
   const clientId = useMemo(() => {
     if (!currentUser || currentUser.role !== 'client') return null;
     return getClientIdForUser(currentUser);
   }, [currentUser]);
 
-  const getClientName = useCallback((id: string): string => {
-    const c = mockClients.find((cl) => cl.id === id);
-    return c ? getClientDisplayName(c) : 'N/A';
-  }, []);
+  const getClientName = useCallback(
+    (id: number): string => {
+      const c = clients.find((cl) => cl.id === id);
+      return c ? getClientDisplayName(c) : 'N/A';
+    },
+    [clients]
+  );
 
   const getInterventionRef = useCallback(
-    (interventionId?: string): string => {
+    (interventionId?: number): string => {
       if (!interventionId) return '—';
       return interventions.find((i) => i.id === interventionId)?.reference ?? '—';
     },
@@ -110,11 +120,11 @@ export default function FacturesPage() {
     if (searchTerm.trim()) {
       const term = searchTerm.toLowerCase();
       list = list.filter((inv) => {
-        const client = mockClients.find((c) => c.id === inv.clientId);
+        const clientName = getClientName(inv.clientId).toLowerCase();
         const intRef = getInterventionRef(inv.interventionId).toLowerCase();
         return (
           inv.numero.toLowerCase().includes(term) ||
-          (client ? getClientDisplayName(client).toLowerCase().includes(term) : false) ||
+          clientName.includes(term) ||
           intRef.includes(term)
         );
       });
@@ -131,7 +141,7 @@ export default function FacturesPage() {
     return [...list].sort(
       (a, b) => new Date(b.dateEmission).getTime() - new Date(a.dateEmission).getTime()
     );
-  }, [invoices, interventions, currentUser, clientId, searchTerm, statusFilter, clientFilter, getInterventionRef]);
+  }, [invoices, currentUser, clientId, searchTerm, statusFilter, clientFilter, getClientName, getInterventionRef]);
 
   useEffect(() => { setPage(1); }, [searchTerm, statusFilter, clientFilter]);
 
@@ -144,7 +154,7 @@ export default function FacturesPage() {
     return sortData(filteredInvoices, sortConfig, (inv, key) => {
       switch (key) {
         case 'numero': return inv.numero;
-        case 'client': { const cl = mockClients.find((c) => c.id === inv.clientId); return cl ? getClientDisplayName(cl) : ''; }
+        case 'client': return getClientName(inv.clientId);
         case 'intervention': return getInterventionRef(inv.interventionId);
         case 'montantHT': return inv.montantHT;
         case 'montantTTC': return inv.montantTTC;
@@ -153,7 +163,7 @@ export default function FacturesPage() {
         default: return '';
       }
     });
-  }, [filteredInvoices, sortConfig, getInterventionRef]);
+  }, [filteredInvoices, sortConfig, getClientName, getInterventionRef]);
 
   const pagedInvoices = useMemo(
     () => paginateData(sortedInvoices, page, 10),
@@ -161,25 +171,64 @@ export default function FacturesPage() {
   );
 
   const handleMarkPaid = useCallback(
-    (invoiceId: string) => {
-      setInvoices((prev) =>
-        prev.map((inv) => (inv.id === invoiceId ? { ...inv, statut: 'PAYEE' } : inv))
-      );
-      setSelectedInvoice((prev) =>
-        prev?.id === invoiceId ? { ...prev, statut: 'PAYEE' } : prev
-      );
-      showSuccess('Facture marquée comme payée.');
+    async (invoiceId: number) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/factures/${invoiceId}/pay`, { method: 'PATCH' });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? 'Erreur lors du marquage en payé.');
+          return;
+        }
+        setInvoices((prev) =>
+          prev.map((inv) =>
+            inv.id === invoiceId ? { ...inv, statut: 'PAYEE' as Invoice['statut'] } : inv
+          )
+        );
+        setSelectedInvoice((prev) =>
+          prev?.id === invoiceId ? { ...prev, statut: 'PAYEE' as Invoice['statut'] } : prev
+        );
+        showSuccess('Facture marquée comme payée.');
+      } catch {
+        showError('Erreur lors du marquage en payé.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [showSuccess]
+    [showSuccess, showError]
   );
 
   const handleGenerate = useCallback(
-    (invoice: Invoice) => {
-      setInvoices((prev) => [invoice, ...prev]);
-      showSuccess('Facture générée avec succès.');
-      setIsGenerateOpen(false);
+    async (data: { interventionId: string; lignes: LigneFacture[] }) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch('/api/factures', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            interventionId: data.interventionId,
+            lignes: data.lignes.map((l) => ({
+              description: l.description,
+              quantite: l.quantite,
+              prixUnitaire: l.prixUnitaire,
+            })),
+          }),
+        });
+        const result = await res.json();
+        if (!res.ok) {
+          showError(result.error ?? 'Erreur lors de la génération de la facture.');
+          return;
+        }
+        setInvoices((prev) => [result, ...prev]);
+        showSuccess('Facture générée avec succès.');
+        setIsGenerateOpen(false);
+      } catch {
+        showError('Erreur lors de la génération de la facture.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [showSuccess]
+    [showSuccess, showError]
   );
 
   const handleViewDetail = useCallback((invoice: Invoice) => {
@@ -287,14 +336,14 @@ export default function FacturesPage() {
             </Select>
 
             {isAdmin && (
-              <Select value={clientFilter} onValueChange={setClientFilter}>
+              <Select value={clientFilter === 'all' ? 'all' : String(clientFilter)} onValueChange={(v) => setClientFilter(v === 'all' ? 'all' : Number(v))}>
                 <SelectTrigger className="h-9 text-xs">
                   <SelectValue placeholder="Tous les clients" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les clients</SelectItem>
-                  {mockClients.map((client) => (
-                    <SelectItem key={client.id} value={client.id}>
+                  {clients.map((client) => (
+                    <SelectItem key={client.id} value={String(client.id)}>
                       {getClientDisplayName(client)}
                     </SelectItem>
                   ))}
@@ -379,6 +428,7 @@ export default function FacturesPage() {
                             variant="outline"
                             className="h-8 gap-1 border-green-200 hover:bg-green-50 hover:text-green-800 text-green-600 font-medium text-xs px-2"
                             title="Marquer payée"
+                            disabled={isSubmitting}
                             onClick={() => handleMarkPaid(invoice.id)}
                           >
                             <CheckCircle size={14} />
@@ -410,6 +460,7 @@ export default function FacturesPage() {
         invoice={selectedInvoice}
         intervention={linkedIntervention}
         isAdmin={isAdmin}
+        clients={clients}
         onClose={() => {
           setIsDetailOpen(false);
           setSelectedInvoice(null);
@@ -425,6 +476,8 @@ export default function FacturesPage() {
           interventions={interventions}
           existingInvoices={invoices}
           onGenerate={handleGenerate}
+          clients={clients}
+          isLoading={isSubmitting}
         />
       )}
     </AppLayout>

@@ -1,20 +1,16 @@
 'use client';
 
 import { useState, useCallback, useMemo, useEffect } from 'react';
-import { Intervention } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { HistoryInterventionDetail } from '@/components/shared/HistoryInterventionDetail';
+import { HistoryInterventionDetail, type EnrichedIntervention } from '@/components/shared/HistoryInterventionDetail';
 import { StatCard } from '@/components/dashboard/StatCard';
-import { mockInterventions } from '@/data/mock-interventions';
-import { mockClients } from '@/data/mock-clients';
-import { mockEquipments } from '@/data/mock-equipments';
-import { mockUsers } from '@/data/mock-users';
-import { getClientIdForUser, getTechnicianName, isDateInRange } from '@/lib/interventions';
+import { getClientIdForUser, isDateInRange } from '@/lib/interventions';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
+import type { Client } from '@/types';
 import {
   INTERVENTION_TYPE_LABELS,
   INTERVENTION_STATUS_LABELS,
@@ -67,61 +63,98 @@ function formatDuration(minutes: number): string {
 
 export default function HistoriquePage() {
   const { user: currentUser, isLoading } = useAuth();
-  const { showSuccess } = useToast();
+  const { showSuccess, showError } = useToast();
 
   // Filters
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statutFilter, setStatutFilter] = useState('all');
-  const [clientFilter, setClientFilter] = useState('all');
-  const [techFilter, setTechFilter] = useState('all');
-  const [equipFilter, setEquipFilter] = useState('all');
+  const [clientFilter, setClientFilter] = useState<number | 'all'>('all');
+  const [techFilter, setTechFilter] = useState<number | 'all'>('all');
+  const [equipFilter, setEquipFilter] = useState<number | 'all'>('all');
   const [dateDebut, setDateDebut] = useState('');
   const [dateFin, setDateFin] = useState('');
 
+  // API state
+  const [historicInterventions, setHistoricInterventions] = useState<EnrichedIntervention[]>([]);
+  const [isPageLoading, setIsPageLoading] = useState(true);
+
   // Detail sheet
-  const [selectedIntervention, setSelectedIntervention] = useState<Intervention | null>(null);
+  const [selectedIntervention, setSelectedIntervention] = useState<EnrichedIntervention | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [page, setPage] = useState(1);
 
-  // Client ID for the logged-in client user
-  const clientId = useMemo(() => {
-    if (!currentUser || currentUser.role !== 'client') return null;
-    return getClientIdForUser(currentUser);
-  }, [currentUser]);
+  // Fetch historical interventions from API
+  useEffect(() => {
+    if (!currentUser) return;
+    setIsPageLoading(true);
+    const load = async () => {
+      try {
+        let url = `/api/historique?role=${currentUser.role}`;
+        if (currentUser.role === 'technician') url += `&userId=${currentUser.id}`;
+        else if (currentUser.role === 'client') url += `&clientId=${getClientIdForUser(currentUser)}`;
+        const res = await fetch(url);
+        if (!res.ok) throw new Error();
+        const data = await res.json();
+        setHistoricInterventions(Array.isArray(data) ? data : []);
+      } catch {
+        showError("Erreur lors du chargement de l'historique.");
+      } finally {
+        setIsPageLoading(false);
+      }
+    };
+    load();
+  }, [currentUser?.role, currentUser?.id, showError]);
 
-  // Helper lookups (stable references — mock data never changes)
+  // Lookup maps built from enriched API response
+  const clientMap = useMemo(() => {
+    const map = new Map<number, { typeClient: string; societe?: string | null; contact?: string | null; prenom?: string | null; nom?: string | null; email: string }>();
+    historicInterventions.forEach((i) => {
+      if (i.client && !map.has(i.clientId)) map.set(i.clientId, i.client);
+    });
+    return map;
+  }, [historicInterventions]);
+
+  const technicienMap = useMemo(() => {
+    const map = new Map<number, { prenom: string; nom: string }>();
+    historicInterventions.forEach((i) => {
+      if (i.technicien && i.technicienId != null && !map.has(i.technicienId)) {
+        map.set(i.technicienId, i.technicien);
+      }
+    });
+    return map;
+  }, [historicInterventions]);
+
+  const equipmentMap = useMemo(() => {
+    const map = new Map<number, { reference: string; marque: string; modele: string }>();
+    historicInterventions.forEach((i) => {
+      if (i.clientEquipement?.equipement && i.equipementId != null && !map.has(i.equipementId)) {
+        map.set(i.equipementId, i.clientEquipement.equipement);
+      }
+    });
+    return map;
+  }, [historicInterventions]);
+
+  // Helper lookups using enriched API data
   const getClientName = useCallback(
-    (id: string): string => {
-      const c = mockClients.find((cl) => cl.id === id);
-      return c ? getClientDisplayName(c) : 'N/A';
+    (id: number): string => {
+      const c = clientMap.get(id);
+      return c ? getClientDisplayName(c as Client) : 'N/A';
     },
-    []
+    [clientMap]
   );
 
-  const getEquipmentLabel = useCallback((id: string): string => {
-    const eq = mockEquipments.find((e) => e.id === id);
+  const getEquipmentLabel = useCallback((id: number): string => {
+    const eq = equipmentMap.get(id);
     return eq ? `${eq.reference} — ${eq.marque} ${eq.modele}` : 'N/A';
-  }, []);
+  }, [equipmentMap]);
 
-  // ─── Base historical list (role-scoped, no UI filters) ────────────────────
-
-  const historicInterventions = useMemo<Intervention[]>(() => {
-    if (!currentUser) return [];
-
-    const all = mockInterventions.filter(
-      (i) => i.statut === 'REALISEE' || i.statut === 'ANNULEE'
-    );
-
-    if (currentUser.role === 'admin') return all;
-    if (currentUser.role === 'technician') {
-      return all.filter((i) => i.technicienId === currentUser.id);
-    }
-    // client
-    if (!clientId) return [];
-    return all.filter((i) => i.clientId === clientId);
-  }, [currentUser, clientId]);
+  const getTechName = useCallback((id?: number): string => {
+    if (id == null) return '—';
+    const t = technicienMap.get(id);
+    return t ? `${t.prenom} ${t.nom}` : '—';
+  }, [technicienMap]);
 
   // ─── Stats (from base list, unaffected by UI filters) ────────────────────
 
@@ -138,30 +171,26 @@ export default function HistoriquePage() {
     };
   }, [historicInterventions]);
 
-  // ─── Dropdown option sets (derived from base list for relevance) ──────────
+  // ─── Dropdown option sets (derived from enriched API data) ──────────────
 
-  const availableClients = useMemo(() => {
-    const ids = new Set(historicInterventions.map((i) => i.clientId));
-    return mockClients.filter((c) => ids.has(c.id));
-  }, [historicInterventions]);
+  const availableClients = useMemo(
+    () => Array.from(clientMap.entries()).map(([id, c]) => ({ id, ...c })),
+    [clientMap]
+  );
 
-  const availableTechnicians = useMemo(() => {
-    const ids = new Set(
-      historicInterventions
-        .map((i) => i.technicienId)
-        .filter((id): id is string => id != null)
-    );
-    return mockUsers.filter((u) => u.role === 'technician' && ids.has(u.id));
-  }, [historicInterventions]);
+  const availableTechnicians = useMemo(
+    () => Array.from(technicienMap.entries()).map(([id, t]) => ({ id, ...t })),
+    [technicienMap]
+  );
 
-  const availableEquipments = useMemo(() => {
-    const ids = new Set(historicInterventions.map((i) => i.equipementId));
-    return mockEquipments.filter((e) => ids.has(e.id));
-  }, [historicInterventions]);
+  const availableEquipments = useMemo(
+    () => Array.from(equipmentMap.entries()).map(([id, e]) => ({ id, ...e })),
+    [equipmentMap]
+  );
 
   // ─── Filtered + sorted table rows ─────────────────────────────────────────
 
-  const filteredInterventions = useMemo<Intervention[]>(() => {
+  const filteredInterventions = useMemo<EnrichedIntervention[]>(() => {
     let list = historicInterventions;
 
     if (searchTerm.trim()) {
@@ -169,7 +198,7 @@ export default function HistoriquePage() {
       list = list.filter((i) => {
         const clientName = getClientName(i.clientId).toLowerCase();
         const eqLabel = getEquipmentLabel(i.equipementId).toLowerCase();
-        const techName = getTechnicianName(i.technicienId).toLowerCase();
+        const techName = getTechName(i.technicienId).toLowerCase();
         return (
           i.reference.toLowerCase().includes(term) ||
           clientName.includes(term) ||
@@ -211,6 +240,7 @@ export default function HistoriquePage() {
     dateFin,
     getClientName,
     getEquipmentLabel,
+    getTechName,
   ]);
 
   useEffect(() => { setPage(1); }, [searchTerm, typeFilter, statutFilter, clientFilter, techFilter, equipFilter, dateDebut, dateFin]);
@@ -227,14 +257,14 @@ export default function HistoriquePage() {
         case 'type': return i.type;
         case 'client': return getClientName(i.clientId);
         case 'equipment': return getEquipmentLabel(i.equipementId);
-        case 'technicien': return getTechnicianName(i.technicienId);
+        case 'technicien': return getTechName(i.technicienId);
         case 'datePrevue': return i.datePrevue;
         case 'dateRealisation': return i.dateRealisation ?? '';
         case 'statut': return i.statut;
         default: return '';
       }
     });
-  }, [filteredInterventions, sortConfig, getClientName, getEquipmentLabel]);
+  }, [filteredInterventions, sortConfig, getClientName, getEquipmentLabel, getTechName]);
 
   const pagedHistorique = useMemo(
     () => paginateData(sortedHistorique, page, 20),
@@ -243,7 +273,7 @@ export default function HistoriquePage() {
 
   // ─── Actions ──────────────────────────────────────────────────────────────
 
-  const handleViewDetail = useCallback((intervention: Intervention) => {
+  const handleViewDetail = useCallback((intervention: EnrichedIntervention) => {
     setSelectedIntervention(intervention);
     setIsDetailOpen(true);
   }, []);
@@ -268,7 +298,7 @@ export default function HistoriquePage() {
       INTERVENTION_TYPE_LABELS[i.type] ?? i.type,
       getClientName(i.clientId),
       getEquipmentLabel(i.equipementId),
-      getTechnicianName(i.technicienId),
+      getTechName(i.technicienId),
       i.datePrevue,
       i.dateRealisation ?? '',
       INTERVENTION_STATUS_LABELS[i.statut] ?? i.statut,
@@ -282,7 +312,7 @@ export default function HistoriquePage() {
       .join('\n');
 
     showSuccess('Export CSV simulé avec succès.');
-  }, [filteredInterventions, getClientName, getEquipmentLabel, showSuccess]);
+  }, [filteredInterventions, getClientName, getEquipmentLabel, getTechName, showSuccess]);
 
   // ─── Role title ───────────────────────────────────────────────────────────
 
@@ -297,7 +327,7 @@ export default function HistoriquePage() {
 
   // ─── Loading ──────────────────────────────────────────────────────────────
 
-  if (isLoading) {
+  if (isLoading || isPageLoading) {
     return (
       <div className="flex items-center justify-center min-h-screen bg-background">
         <div className="text-center">
@@ -418,15 +448,15 @@ export default function HistoriquePage() {
           {/* Row 2: admin filters + equipment + dates */}
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3">
             {isAdmin && (
-              <Select value={clientFilter} onValueChange={setClientFilter}>
+              <Select value={clientFilter === 'all' ? 'all' : String(clientFilter)} onValueChange={(v) => setClientFilter(v === 'all' ? 'all' : Number(v))}>
                 <SelectTrigger className="h-9 text-xs">
                   <SelectValue placeholder="Tous les clients" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les clients</SelectItem>
                   {availableClients.map((c) => (
-                    <SelectItem key={c.id} value={c.id}>
-                      {getClientDisplayName(c)}
+                    <SelectItem key={c.id} value={String(c.id)}>
+                      {getClientDisplayName(c as Client)}
                     </SelectItem>
                   ))}
                 </SelectContent>
@@ -434,14 +464,14 @@ export default function HistoriquePage() {
             )}
 
             {isAdmin && (
-              <Select value={techFilter} onValueChange={setTechFilter}>
+              <Select value={techFilter === 'all' ? 'all' : String(techFilter)} onValueChange={(v) => setTechFilter(v === 'all' ? 'all' : Number(v))}>
                 <SelectTrigger className="h-9 text-xs">
                   <SelectValue placeholder="Tous les techniciens" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="all">Tous les techniciens</SelectItem>
                   {availableTechnicians.map((u) => (
-                    <SelectItem key={u.id} value={u.id}>
+                    <SelectItem key={u.id} value={String(u.id)}>
                       {u.prenom} {u.nom}
                     </SelectItem>
                   ))}
@@ -449,14 +479,14 @@ export default function HistoriquePage() {
               </Select>
             )}
 
-            <Select value={equipFilter} onValueChange={setEquipFilter}>
+            <Select value={equipFilter === 'all' ? 'all' : String(equipFilter)} onValueChange={(v) => setEquipFilter(v === 'all' ? 'all' : Number(v))}>
               <SelectTrigger className="h-9 text-xs">
                 <SelectValue placeholder="Tous les équipements" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tous les équipements</SelectItem>
                 {availableEquipments.map((e) => (
-                  <SelectItem key={e.id} value={e.id}>
+                  <SelectItem key={e.id} value={String(e.id)}>
                     {e.reference} — {e.marque} {e.modele}
                   </SelectItem>
                 ))}
@@ -536,7 +566,7 @@ export default function HistoriquePage() {
                       </TableCell>
                       {isAdmin && (
                         <TableCell className="text-xs">
-                          {getTechnicianName(intervention.technicienId)}
+                          {getTechName(intervention.technicienId)}
                         </TableCell>
                       )}
                       <TableCell className="text-xs text-muted-foreground">

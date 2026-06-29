@@ -18,7 +18,7 @@ import {
 import { SortableHeader } from '@/components/shared/SortableHeader';
 import { TablePagination } from '@/components/shared/TablePagination';
 import { type SortConfig, sortData, paginateData, toggleSort } from '@/lib/table';
-import { Intervention, InterventionStatut, User } from '@/types';
+import { Client, ClientEquipement, Equipment, Intervention, InterventionStatut, User } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
@@ -30,9 +30,6 @@ import { ChangeStatusDialog } from '@/components/shared/ChangeStatusDialog';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
 import { StatusBadge } from '@/components/shared/StatusBadge';
 import { EmptyState } from '@/components/shared/EmptyState';
-import { mockInterventions } from '@/data/mock-interventions';
-import { mockClients } from '@/data/mock-clients';
-import { mockEquipments } from '@/data/mock-equipments';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -64,12 +61,8 @@ import {
 } from '@/lib/constants';
 import {
   filterInterventionsByRole,
-  generateInterventionReference,
-  getActiveTechnicians,
   getTechnicianName,
   isDateInRange,
-  isTechnicianAvailable,
-  TECHNICIAN_UNAVAILABLE_MESSAGE,
 } from '@/lib/interventions';
 import { Badge } from '@/components/ui/badge';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
@@ -80,11 +73,17 @@ export default function InterventionsPage() {
   const { showSuccess, showError } = useToast();
 
   const [interventions, setInterventions] = useState<Intervention[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [clientEquipements, setClientEquipements] = useState<ClientEquipement[]>([]);
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statutFilter, setStatutFilter] = useState('all');
-  const [clientFilter, setClientFilter] = useState('all');
-  const [technicianFilter, setTechnicianFilter] = useState('all');
+  const [clientFilter, setClientFilter] = useState<number | 'all'>('all');
+  const [technicianFilter, setTechnicianFilter] = useState<number | 'all'>('all');
   const [dateStart, setDateStart] = useState('');
   const [dateEnd, setDateEnd] = useState('');
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
@@ -105,8 +104,22 @@ export default function InterventionsPage() {
   }, [isLoading, user, router]);
 
   useEffect(() => {
-    setInterventions(mockInterventions);
-  }, []);
+    Promise.all([
+      fetch('/api/interventions').then((r) => r.json()),
+      fetch('/api/clients').then((r) => r.json()),
+      fetch('/api/client-equipements').then((r) => r.json()),
+      fetch('/api/equipements').then((r) => r.json()),
+      fetch('/api/users').then((r) => r.json()),
+    ])
+      .then(([ivs, cls, ces, eqs, us]) => {
+        if (Array.isArray(ivs)) setInterventions(ivs);
+        if (Array.isArray(cls)) setClients(cls);
+        if (Array.isArray(ces)) setClientEquipements(ces);
+        if (Array.isArray(eqs)) setEquipments(eqs);
+        if (Array.isArray(us)) setUsers(us);
+      })
+      .catch(() => showError('Erreur lors du chargement des données.'));
+  }, [showError]);
 
   const roleScoped = useMemo(() => {
     if (!user) return [];
@@ -119,12 +132,10 @@ export default function InterventionsPage() {
     if (searchTerm.trim()) {
       const q = searchTerm.toLowerCase();
       result = result.filter((intervention) => {
-        const cl = mockClients.find((c) => c.id === intervention.clientId);
+        const cl = clients.find((c) => c.id === intervention.clientId);
         const clientName = cl ? getClientDisplayName(cl) : '';
-        const equipmentLabel = (() => {
-          const eq = mockEquipments.find((e) => e.id === intervention.equipementId);
-          return eq ? `${eq.reference} ${eq.marque} ${eq.modele}` : '';
-        })();
+        const eq = equipments.find((e) => e.id === intervention.equipementId);
+        const equipmentLabel = eq ? `${eq.reference} ${eq.marque} ${eq.modele}` : '';
         const techName = getTechnicianName(intervention.technicienId).toLowerCase();
 
         return (
@@ -163,6 +174,8 @@ export default function InterventionsPage() {
     technicianFilter,
     dateStart,
     dateEnd,
+    clients,
+    equipments,
   ]);
 
   // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -178,15 +191,15 @@ export default function InterventionsPage() {
         switch (key) {
           case 'reference': return i.reference;
           case 'type': return i.type;
-          case 'client': { const cl = mockClients.find((c) => c.id === i.clientId); return cl ? getClientDisplayName(cl) : ''; }
-          case 'equipment': return mockEquipments.find((e) => e.id === i.equipementId)?.reference ?? '';
+          case 'client': { const cl = clients.find((c) => c.id === i.clientId); return cl ? getClientDisplayName(cl) : ''; }
+          case 'equipment': return equipments.find((e) => e.id === i.equipementId)?.reference ?? '';
           case 'technicien': return getTechnicianName(i.technicienId);
           case 'datePrevue': return i.datePrevue;
           case 'statut': return i.statut;
           default: return '';
         }
       }),
-    [filteredInterventions, sortConfig]
+    [filteredInterventions, sortConfig, clients, equipments]
   );
 
   const pagedInterventions = useMemo(
@@ -198,136 +211,249 @@ export default function InterventionsPage() {
   const isTechnician = user?.role === ROLES.TECHNICIAN;
   const isClient = user?.role === ROLES.CLIENT;
 
-  const getClientName = (clientId: string) => {
-    const c = mockClients.find((cl) => cl.id === clientId);
-    return c ? getClientDisplayName(c) : 'N/A';
-  };
+  const activeTechnicians = useMemo(
+    () => users.filter((u) => u.role === 'technician' && u.actif),
+    [users]
+  );
 
-  const getEquipmentLabel = (equipementId: string) => {
-    const eq = mockEquipments.find((e) => e.id === equipementId);
+  const getClientName = useCallback((clientId: number) => {
+    const c = clients.find((cl) => cl.id === clientId);
+    return c ? getClientDisplayName(c) : 'N/A';
+  }, [clients]);
+
+  const getEquipmentLabel = useCallback((equipementId: number) => {
+    if (!equipementId) return 'N/A';
+    const eq = equipments.find((e) => e.id === equipementId);
     return eq ? `${eq.reference}` : 'N/A';
-  };
+  }, [equipments]);
 
   const handleAdd = useCallback(
-    (formData: InterventionFormData) => {
-      if (
-        formData.technicienId &&
-        !isTechnicianAvailable(formData.technicienId, formData.datePrevue, interventions)
-      ) {
-        showError(TECHNICIAN_UNAVAILABLE_MESSAGE);
-        return;
+    async (formData: InterventionFormData) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch('/api/interventions', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            type: formData.type,
+            clientId: formData.clientId,
+            clientEquipementId: formData.clientEquipementId,
+            technicienId: formData.technicienId,
+            contractId: formData.contractId,
+            datePrevue: formData.datePrevue,
+            description: formData.description,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de la création de l'intervention.");
+          return;
+        }
+        setInterventions((prev) => [...prev, data]);
+        setIsFormOpen(false);
+        setSelectedIntervention(undefined);
+        showSuccess('Intervention créée avec succès');
+      } catch {
+        showError("Erreur lors de la création de l'intervention.");
+      } finally {
+        setIsSubmitting(false);
       }
-
-      const newIntervention: Intervention = {
-        id: `int-${Date.now()}`,
-        reference: generateInterventionReference(interventions),
-        ...formData,
-        statut: 'PLANIFIEE',
-      };
-      setInterventions((prev) => [...prev, newIntervention]);
-      setIsFormOpen(false);
-      setSelectedIntervention(undefined);
-      showSuccess('Intervention créée avec succès');
     },
-    [interventions, showSuccess, showError]
+    [showSuccess, showError]
   );
 
   const handleUpdate = useCallback(
-    (formData: InterventionFormData) => {
+    async (formData: InterventionFormData) => {
       if (!selectedIntervention) return;
-      if (
-        formData.technicienId &&
-        !isTechnicianAvailable(
-          formData.technicienId,
-          formData.datePrevue,
-          interventions,
-          selectedIntervention.id
-        )
-      ) {
-        showError(TECHNICIAN_UNAVAILABLE_MESSAGE);
-        return;
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/interventions/${selectedIntervention.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            description: formData.description,
+            datePrevue: formData.datePrevue,
+            technicienId: formData.technicienId,
+            contractId: formData.contractId,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de la modification de l'intervention.");
+          return;
+        }
+        setInterventions((prev) =>
+          prev.map((i) => (i.id === selectedIntervention.id ? data : i))
+        );
+        setIsFormOpen(false);
+        setSelectedIntervention(undefined);
+        showSuccess('Intervention modifiée avec succès');
+      } catch {
+        showError("Erreur lors de la modification de l'intervention.");
+      } finally {
+        setIsSubmitting(false);
       }
-
-      setInterventions((prev) =>
-        prev.map((i) =>
-          i.id === selectedIntervention.id ? { ...i, ...formData } : i
-        )
-      );
-      setIsFormOpen(false);
-      setSelectedIntervention(undefined);
-      showSuccess('Intervention modifiée avec succès');
     },
-    [selectedIntervention, interventions, showSuccess, showError]
+    [selectedIntervention, showSuccess, showError]
   );
 
-  const handleDelete = useCallback(() => {
+  const handleDelete = useCallback(async () => {
     if (!deleteIntervention) return;
-    setInterventions((prev) => prev.filter((i) => i.id !== deleteIntervention.id));
-    setDeleteIntervention(null);
-    showSuccess('Intervention supprimée');
-  }, [deleteIntervention, showSuccess]);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/interventions/${deleteIntervention.id}`, { method: 'DELETE' });
+      if (!res.ok) {
+        const data = await res.json().catch(() => ({}));
+        showError((data as { error?: string }).error ?? "Erreur lors de la suppression de l'intervention.");
+        return;
+      }
+      setInterventions((prev) => prev.filter((i) => i.id !== deleteIntervention.id));
+      setDeleteIntervention(null);
+      showSuccess('Intervention supprimée');
+    } catch {
+      showError("Erreur lors de la suppression de l'intervention.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [deleteIntervention, showSuccess, showError]);
 
   const handleAssign = useCallback(
-    (technicienId: string) => {
+    async (technicienId: string) => {
       if (!assignIntervention) return;
-      setInterventions((prev) =>
-        prev.map((i) =>
-          i.id === assignIntervention.id ? { ...i, technicienId } : i
-        )
-      );
-      setAssignIntervention(null);
-      showSuccess('Technicien affecté');
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/interventions/${assignIntervention.id}/assign`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ technicienId }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de l'affectation du technicien.");
+          return;
+        }
+        setInterventions((prev) =>
+          prev.map((i) =>
+            i.id === assignIntervention.id ? { ...i, technicienId: data.technicienId } : i
+          )
+        );
+        setAssignIntervention(null);
+        showSuccess('Technicien affecté');
+      } catch {
+        showError("Erreur lors de l'affectation du technicien.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [assignIntervention, showSuccess]
+    [assignIntervention, showSuccess, showError]
   );
 
   const handleStatusChange = useCallback(
-    (statut: InterventionStatut) => {
+    async (statut: InterventionStatut) => {
       if (!statusIntervention) return;
-      setInterventions((prev) =>
-        prev.map((i) => (i.id === statusIntervention.id ? { ...i, statut } : i))
-      );
-      setStatusIntervention(null);
-      showSuccess('Statut mis à jour');
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/interventions/${statusIntervention.id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ statut }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? 'Erreur lors du changement de statut.');
+          return;
+        }
+        setInterventions((prev) =>
+          prev.map((i) =>
+            i.id === statusIntervention.id
+              ? { ...i, statut: data.statut, dateRealisation: data.dateRealisation }
+              : i
+          )
+        );
+        setStatusIntervention(null);
+        showSuccess('Statut mis à jour');
+      } catch {
+        showError('Erreur lors du changement de statut.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [statusIntervention, showSuccess]
+    [statusIntervention, showSuccess, showError]
   );
 
   const handleStart = useCallback(
-    (intervention: Intervention) => {
-      setInterventions((prev) =>
-        prev.map((i) =>
-          i.id === intervention.id ? { ...i, statut: 'EN_COURS' as const } : i
-        )
-      );
-      showSuccess('Intervention démarrée');
+    async (intervention: Intervention) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/interventions/${intervention.id}/status`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ statut: 'EN_COURS' }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors du démarrage de l'intervention.");
+          return;
+        }
+        setInterventions((prev) =>
+          prev.map((i) => (i.id === intervention.id ? { ...i, statut: data.statut } : i))
+        );
+        showSuccess('Intervention démarrée');
+      } catch {
+        showError("Erreur lors du démarrage de l'intervention.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [showSuccess]
+    [showSuccess, showError]
   );
 
   const handleClose = useCallback(
-    (data: CloseInterventionData) => {
+    async (data: CloseInterventionData) => {
       if (!closeIntervention) return;
-      setInterventions((prev) =>
-        prev.map((i) =>
-          i.id === closeIntervention.id
-            ? {
-                ...i,
-                statut: data.statut,
-                dateRealisation: data.dateRealisation,
-                diagnostic: data.diagnostic,
-                actionsRealisees: data.actionsRealisees,
-                materielUtilise: data.materielUtilise || undefined,
-                dureeMinutes: data.dureeMinutes,
-                observations: data.observations || undefined,
-              }
-            : i
-        )
-      );
-      setCloseIntervention(null);
-      showSuccess('Intervention clôturée');
+      setIsSubmitting(true);
+      try {
+        let res: Response;
+        if (data.statut === 'ANNULEE') {
+          res = await fetch(`/api/interventions/${closeIntervention.id}/status`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ statut: 'ANNULEE' }),
+          });
+        } else {
+          res = await fetch(`/api/interventions/${closeIntervention.id}/close`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              diagnostic: data.diagnostic,
+              actionsRealisees: data.actionsRealisees,
+              materielUtilise: data.materielUtilise,
+              dureeMinutes: data.dureeMinutes,
+              observations: data.observations,
+            }),
+          });
+        }
+        const json = await res.json();
+        if (!res.ok) {
+          showError(json.error ?? "Erreur lors de la clôture de l'intervention.");
+          return;
+        }
+        setInterventions((prev) =>
+          prev.map((i) => {
+            if (i.id !== closeIntervention.id) return i;
+            if (data.statut === 'ANNULEE') return { ...i, statut: 'ANNULEE' as InterventionStatut };
+            return json as Intervention;
+          })
+        );
+        setCloseIntervention(null);
+        showSuccess('Intervention clôturée');
+      } catch {
+        showError("Erreur lors de la clôture de l'intervention.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [closeIntervention, showSuccess]
+    [closeIntervention, showSuccess, showError]
   );
 
   if (isLoading || !user) {
@@ -407,14 +533,14 @@ export default function InterventionsPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {(isAdmin || isTechnician) && (
-            <Select value={clientFilter} onValueChange={setClientFilter}>
+            <Select value={clientFilter === 'all' ? 'all' : String(clientFilter)} onValueChange={(v) => setClientFilter(v === 'all' ? 'all' : Number(v))}>
               <SelectTrigger className="h-9">
                 <SelectValue placeholder="Client" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tous les clients</SelectItem>
-                {mockClients.map((client) => (
-                  <SelectItem key={client.id} value={client.id}>
+                {clients.map((client) => (
+                  <SelectItem key={client.id} value={String(client.id)}>
                     {getClientDisplayName(client)}
                   </SelectItem>
                 ))}
@@ -422,14 +548,14 @@ export default function InterventionsPage() {
             </Select>
           )}
           {isAdmin && (
-            <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
+            <Select value={technicianFilter === 'all' ? 'all' : String(technicianFilter)} onValueChange={(v) => setTechnicianFilter(v === 'all' ? 'all' : Number(v))}>
               <SelectTrigger className="h-9">
                 <SelectValue placeholder="Technicien" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tous les techniciens</SelectItem>
-                {getActiveTechnicians().map((tech) => (
-                  <SelectItem key={tech.id} value={tech.id}>
+                {activeTechnicians.map((tech) => (
+                  <SelectItem key={tech.id} value={String(tech.id)}>
                     {tech.prenom} {tech.nom}
                   </SelectItem>
                 ))}
@@ -518,6 +644,11 @@ export default function InterventionsPage() {
             setSelectedIntervention(undefined);
           }}
           onSubmit={selectedIntervention ? handleUpdate : handleAdd}
+          isLoading={isSubmitting}
+          clients={clients}
+          clientEquipements={clientEquipements}
+          equipments={equipments}
+          users={users}
         />
       )}
 
@@ -535,6 +666,7 @@ export default function InterventionsPage() {
             interventions={interventions}
             onClose={() => setAssignIntervention(null)}
             onAssign={handleAssign}
+            users={users}
           />
           <ChangeStatusDialog
             open={!!statusIntervention}
@@ -545,7 +677,7 @@ export default function InterventionsPage() {
           <ConfirmDialog
             open={!!deleteIntervention}
             title="Supprimer l'intervention"
-            description={`Êtes-vous sûr de vouloir supprimer ${deleteIntervention?.reference} ? Cette suppression est simulée.`}
+            description={`Êtes-vous sûr de vouloir supprimer ${deleteIntervention?.reference} ? Cette action est irréversible.`}
             actionLabel="Supprimer"
             actionVariant="destructive"
             onConfirm={handleDelete}
@@ -569,8 +701,8 @@ export default function InterventionsPage() {
 interface InterventionTableRowProps {
   intervention: Intervention;
   user: User;
-  getClientName: (id: string) => string;
-  getEquipmentLabel: (id: string) => string;
+  getClientName: (id: number) => string;
+  getEquipmentLabel: (id: number) => string;
   onView: () => void;
   onEdit: () => void;
   onAssign: () => void;

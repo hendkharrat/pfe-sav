@@ -23,26 +23,75 @@ import { INTERVENTION_TYPE_LABELS } from '@/lib/constants';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
 import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 import { FileText } from 'lucide-react';
+import type { Client, Equipment } from '@/types';
+
+export type EnrichedIntervention = Intervention & {
+  client?: {
+    typeClient: string;
+    societe?: string | null;
+    contact?: string | null;
+    prenom?: string | null;
+    nom?: string | null;
+    email: string;
+  };
+  technicien?: { id: string; prenom: string; nom: string; email: string } | null;
+  clientEquipement?: {
+    id: string;
+    localisation?: string | null;
+    equipement?: {
+      id: string;
+      reference: string;
+      type: string;
+      marque: string;
+      modele: string;
+    } | null;
+  } | null;
+  contract?: { id: string; reference: string; description?: string | null } | null;
+  facture?: {
+    id: string;
+    numero: string;
+    statut: string;
+    montantTTC: number;
+    dateEmission?: string;
+  } | null;
+};
 
 interface Props {
   open: boolean;
-  intervention: Intervention | null;
+  intervention: EnrichedIntervention | null;
   onClose: () => void;
 }
 
 export function HistoryInterventionDetail({ open, intervention, onClose }: Props) {
   if (!intervention) return null;
 
-  const client = mockClients.find((c) => c.id === intervention.clientId);
-  const equipment = mockEquipments.find((e) => e.id === intervention.equipementId);
-  const contract = intervention.contractId
-    ? mockContracts.find((c) => c.id === intervention.contractId)
-    : undefined;
-  const invoice = mockInvoices.find((inv) => inv.interventionId === intervention.id);
+  const client =
+    (intervention.client as Client | undefined) ??
+    mockClients.find((c) => c.id === intervention.clientId);
 
-  const clientEquipement = intervention.clientEquipementId
-    ? mockClientEquipements.find((ce) => ce.id === intervention.clientEquipementId)
-    : getClientEquipementByEquipmentAndClient(intervention.clientId, intervention.equipementId);
+  const equipment =
+    (intervention.clientEquipement?.equipement as Equipment | undefined) ??
+    mockEquipments.find((e) => e.id === intervention.equipementId);
+
+  const contract =
+    intervention.contract ??
+    (intervention.contractId
+      ? mockContracts.find((c) => c.id === intervention.contractId)
+      : undefined);
+
+  const invoice =
+    intervention.facture ??
+    mockInvoices.find((inv) => inv.interventionId === intervention.id);
+
+  const clientEquipement =
+    intervention.clientEquipement ??
+    (intervention.clientEquipementId
+      ? mockClientEquipements.find((ce) => ce.id === intervention.clientEquipementId)
+      : getClientEquipementByEquipmentAndClient(intervention.clientId, intervention.equipementId));
+
+  const technicienName = intervention.technicien
+    ? `${intervention.technicien.prenom} ${intervention.technicien.nom}`
+    : getTechnicianName(intervention.technicienId);
 
   return (
     <Dialog open={open} onOpenChange={(isOpen) => !isOpen && onClose()}>
@@ -94,7 +143,7 @@ export function HistoryInterventionDetail({ open, intervention, onClose }: Props
           </DetailRow>
 
           <DetailRow label="Technicien">
-            <p className="font-medium">{getTechnicianName(intervention.technicienId)}</p>
+            <p className="font-medium">{technicienName}</p>
           </DetailRow>
 
           <Separator />
@@ -177,11 +226,17 @@ export function HistoryInterventionDetail({ open, intervention, onClose }: Props
                 <div className="flex items-center gap-2">
                   <FileText size={14} className="text-primary shrink-0" />
                   <p className="font-mono font-semibold text-primary">{invoice.numero}</p>
-                  <StatusBadge status={invoice.statut} type="invoice" />
+                  <StatusBadge
+                    status={invoice.statut as 'PAYEE' | 'IMPAYEE' | 'EN_ATTENTE'}
+                    type="invoice"
+                  />
                 </div>
-                <p className="text-sm text-muted-foreground mt-1">
-                  {invoice.montantTTC.toFixed(2)} TND TTC — émise le {formatDate(invoice.dateEmission)}
-                </p>
+                {invoice.dateEmission && (
+                  <p className="text-sm text-muted-foreground mt-1">
+                    {invoice.montantTTC.toFixed(2)} TND TTC — émise le{' '}
+                    {formatDate(invoice.dateEmission)}
+                  </p>
+                )}
               </DetailRow>
             </>
           )}

@@ -1,26 +1,7 @@
 import { AuthSession, UserRole } from '@/types';
-import { mockUsers } from '@/data/mock-users';
-import { mockClients } from '@/data/mock-clients';
 
 const AUTH_STORAGE_KEY = 'sav_session';
 const LEGACY_AUTH_STORAGE_KEY = 'sav-manager-auth';
-
-/** Normalize phone for comparison: strip all whitespace. */
-function normalizePhone(phone: string): string {
-  return phone.trim().replace(/\s+/g, '');
-}
-
-/** Returns true if the login identifier matches the user's email or phone. */
-function matchesIdentifier(identifier: string, email: string, telephone?: string): boolean {
-  const norm = identifier.trim().toLowerCase();
-  if (email.toLowerCase() === norm) return true;
-  if (telephone) {
-    const normId = normalizePhone(norm);
-    const normStored = normalizePhone(telephone);
-    if (normStored.toLowerCase() === normId) return true;
-  }
-  return false;
-}
 
 function isValidSession(raw: unknown): raw is AuthSession {
   if (!raw || typeof raw !== 'object') return false;
@@ -72,48 +53,6 @@ export function clearAuthSession(): void {
   if (typeof window === 'undefined') return;
   localStorage.removeItem(AUTH_STORAGE_KEY);
   localStorage.removeItem(LEGACY_AUTH_STORAGE_KEY);
-}
-
-export function authenticate(identifier: string, password: string): AuthSession | null {
-  // 1. Try internal users (admin / technician)
-  const user = mockUsers.find((u) => matchesIdentifier(identifier, u.email, u.telephone));
-  if (user) {
-    if (!user.password || user.password !== password) return null;
-    const session: AuthSession = {
-      isAuthenticated: true,
-      loginTime: new Date().toISOString(),
-      role: user.role,
-      displayName: `${user.prenom} ${user.nom}`,
-      email: user.email,
-      telephone: user.telephone,
-      userId: user.id,
-    };
-    setAuthSession(session);
-    return session;
-  }
-
-  // 2. Try business clients
-  const client = mockClients.find((c) => matchesIdentifier(identifier, c.email, c.telephone));
-  if (client) {
-    if (!client.password || client.password !== password) return null;
-    const displayName =
-      client.typeClient === 'PERSONNE_PHYSIQUE'
-        ? `${client.prenom ?? ''} ${client.nom ?? ''}`.trim()
-        : (client.societe ?? client.contact ?? client.email);
-    const session: AuthSession = {
-      isAuthenticated: true,
-      loginTime: new Date().toISOString(),
-      role: 'client',
-      displayName,
-      email: client.email,
-      telephone: client.telephone,
-      clientId: client.id,
-    };
-    setAuthSession(session);
-    return session;
-  }
-
-  return null;
 }
 
 export function logoutUser(): void {

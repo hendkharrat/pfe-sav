@@ -53,7 +53,8 @@ export function PreventiveInterventionPreviewTable({
   const [bulkTechId, setBulkTechId] = useState('');
   const technicians = getActiveTechnicians();
 
-  const updateRowTech = (previewId: string, technicienId: string | undefined) => {
+  const updateRowTech = (previewId: string, techIdStr: string | undefined) => {
+    const technicienId = techIdStr != null ? Number(techIdStr) : undefined;
     onChange(previews.map((p) => (p.id === previewId ? { ...p, technicienId } : p)));
   };
 
@@ -66,11 +67,12 @@ export function PreventiveInterventionPreviewTable({
   const handleBulkAssign = () => {
     if (!bulkTechId) return;
     const usedDates = new Set<string>();
+    const bulkTechNum = Number(bulkTechId);
     const updated = previews.map((p) => {
       if (usedDates.has(p.datePrevue)) return p;
-      if (!isTechnicianAvailable(bulkTechId, p.datePrevue, interventions)) return p;
+      if (!isTechnicianAvailable(bulkTechNum, p.datePrevue, interventions)) return p;
       usedDates.add(p.datePrevue);
-      return { ...p, technicienId: bulkTechId };
+      return { ...p, technicienId: bulkTechNum };
     });
     onChange(updated);
   };
@@ -126,7 +128,7 @@ export function PreventiveInterventionPreviewTable({
           </SelectTrigger>
           <SelectContent>
             {technicians.map((t) => (
-              <SelectItem key={t.id} value={t.id}>
+              <SelectItem key={t.id} value={String(t.id)}>
                 {t.prenom} {t.nom}
               </SelectItem>
             ))}
@@ -175,7 +177,7 @@ export function PreventiveInterventionPreviewTable({
                     </TableCell>
                     <TableCell className="py-1.5">
                       <Select
-                        value={p.technicienId ?? '__none__'}
+                        value={p.technicienId != null ? String(p.technicienId) : '__none__'}
                         onValueChange={(v) =>
                           updateRowTech(p.id, v === '__none__' ? undefined : v)
                         }
@@ -195,7 +197,7 @@ export function PreventiveInterventionPreviewTable({
                               others
                             );
                             return (
-                              <SelectItem key={t.id} value={t.id} disabled={!available}>
+                              <SelectItem key={t.id} value={String(t.id)} disabled={!available}>
                                 {t.prenom} {t.nom}
                                 {!available ? ' (indisponible)' : ''}
                               </SelectItem>

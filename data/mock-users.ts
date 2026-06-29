@@ -2,7 +2,7 @@ import { User } from '@/types';
 
 export const mockUsers: User[] = [
   {
-    id: 'user-admin-1',
+    id: 1,
     email: 'admin@sav.com',
     telephone: '71100200',
     password: 'admin123',
@@ -13,7 +13,7 @@ export const mockUsers: User[] = [
     dateCreation: '2024-01-15',
   },
   {
-    id: 'user-admin-2',
+    id: 2,
     email: 'leila.admin@sav.com',
     telephone: '71100201',
     password: 'admin456',
@@ -24,7 +24,7 @@ export const mockUsers: User[] = [
     dateCreation: '2024-01-20',
   },
   {
-    id: 'user-tech-1',
+    id: 3,
     email: 'tech@sav.com',
     telephone: '98200300',
     password: 'tech123',
@@ -35,7 +35,7 @@ export const mockUsers: User[] = [
     dateCreation: '2024-02-20',
   },
   {
-    id: 'user-tech-2',
+    id: 4,
     email: 'walid.jlassi@sav.com',
     telephone: '98200301',
     password: 'tech456',
@@ -46,7 +46,7 @@ export const mockUsers: User[] = [
     dateCreation: '2024-02-25',
   },
   {
-    id: 'user-tech-3',
+    id: 5,
     email: 'amira.chebbi@sav.com',
     telephone: '98200302',
     password: 'tech789',
@@ -57,7 +57,7 @@ export const mockUsers: User[] = [
     dateCreation: '2024-03-01',
   },
   {
-    id: 'user-tech-4',
+    id: 6,
     email: 'ahmed.miled@sav.com',
     telephone: '98200303',
     password: 'tech000',

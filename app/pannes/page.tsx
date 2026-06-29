@@ -3,21 +3,20 @@
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
 import {
-  Panne,
+  Client,
   ClientEquipement,
-  PieceJointe,
+  Contract,
+  Equipment,
   Intervention,
+  Panne,
+  PieceJointe,
   PanneStatut,
+  User,
 } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { StatusBadge } from '@/components/shared/StatusBadge';
-import { mockPannes } from '@/data/mock-pannes';
-import { mockEquipments } from '@/data/mock-equipments';
-import { mockClients } from '@/data/mock-clients';
-import { mockInterventions } from '@/data/mock-interventions';
-import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Card, CardContent } from '@/components/ui/card';
@@ -57,9 +56,6 @@ import {
 } from '@/components/ui/dialog';
 import {
   getClientIdForUser,
-  getContractCoverage,
-  findActiveContractForClientEquipement,
-  generateInterventionReference,
 } from '@/lib/interventions';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
 import { PanneForm } from '@/components/forms/PanneForm';
@@ -77,10 +73,16 @@ export default function PannesPage() {
 
   const [pannes, setPannes] = useState<Panne[]>([]);
   const [interventions, setInterventions] = useState<Intervention[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
+  const [clientEquipements, setClientEquipements] = useState<ClientEquipement[]>([]);
+  const [equipments, setEquipments] = useState<Equipment[]>([]);
+  const [contracts, setContracts] = useState<Contract[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [searchTerm, setSearchTerm] = useState('');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [clientFilter, setClientFilter] = useState('all');
+  const [clientFilter, setClientFilter] = useState<number | 'all'>('all');
 
   const [selectedPanne, setSelectedPanne] = useState<Panne | null>(null);
   const [isDetailOpen, setIsDetailOpen] = useState(false);
@@ -97,19 +99,36 @@ export default function PannesPage() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    setPannes(mockPannes);
-    setInterventions(mockInterventions);
-  }, []);
+    Promise.all([
+      fetch('/api/pannes').then((r) => r.json()),
+      fetch('/api/interventions').then((r) => r.json()),
+      fetch('/api/clients').then((r) => r.json()),
+      fetch('/api/client-equipements').then((r) => r.json()),
+      fetch('/api/equipements').then((r) => r.json()),
+      fetch('/api/contracts').then((r) => r.json()),
+      fetch('/api/users').then((r) => r.json()),
+    ])
+      .then(([pns, ivs, cls, ces, eqs, cts, us]) => {
+        if (Array.isArray(pns)) setPannes(pns);
+        if (Array.isArray(ivs)) setInterventions(ivs);
+        if (Array.isArray(cls)) setClients(cls);
+        if (Array.isArray(ces)) setClientEquipements(ces);
+        if (Array.isArray(eqs)) setEquipments(eqs);
+        if (Array.isArray(cts)) setContracts(cts);
+        if (Array.isArray(us)) setUsers(us);
+      })
+      .catch(() => showError('Erreur lors du chargement des données.'));
+  }, [showError]);
 
   // Client context: resolve clientId + their CE records
-  const clientInfo = useMemo((): { clientId: string | null; clientEquipements: ClientEquipement[] } => {
+  const clientInfo = useMemo((): { clientId: number | null; clientEquipements: ClientEquipement[] } => {
     if (!currentUser || currentUser.role !== 'client') {
       return { clientId: null, clientEquipements: [] };
     }
     const clientId = getClientIdForUser(currentUser);
-    const clientCEs = mockClientEquipements.filter((ce) => ce.clientId === clientId);
+    const clientCEs = clientEquipements.filter((ce) => ce.clientId === clientId);
     return { clientId, clientEquipements: clientCEs };
-  }, [currentUser]);
+  }, [currentUser, clientEquipements]);
 
   const clientHasPannes = useMemo(() => {
     if (!currentUser || currentUser.role !== 'client') return true;
@@ -119,17 +138,18 @@ export default function PannesPage() {
   }, [pannes, currentUser, clientInfo.clientId]);
 
   const getClientName = useCallback(
-    (clientId: string): string => {
-      const c = mockClients.find((cl) => cl.id === clientId);
+    (clientId: number): string => {
+      const c = clients.find((cl) => cl.id === clientId);
       return c ? getClientDisplayName(c) : 'N/A';
     },
-    []
+    [clients]
   );
 
-  const getEquipmentName = useCallback((equipementId: string): string => {
-    const eq = mockEquipments.find((e) => e.id === equipementId);
+  const getEquipmentName = useCallback((equipementId: number): string => {
+    if (!equipementId) return 'N/A';
+    const eq = equipments.find((e) => e.id === equipementId);
     return eq ? `${eq.reference} (${eq.marque} ${eq.modele})` : 'N/A';
-  }, []);
+  }, [equipments]);
 
   const filteredPannes = useMemo(() => {
     if (!currentUser) return [];
@@ -177,13 +197,13 @@ export default function PannesPage() {
       switch (key) {
         case 'reference': return panne.reference;
         case 'date': return panne.dateDeclaration;
-        case 'client': { const cl = mockClients.find((c) => c.id === panne.clientId); return cl ? getClientDisplayName(cl) : ''; }
-        case 'equipment': return mockEquipments.find((e) => e.id === panne.equipementId)?.reference ?? '';
+        case 'client': { const cl = clients.find((c) => c.id === panne.clientId); return cl ? getClientDisplayName(cl) : ''; }
+        case 'equipment': return equipments.find((e) => e.id === panne.equipementId)?.reference ?? '';
         case 'statut': return panne.statut;
         default: return '';
       }
     });
-  }, [filteredPannes, sortConfig]);
+  }, [filteredPannes, sortConfig, clients, equipments]);
 
   const pagedPannes = useMemo(
     () => paginateData(sortedPannes, page, 10),
@@ -192,7 +212,7 @@ export default function PannesPage() {
 
   // Client: submit new panne declaration
   const handleClientSubmit = useCallback(
-    (formData: {
+    async (formData: {
       clientEquipementId: string;
       equipementId: string;
       description: string;
@@ -203,107 +223,126 @@ export default function PannesPage() {
         showError("Impossible d'associer la panne à un client valide.");
         return;
       }
-      const year = new Date().getFullYear();
-      const nextNum = pannes.length + 1;
-      const refStr = `PAN-${year}-${String(nextNum).padStart(3, '0')}`;
-
-      const newPanne: Panne = {
-        id: `pan-${Date.now()}`,
-        reference: refStr,
-        clientId,
-        clientEquipementId: formData.clientEquipementId,
-        equipementId: formData.equipementId,
-        dateDeclaration: new Date().toISOString().split('T')[0],
-        description: formData.description,
-        statut: 'EN_ATTENTE',
-        piecesJointes: formData.piecesJointes,
-      };
-
-      setPannes((prev) => [newPanne, ...prev]);
-      setIsCreateOpen(false);
-      showSuccess('Votre déclaration a été enregistrée.');
+      setIsSubmitting(true);
+      try {
+        const res = await fetch('/api/pannes', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            clientId,
+            clientEquipementId: formData.clientEquipementId,
+            description: formData.description,
+            piecesJointes: formData.piecesJointes.map((pj) => ({
+              filename: pj.filename,
+              url: pj.previewUrl ?? '',
+              size: pj.size,
+              mimeType: pj.type,
+            })),
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? 'Erreur lors de la déclaration de la panne.');
+          return;
+        }
+        setPannes((prev) => [data, ...prev]);
+        setIsCreateOpen(false);
+        showSuccess('Votre déclaration a été enregistrée.');
+      } catch {
+        showError('Erreur lors de la déclaration de la panne.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [clientInfo.clientId, pannes.length, showError, showSuccess]
+    [clientInfo.clientId, showError, showSuccess]
   );
 
   // Admin: mark panne as "prise en charge"
   const handlePrendreEnCharge = useCallback(
-    (panneId: string) => {
-      setPannes((prev) =>
-        prev.map((p) => (p.id === panneId ? { ...p, statut: 'PRISE_EN_CHARGE' as PanneStatut } : p))
-      );
-      showSuccess('La panne a été prise en charge avec succès.');
+    async (panneId: number) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/pannes/${panneId}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ statut: 'PRISE_EN_CHARGE' }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? 'Erreur lors de la mise en charge de la panne.');
+          return;
+        }
+        setPannes((prev) => prev.map((p) => (p.id === panneId ? data : p)));
+        showSuccess('La panne a été prise en charge avec succès.');
+      } catch {
+        showError('Erreur lors de la mise en charge de la panne.');
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [showSuccess]
+    [showSuccess, showError]
   );
 
   // Admin: confirm cancellation
-  const handleCancelPanne = useCallback(() => {
+  const handleCancelPanne = useCallback(async () => {
     if (!panneToCancel) return;
-    setPannes((prev) =>
-      prev.map((p) =>
-        p.id === panneToCancel.id ? { ...p, statut: 'ANNULEE' as PanneStatut } : p
-      )
-    );
-    setIsCancelConfirmOpen(false);
-    setPanneToCancel(null);
-    showSuccess('La déclaration de panne a été annulée.');
-  }, [panneToCancel, showSuccess]);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/pannes/${panneToCancel.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ statut: 'ANNULEE' }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showError(data.error ?? "Erreur lors de l'annulation de la panne.");
+        return;
+      }
+      setPannes((prev) => prev.map((p) => (p.id === panneToCancel.id ? data : p)));
+      setIsCancelConfirmOpen(false);
+      setPanneToCancel(null);
+      showSuccess('La déclaration de panne a été annulée.');
+    } catch {
+      showError("Erreur lors de l'annulation de la panne.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [panneToCancel, showSuccess, showError]);
 
   // Admin: convert panne to curative intervention
   const handleConvertConfirm = useCallback(
-    (formData: { technicienId?: string; datePrevue: string; description: string }) => {
+    async (formData: { technicienId?: string; datePrevue: string; description: string }) => {
       if (!panneToConvert) return;
-
-      // Resolve contract coverage: prefer CE-based lookup, fall back to legacy
-      let couvertureContrat = false;
-      let contractId: string | undefined;
-
-      if (panneToConvert.clientEquipementId) {
-        const contract = findActiveContractForClientEquipement(
-          panneToConvert.clientEquipementId,
-          panneToConvert.clientId
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/pannes/${panneToConvert.id}/convert`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            datePrevue: formData.datePrevue,
+            technicienId: formData.technicienId,
+            description: formData.description,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de la conversion de la panne.");
+          return;
+        }
+        setPannes((prev) =>
+          prev.map((p) => (p.id === panneToConvert.id ? data.panne : p))
         );
-        couvertureContrat = contract !== undefined;
-        contractId = contract?.id;
-      } else {
-        const coverage = getContractCoverage(panneToConvert.equipementId, panneToConvert.clientId);
-        couvertureContrat = coverage.couvertureContrat;
-        contractId = coverage.contractId;
+        setInterventions((prev) => [data.intervention, ...prev]);
+        setIsConvertOpen(false);
+        setPanneToConvert(null);
+        showSuccess(`Intervention curative ${data.intervention.reference} créée avec succès.`);
+      } catch {
+        showError("Erreur lors de la conversion de la panne.");
+      } finally {
+        setIsSubmitting(false);
       }
-
-      const nextRef = generateInterventionReference(interventions);
-      const newInterventionId = `int-${Date.now()}`;
-
-      const newIntervention: Intervention = {
-        id: newInterventionId,
-        reference: nextRef,
-        type: 'CURATIVE',
-        clientId: panneToConvert.clientId,
-        equipementId: panneToConvert.equipementId,
-        clientEquipementId: panneToConvert.clientEquipementId,
-        technicienId: formData.technicienId,
-        contractId,
-        datePrevue: formData.datePrevue,
-        statut: 'PLANIFIEE',
-        couvertureContrat,
-        description: formData.description,
-      };
-
-      setInterventions((prev) => [newIntervention, ...prev]);
-      setPannes((prev) =>
-        prev.map((p) =>
-          p.id === panneToConvert.id
-            ? { ...p, statut: 'CONVERTIE' as PanneStatut, interventionId: newInterventionId }
-            : p
-        )
-      );
-
-      setIsConvertOpen(false);
-      setPanneToConvert(null);
-      showSuccess(`Intervention curative ${nextRef} créée avec succès.`);
     },
-    [panneToConvert, interventions, showSuccess]
+    [panneToConvert, showSuccess, showError]
   );
 
   const handleViewDetail = (panne: Panne) => {
@@ -503,14 +542,14 @@ export default function PannesPage() {
                     className="pl-9 h-9 text-xs"
                   />
                 </div>
-                <Select value={clientFilter} onValueChange={setClientFilter}>
+                <Select value={clientFilter === 'all' ? 'all' : String(clientFilter)} onValueChange={(v) => setClientFilter(v === 'all' ? 'all' : Number(v))}>
                   <SelectTrigger className="h-9 text-xs">
                     <SelectValue placeholder="Tous les clients" />
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">Tous les clients</SelectItem>
-                    {mockClients.map((client) => (
-                      <SelectItem key={client.id} value={client.id}>
+                    {clients.map((client) => (
+                      <SelectItem key={client.id} value={String(client.id)}>
                         {getClientDisplayName(client)}
                       </SelectItem>
                     ))}
@@ -579,6 +618,7 @@ export default function PannesPage() {
                                   size="sm"
                                   variant="outline"
                                   className="h-8 gap-1 border-blue-200 hover:bg-blue-50 hover:text-blue-800 text-blue-600 font-medium text-xs px-2"
+                                  disabled={isSubmitting}
                                   onClick={() => handlePrendreEnCharge(panne.id)}
                                 >
                                   <Check size={14} />
@@ -642,9 +682,11 @@ export default function PannesPage() {
             </DialogDescription>
           </DialogHeader>
           <PanneForm
-            clientId={clientInfo.clientId || ''}
+            clientId={clientInfo.clientId != null ? String(clientInfo.clientId) : ''}
             clientEquipements={clientInfo.clientEquipements}
+            equipments={equipments}
             onSubmit={handleClientSubmit}
+            isLoading={isSubmitting}
             noCard
           />
         </DialogContent>
@@ -668,6 +710,11 @@ export default function PannesPage() {
           setPanneToConvert(null);
         }}
         onConfirm={handleConvertConfirm}
+        clients={clients}
+        equipments={equipments}
+        interventions={interventions}
+        users={users}
+        contracts={contracts}
       />
 
       <ConfirmDialog

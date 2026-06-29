@@ -1,8 +1,10 @@
 # SAV Manager
 
-**Application Web de Gestion du Service Après-Vente**
+**Application Web Full-Stack de Gestion du Service Après-Vente**
 
-Plateforme frontend de démonstration pour la gestion complète d'un service après-vente spécialisé dans la maintenance de climatiseurs et de systèmes de surpression. L'application couvre la gestion des utilisateurs internes, des clients, du catalogue d'équipements, des affectations client-équipement, des contrats de maintenance, des interventions préventives et curatives, des pannes, des factures, de l'historique et du planning, avec des tableaux de bord différenciés selon le rôle de l'utilisateur.
+Plateforme de gestion complète d'un service après-vente spécialisé dans la maintenance de climatiseurs et de systèmes de surpression. L'application couvre la gestion des utilisateurs internes, des clients, du catalogue d'équipements, des affectations client-équipement, des contrats de maintenance, des interventions préventives et curatives, des pannes, des factures, de l'historique et du planning, avec des tableaux de bord différenciés selon le rôle de l'utilisateur.
+
+Développée dans le cadre d'un **projet de fin d'études (PFE)**, elle repose sur une architecture trois couches : présentation React/Next.js, logique métier via routes API Next.js, et persistance MySQL via Prisma ORM.
 
 ---
 
@@ -10,7 +12,7 @@ Plateforme frontend de démonstration pour la gestion complète d'un service apr
 
 Ce projet a été réalisé dans le cadre d'un **projet de fin d'études (PFE)**.
 
-Il s'agit d'une application **frontend de démonstration** : toutes les données sont simulées via des fichiers de données mockées. Il n'existe aucune API, aucun backend et aucune base de données réelle. L'authentification est simulée via `localStorage`. Les opérations CRUD sont gérées dans l'état local React et se réinitialisent au rechargement de la page.
+L'application est une **plateforme full-stack** : les données sont stockées dans une base MySQL et toutes les opérations CRUD passent par des routes API Next.js. La logique métier et la validation sont centralisées côté serveur. L'authentification est assurée par vérification du mot de passe (bcrypt) dans la route API, avec session stockée dans `localStorage`. Les données mockées restent présentes uniquement comme valeurs par défaut de secours dans certains composants et helpers — elles ne constituent plus la source de données principale.
 
 ---
 
@@ -18,7 +20,7 @@ Il s'agit d'une application **frontend de démonstration** : toutes les données
 
 | Technologie | Version | Usage |
 |---|---|---|
-| Next.js | 16.2.6 | Framework React (App Router) |
+| Next.js | 16.2.6 | Framework React (App Router) — pages et routes API |
 | React | 19 | Bibliothèque UI |
 | TypeScript | 5.7.3 | Typage statique strict |
 | Tailwind CSS | 4.x | Styles utilitaires |
@@ -26,27 +28,47 @@ Il s'agit d'une application **frontend de démonstration** : toutes les données
 | lucide-react | 0.564 | Icônes |
 | Recharts | 2.15 | Graphiques des dashboards |
 | next-themes | 0.4.6 | Thème clair / sombre |
-| localStorage | — | Session d'authentification simulée |
+| Prisma ORM | 5.22.0 | Accès à la base de données |
+| MySQL | — | Base de données relationnelle |
+| bcrypt | — | Hachage des mots de passe |
+| localStorage | — | Session d'authentification côté client |
 
-> **Note :** ESLint n'est pas configuré dans cette version de démonstration. Le script `npm run lint` a été retiré.
+> **Note :** ESLint n'est pas configuré. Vérification de types via `pnpm tsc --noEmit`.
+
+---
+
+## Architecture
+
+L'application suit une **architecture trois couches** dans un seul projet Next.js :
+
+| Couche | Technologie | Rôle |
+|---|---|---|
+| Présentation | React + composants Next.js | Pages, formulaires, dialogs, navigation |
+| Logique métier | Routes API Next.js (`app/api/`) | Validation, règles métier, appels Prisma |
+| Accès aux données | Prisma ORM + MySQL | Persistance relationnelle, migrations |
+
+**Session** : après connexion réussie via `POST /api/auth/login`, un objet de session est stocké dans `localStorage` sous la clé `sav_session`. Il contient le rôle, l'identifiant numérique (`userId` ou `clientId`), l'email et le nom d'affichage — jamais le mot de passe.
+
+**Identifiants techniques** : tous les IDs de la base de données sont des entiers auto-incrémentés (`Int @id @default(autoincrement())`). Les références métier lisibles (`INT-2026-001`, `FAC-2026-001`, `CTR-001`, `EQ-001`) restent des chaînes de caractères.
 
 ---
 
 ## Fonctionnalités principales
 
-- Authentification simulée par rôle (administrateur, technicien, client), par email **ou numéro de téléphone (8 chiffres, sans indicatif)**.
+- Authentification par rôle (administrateur, technicien, client), par email **ou numéro de téléphone (8 chiffres, sans indicatif)**, avec vérification bcrypt.
 - Tableaux de bord adaptés à chaque rôle avec KPIs et graphiques.
-- Gestion des utilisateurs internes (administrateur et technicien), avec numéro de téléphone.
+- Gestion des utilisateurs internes (administrateur et technicien) avec désactivation/restauration de compte.
 - Gestion des clients : société ou personne physique, sélection de ville tunisienne, affectation d'équipements.
 - Catalogue d'équipements indépendant du client, avec images multiples (une image principale).
-- Affectation des équipements du catalogue aux clients via une relation `ClientEquipement` (date d'achat, localisation, date d'installation). La localisation est facultative.
+- Affectation des équipements du catalogue aux clients via une relation `ClientEquipement` (date d'achat, localisation facultative, date d'installation).
 - Contrats de maintenance couvrant les équipements affectés, avec calcul automatique du statut (actif / bientôt expiré / expiré).
-- Génération et prévisualisation du planning préventif lors de la création d'un contrat (périodicité, dates, technicien).
+- Génération et prévisualisation du planning préventif à la création d'un contrat (périodicité, dates, technicien).
 - Vérification de disponibilité des techniciens par date pour les interventions.
-- Déclaration de pannes avec pièces jointes multiples (simulées) et conversion en intervention curative.
+- Déclaration de pannes avec pièces jointes multiples (métadonnées uniquement, sans stockage réel), prise en charge et conversion en intervention curative.
 - Interventions préventives et curatives sans champ de priorité.
-- Génération de factures pour les interventions curatives réalisées et hors couverture contrat, avec chargement d'un exemple automatique.
+- Génération de factures pour les interventions curatives réalisées et hors couverture contrat, avec TVA à 19 % (TND).
 - Planning en vue hebdomadaire (1 semaine, 2 semaines) et mensuelle.
+- Export CSV de l'historique.
 - Thème clair / sombre.
 
 ---
@@ -56,29 +78,29 @@ Il s'agit d'une application **frontend de démonstration** : toutes les données
 ### Administrateur
 
 - **Dashboard global** : statistiques, KPIs, graphiques d'activité par mois et par type.
-- **Utilisateurs** : CRUD des utilisateurs internes (administrateur et technicien). Les comptes clients ne sont pas gérés ici. Un utilisateur désactivé reste visible dans la liste avec une action **Restaurer** permettant de réactiver son accès.
-- **Clients** : CRUD, société ou personne physique, ville sélectionnée depuis une liste de villes tunisiennes, affectation d'équipements du catalogue via `ClientEquipement`. Chaque client dispose d'un mot de passe pour l'accès au portail client. La localisation chez le client est facultative.
-- **Équipements** : catalogue global sans champ client ni statut ; images multiples avec une image principale ; CRUD complet avec filtres par type et marque. La fiche équipement permet d'affecter l'équipement à un client directement depuis le module Équipements, sans modifier le catalogue (l'affectation est enregistrée dans `ClientEquipement`).
-- **Contrats** : CRUD, couverture des installations `ClientEquipement` du client, prévisualisation du planning préventif généré par dates et périodicité, affectation de technicien avec détection de conflit de disponibilité.
-- **Interventions** : CRUD, préventives et curatives, sans priorité, affectation de technicien avec vérification de disponibilité par date.
+- **Utilisateurs** : CRUD des utilisateurs internes (administrateur et technicien). Un utilisateur désactivé reste visible avec une action **Restaurer**. Un utilisateur inactif ne peut pas se connecter.
+- **Clients** : CRUD, société ou personne physique, ville sélectionnée depuis une liste de villes tunisiennes, affectation d'équipements via `ClientEquipement`.
+- **Équipements** : catalogue global avec images multiples et image principale ; CRUD complet avec filtres. Affectation à un client directement depuis la fiche équipement (enregistrée dans `ClientEquipement`).
+- **Contrats** : CRUD, couverture des installations `ClientEquipement` du client, prévisualisation du planning préventif, affectation de technicien avec détection de conflit de disponibilité.
+- **Interventions** : CRUD, préventives et curatives, affectation de technicien avec vérification de disponibilité par date.
 - **Planning** : vue hebdomadaire (1 semaine, 2 semaines) et mensuelle, filtres par type, statut et technicien.
-- **Pannes** : gestion des signalements, prise en charge, conversion en intervention curative, annulation ; sans champ de priorité.
-- **Factures** : génération pour les interventions curatives réalisées hors contrat, chargement automatique d'un exemple, marquage comme payée.
-- **Historique** : liste des interventions réalisées ou annulées, statistiques.
+- **Pannes** : gestion des signalements, prise en charge, conversion en intervention curative, annulation.
+- **Factures** : génération pour les interventions curatives réalisées hors contrat, marquage comme payée.
+- **Historique** : liste des interventions réalisées ou annulées avec statistiques et export CSV.
 
 ### Technicien
 
 - **Dashboard personnel** : interventions assignées, taux de réalisation, planning de la semaine.
-- **Mes interventions** : liste filtrée des interventions assignées, sans colonne technicien ni filtre technicien. Démarrage et clôture d'interventions.
+- **Mes interventions** : liste filtrée des interventions assignées. Démarrage et clôture d'interventions.
 - **Planning** : vue de son propre planning.
 - **Historique** : historique de ses interventions réalisées ou annulées.
 
 ### Client
 
 - **Dashboard personnel** : équipements assignés, interventions en cours, pannes ouvertes, factures en attente.
-- **Déclaration de panne** : signalement sur ses équipements affectés, sans champ de priorité, avec pièces jointes simulées multiples.
+- **Déclaration de panne** : signalement sur ses équipements affectés, avec pièces jointes (métadonnées).
 - **Mes pannes** : suivi des déclarations et de leur statut.
-- **Mes interventions** : liste des interventions sur ses équipements, sans colonne client.
+- **Mes interventions** : liste des interventions sur ses équipements.
 - **Mes factures** : consultation des factures le concernant.
 - **Historique** : historique des interventions réalisées sur ses équipements.
 
@@ -97,44 +119,107 @@ La connexion accepte **l'email ou le numéro de téléphone** comme identifiant.
 
 ### Clients (portail client)
 
-Les clients s'authentifient directement depuis leurs enregistrements dans le module **Clients**.
-
 | Client | Email | Téléphone | Mot de passe |
 |---|---|---|---|
 | Ahmed Ben Salah (particulier) | `ahmed.bensalah@mail.tn` | `98765432` | `ahmed123` |
 | EDI Solutions (société) | `contact@edi-solutions.tn` | `71345678` | `edi123` |
 | Centre Médical Ibn Sina (société) | `maintenance@ibnsina.tn` | `71234567` | `ibnsina123` |
 
+> **Important** : avant la première connexion, vider le `localStorage` du navigateur pour supprimer toute ancienne session résiduelle (`sav_session`).
+
+---
+
+## Prérequis
+
+- Node.js 18+
+- pnpm
+- MySQL en cours d'exécution en local (ex. XAMPP)
+- Base de données `sav_manager` créée dans MySQL
+
+---
+
+## Variables d'environnement
+
+Créer un fichier `.env` à la racine du projet :
+
+```env
+DATABASE_URL="mysql://root:@localhost:3306/sav_manager"
+```
+
 ---
 
 ## Installation et démarrage
 
-**Prérequis** : Node.js 18+ et npm.
-
-```bash
+```powershell
 # Installer les dépendances
-npm install
+pnpm install
+
+# Générer le client Prisma
+pnpm exec prisma generate
+
+# Appliquer le schéma à la base de données
+pnpm exec prisma db push
+
+# Insérer les données de démonstration
+pnpm exec prisma db seed
 
 # Démarrer le serveur de développement
-npm run dev
+pnpm dev
 ```
 
 L'application est accessible à l'adresse : [http://localhost:3000](http://localhost:3000)
+
+### Réinitialisation complète (démo)
+
+Pour remettre la base à zéro et réinsérer les données initiales :
+
+```powershell
+pnpm exec prisma db push --force-reset
+pnpm exec prisma db seed
+```
+
+> **Attention** : `--force-reset` supprime toutes les données existantes.
 
 ---
 
 ## Commandes disponibles
 
-```bash
+```powershell
 # Développement
-npm run dev
+pnpm dev
 
 # Build de production
-npm run build
+pnpm build
 
 # Vérification TypeScript (sans émission)
-npx tsc --noEmit
+pnpm tsc --noEmit
+
+# Prisma — génération du client
+pnpm exec prisma generate
+
+# Prisma — appliquer le schéma sans migration
+pnpm exec prisma db push
+
+# Prisma — insérer les données de démonstration
+pnpm exec prisma db seed
+
+# Prisma — interface de navigation des données
+pnpm exec prisma studio
 ```
+
+> Toujours utiliser `pnpm exec prisma ...` — ne pas utiliser `pnpm dlx prisma ...`.
+
+---
+
+## Vérification
+
+```powershell
+pnpm exec prisma generate
+pnpm tsc --noEmit
+pnpm build
+```
+
+Les trois commandes doivent terminer sans erreur.
 
 ---
 
@@ -143,6 +228,18 @@ npx tsc --noEmit
 ```
 sav-manager-frontend-setup/
 ├── app/                        # Routes Next.js (App Router)
+│   ├── api/                    # Routes API (logique métier + accès Prisma)
+│   │   ├── auth/login/
+│   │   ├── clients/
+│   │   ├── equipements/
+│   │   ├── client-equipements/
+│   │   ├── contracts/
+│   │   ├── interventions/
+│   │   ├── pannes/
+│   │   ├── factures/
+│   │   ├── users/
+│   │   ├── dashboard/
+│   │   └── historique/
 │   ├── dashboard/
 │   ├── utilisateurs/
 │   ├── clients/
@@ -160,7 +257,10 @@ sav-manager-frontend-setup/
 │   ├── forms/                  # Formulaires métier (clients, contrats, interventions…)
 │   ├── dashboard/              # Composants spécifiques aux dashboards
 │   └── ui/                     # Composants shadcn/ui
-├── data/                       # Données mockées
+├── prisma/
+│   ├── schema.prisma           # Schéma Prisma (modèles, relations, types)
+│   └── seed.ts                 # Script d'initialisation des données de démonstration
+├── data/                       # Données mockées (référence / valeurs de secours)
 │   ├── mock-users.ts
 │   ├── mock-clients.ts
 │   ├── mock-equipments.ts
@@ -170,13 +270,14 @@ sav-manager-frontend-setup/
 │   ├── mock-pannes.ts
 │   └── mock-invoices.ts
 ├── lib/                        # Utilitaires et logique métier
-│   ├── auth.ts                 # Authentification simulée (localStorage)
-│   ├── interventions.ts        # Helpers métier interventions/planning/contrats
+│   ├── prisma.ts               # Instance Prisma Client (singleton)
+│   ├── auth.ts                 # Helpers de session localStorage
+│   ├── interventions.ts        # Helpers métier : planning, couverture, disponibilité
 │   ├── table.ts                # Tri et pagination des tableaux
 │   ├── constants.ts            # Labels et constantes applicatives
 │   └── utils.ts                # Fonctions utilitaires générales
 ├── hooks/                      # Hooks React personnalisés
-│   └── useAuth.ts
+│   └── useAuth.ts              # Lecture de la session, synthèse de l'utilisateur courant
 └── types/                      # Définitions TypeScript
     └── index.ts
 ```
@@ -185,41 +286,44 @@ sav-manager-frontend-setup/
 
 ## Modèle de données
 
+Tous les identifiants techniques sont des **entiers auto-incrémentés** (`INT AUTO_INCREMENT`). Les références lisibles (`INT-2026-001`, `FAC-2026-001`, etc.) sont des chaînes de caractères distinctes.
+
 | Entité | Description |
 |---|---|
-| `User` | Utilisateur interne : administrateur ou technicien |
-| `Client` | Client métier : société ou personne physique (ville tunisienne). Dispose d'un mot de passe pour le portail client. |
-| `Equipment` | Équipement du catalogue global (climatiseur, surpression) avec images multiples |
-| `EquipmentImage` | Image associée à un équipement (nom de fichier, URL de prévisualisation, indicateur image principale) |
-| `ClientEquipement` | Affectation d'un équipement du catalogue à un client (date d'achat, localisation facultative, date d'installation). Peut être créée depuis le module Client ou depuis la fiche équipement du module Équipements. |
+| `User` | Utilisateur interne : administrateur ou technicien. Mot de passe haché bcrypt. |
+| `Client` | Client métier : société ou personne physique (ville tunisienne). Mot de passe haché bcrypt pour le portail client. |
+| `Equipment` | Équipement du catalogue global (climatiseur, surpression) |
+| `EquipmentImage` | Image associée à un équipement (URL, indicateur image principale) |
+| `ClientEquipement` | Affectation d'un équipement du catalogue à un client (date d'achat, localisation facultative, date d'installation) |
 | `Contract` | Contrat de maintenance couvrant des installations `ClientEquipement` d'un client |
-| `Intervention` | Intervention préventive ou curative, sans priorité |
-| `Panne` | Déclaration de panne soumise par un client, sans priorité |
-| `PieceJointe` | Pièce jointe simulée associée à une panne |
-| `Invoice` | Facture générée pour une intervention curative réalisée hors contrat |
+| `ContractEquipement` | Table de jonction entre un contrat et les `ClientEquipement` couverts |
+| `Intervention` | Intervention préventive ou curative, sans champ de priorité |
+| `Panne` | Déclaration de panne soumise par un client |
+| `PieceJointe` | Métadonnées d'une pièce jointe associée à une panne (pas de stockage réel) |
+| `Facture` | Facture générée pour une intervention curative réalisée hors contrat |
 | `LigneFacture` | Ligne de détail d'une facture (main-d'œuvre, matériel) |
 
 ---
 
 ## Règles métier
 
-- L'application est **entièrement frontend** : aucune persistance réelle des données.
-- Les opérations CRUD modifient l'état local React et sont perdues au rechargement.
-- La session utilisateur est stockée dans `localStorage` sous la clé `sav_session`. Elle contient rôle, identifiant et nom d'affichage (pas de mot de passe).
-- La connexion est possible avec l'email **ou** le numéro de téléphone.
-- Les utilisateurs internes s'authentifient depuis `mock-users.ts` ; les clients depuis `mock-clients.ts`.
-- La localisation d'un équipement chez le client est facultative.
-- La description d'une panne est obligatoire mais sans longueur minimale.
+- La session utilisateur est stockée dans `localStorage` sous la clé `sav_session`. Elle contient le rôle, l'identifiant numérique et le nom d'affichage. Elle ne contient jamais le mot de passe.
+- La connexion est possible avec l'email **ou** le numéro de téléphone (8 chiffres).
+- Les utilisateurs internes s'authentifient via la table `User` (rôles `ADMIN` / `TECHNICIAN`). Les clients s'authentifient via la table `Client`. Les mots de passe sont vérifiés côté serveur avec bcrypt.
+- Un utilisateur interne inactif ne peut pas se connecter.
+- La localisation d'un équipement chez le client (`ClientEquipement`) est facultative.
+- La description d'une panne est obligatoire.
 - Un **technicien** ne voit que les interventions qui lui sont assignées.
-- Un **client** ne voit que ses propres données (équipements affectés, interventions, pannes, factures).
+- Un **client** ne voit que ses propres données (équipements, interventions, pannes, factures).
 - Les **interventions préventives** ne génèrent pas de factures.
 - Les factures sont générées uniquement pour les interventions **curatives, réalisées et hors couverture contrat**.
 - La monnaie utilisée est le **dinar tunisien (TND)** avec une TVA à **19 %**.
 - Le statut d'un contrat (actif / bientôt expiré / expiré) est calculé dynamiquement à partir des dates.
-- Un technicien ne peut pas être affecté à deux interventions à la même date (vérification de disponibilité).
-- Lors de la création d'une intervention curative depuis une panne, la date prévue doit être sélectionnée avant de pouvoir choisir un technicien. Les techniciens indisponibles à la date choisie sont signalés et ne peuvent pas être sélectionnés.
-- Les numéros de téléphone sont stockés sur 8 chiffres, sans indicatif pays.
+- Un technicien ne peut pas être affecté à deux interventions à la même date (vérification de disponibilité côté API).
+- La couverture d'une intervention par un contrat est vérifiée côté API lors de la création.
 - Le planning préventif est généré automatiquement à la création d'un contrat selon les dates et la périodicité choisies.
+- La conversion d'une panne en intervention curative crée une nouvelle intervention liée à la panne.
+- Les numéros de téléphone sont stockés sur 8 chiffres, sans indicatif pays.
 
 ---
 
@@ -229,7 +333,7 @@ sav-manager-frontend-setup/
 - **Design** : style SaaS professionnel, thème clair/sombre via `next-themes`.
 - **Responsive** : compatible desktop, tablette et mobile.
 - **Navigation** : sidebar sur desktop, navigation mobile adaptée selon le rôle.
-- **Dialogs** : détails et formulaires en modales centrées (aucun Sheet/Drawer pour les formulaires métier).
+- **Dialogs** : détails et formulaires en modales centrées.
 - **Tableaux** : pagination et colonnes triables sur toutes les pages de listes.
 - **Planning** : vue hebdomadaire (1 semaine, 2 semaines) et vue mensuelle avec grille calendrier.
 
@@ -266,13 +370,13 @@ Connexion → Dashboard → Déclaration de panne (avec pièces jointes)
 
 | Limitation | Détail |
 |---|---|
-| Pas de backend | Aucune API REST ou GraphQL ; données simulées en mémoire |
-| Pas de persistance | Les modifications sont perdues au rechargement de la page |
-| État local par page | Chaque page gère son propre état `clientEquipements`. Une affectation créée depuis la page Équipements n'est pas visible en temps réel dans la page Clients, et vice-versa. Les deux vues se resynchronisent au rechargement. |
-| Upload de fichiers | Simulé (nom de fichier enregistré, aucun fichier réellement stocké) |
-| Export CSV | Logique présente, export réel non implémenté en démonstration |
-| Authentification | Simplifiée via `localStorage`, sans JWT ni session serveur |
-| ESLint | Non configuré dans cette version de démonstration |
+| Session localStorage | Pas de JWT ni de cookie HttpOnly ; la session est stockée côté client dans `localStorage` |
+| Upload de fichiers | Simulé : les métadonnées sont enregistrées en base, mais aucun fichier n'est réellement stocké |
+| Données mockées résiduelles | Les fichiers `data/mock-*.ts` subsistent comme valeurs de secours dans certains composants et helpers — ils ne sont pas la source de données principale |
+| Pas de déploiement production | Aucune configuration de déploiement (Dockerfile, CI/CD, variables d'environnement de production) |
+| Pas de notifications | Aucun système d'emails ou de notifications push |
+| Export CSV | Logique présente dans l'historique, export complet non finalisé |
+| ESLint | Non configuré dans cette version |
 
 ---
 
@@ -280,4 +384,4 @@ Connexion → Dashboard → Déclaration de panne (avec pièces jointes)
 
 Projet réalisé dans le cadre d'un **projet de fin d'études (PFE)**.
 
-L'objectif est de démontrer la maîtrise du développement frontend moderne avec Next.js, React, TypeScript et une architecture de composants professionnelle, appliquée à un cas métier réel de gestion de service après-vente.
+L'objectif est de démontrer la maîtrise du développement **full-stack** moderne avec Next.js, React, TypeScript et Prisma/MySQL, appliquée à un cas métier réel de gestion de service après-vente. L'architecture trois couches (présentation, logique métier, accès aux données) est entièrement implémentée au sein d'un seul projet Next.js App Router.

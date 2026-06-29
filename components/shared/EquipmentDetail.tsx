@@ -14,7 +14,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockClients } from '@/data/mock-clients';
-import { mockEquipments } from '@/data/mock-equipments';
 import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
 import { formatDate, getClientDisplayName } from '@/lib/utils';
 import { ImageIcon, MapPin, Calendar, Building2, Plus, Trash2 } from 'lucide-react';
@@ -28,10 +27,12 @@ interface EquipmentDetailProps {
   clientEquipements?: ClientEquipement[];
   /** Client list for the assign form. Falls back to mockClients. */
   clients?: Client[];
+  /** Equipment list passed to the assign form. Falls back to []. */
+  equipments?: Equipment[];
   /** Called when a new assignment is created. Omit to make the section read-only. */
   onAddClientEquipement?: (ce: ClientEquipement) => void;
   /** Called when an assignment row is removed. */
-  onRemoveClientEquipement?: (ceId: string) => void;
+  onRemoveClientEquipement?: (ceId: number) => void;
 }
 
 export function EquipmentDetail({
@@ -40,6 +41,7 @@ export function EquipmentDetail({
   onClose,
   clientEquipements: clientEquipementsProp,
   clients: clientsProp,
+  equipments: equipmentsProp,
   onAddClientEquipement,
   onRemoveClientEquipement,
 }: EquipmentDetailProps) {
@@ -49,6 +51,7 @@ export function EquipmentDetail({
 
   const clientEquipements = clientEquipementsProp ?? mockClientEquipements;
   const clients = clientsProp ?? mockClients;
+  const equipments = equipmentsProp ?? [];
 
   const mainImage = equipment.images?.find((img) => img.isMain);
   const otherImages = equipment.images?.filter((img) => !img.isMain) ?? [];
@@ -60,7 +63,7 @@ export function EquipmentDetail({
       client: clients.find((c) => c.id === ce.clientId),
     }));
 
-  const handleRemove = (ceId: string) => {
+  const handleRemove = (ceId: number) => {
     if (!window.confirm('Retirer cette affectation client ?')) return;
     onRemoveClientEquipement?.(ceId);
   };
@@ -260,9 +263,9 @@ export function EquipmentDetail({
         <ClientEquipementAssignForm
           open={isAssignFormOpen}
           onOpenChange={(v) => setIsAssignFormOpen(v)}
-          clientId=""
+          clientId={0}
           existingAssignments={affectations.map(({ ce }) => ce)}
-          equipments={mockEquipments}
+          equipments={equipments}
           fixedEquipementId={equipment.id}
           clients={clients}
           onSubmit={(ce) => {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useState, useMemo } from 'react';
-import { Invoice, LigneFacture, Intervention } from '@/types';
+import { Client, Invoice, LigneFacture, Intervention } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -42,18 +42,6 @@ function formatTND(amount: number): string {
   return `${amount.toFixed(2)} TND`;
 }
 
-function generateNumero(existingInvoices: Invoice[]): string {
-  const year = new Date().getFullYear();
-  const numbers = existingInvoices
-    .map((inv) => {
-      const match = inv.numero.match(/^FAC-(\d{4})-(\d+)$/);
-      return match && parseInt(match[1], 10) === year ? parseInt(match[2], 10) : 0;
-    })
-    .filter((n) => n > 0);
-  const next = numbers.length > 0 ? Math.max(...numbers) + 1 : 1;
-  return `FAC-${year}-${String(next).padStart(4, '0')}`;
-}
-
 function computeLines(intervention: Intervention): LigneFacture[] {
   const lines: LigneFacture[] = [];
 
@@ -82,7 +70,9 @@ interface Props {
   onClose: () => void;
   interventions: Intervention[];
   existingInvoices: Invoice[];
-  onGenerate: (invoice: Invoice) => void;
+  onGenerate: (data: { interventionId: string; lignes: LigneFacture[] }) => void;
+  clients?: Client[];
+  isLoading?: boolean;
 }
 
 export function GenerateInvoiceDialog({
@@ -91,6 +81,8 @@ export function GenerateInvoiceDialog({
   interventions,
   existingInvoices,
   onGenerate,
+  clients = mockClients,
+  isLoading = false,
 }: Props) {
   const [selectedId, setSelectedId] = useState<string>('');
 
@@ -99,7 +91,7 @@ export function GenerateInvoiceDialog({
       new Set(
         existingInvoices
           .filter((inv) => inv.interventionId != null)
-          .map((inv) => inv.interventionId as string)
+          .map((inv) => inv.interventionId as number)
       ),
     [existingInvoices]
   );
@@ -117,7 +109,7 @@ export function GenerateInvoiceDialog({
   );
 
   const selectedIntervention = useMemo(
-    () => eligibleInterventions.find((i) => i.id === selectedId) ?? null,
+    () => eligibleInterventions.find((i) => String(i.id) === selectedId) ?? null,
     [eligibleInterventions, selectedId]
   );
 
@@ -141,21 +133,11 @@ export function GenerateInvoiceDialog({
   }
 
   function handleConfirm() {
-    if (!selectedIntervention) return;
-    const invoice: Invoice = {
-      id: `inv-${Date.now()}`,
-      numero: generateNumero(existingInvoices),
-      clientId: selectedIntervention.clientId,
-      interventionId: selectedIntervention.id,
-      dateEmission: new Date().toISOString().split('T')[0],
-      montantHT,
-      tva,
-      montantTTC,
-      statut: 'EN_ATTENTE',
+    if (!selectedIntervention || isLoading) return;
+    onGenerate({
+      interventionId: selectedId,
       lignes: previewLines,
-    };
-    onGenerate(invoice);
-    setSelectedId('');
+    });
   }
 
   return (
@@ -188,15 +170,15 @@ export function GenerateInvoiceDialog({
                 <label className="text-sm font-medium text-foreground">
                   Intervention à facturer
                 </label>
-                <Select value={selectedId} onValueChange={setSelectedId}>
+                <Select value={selectedId} onValueChange={setSelectedId} disabled={isLoading}>
                   <SelectTrigger>
                     <SelectValue placeholder="Sélectionner une intervention..." />
                   </SelectTrigger>
                   <SelectContent>
                     {eligibleInterventions.map((int) => {
-                      const client = mockClients.find((c) => c.id === int.clientId);
+                      const client = clients.find((c) => c.id === int.clientId);
                       return (
-                        <SelectItem key={int.id} value={int.id}>
+                        <SelectItem key={int.id} value={String(int.id)}>
                           <span className="font-mono text-xs">{int.reference}</span>
                           <span className="mx-2 text-muted-foreground">—</span>
                           <span>{client ? getClientDisplayName(client) : 'Client inconnu'}</span>
@@ -213,7 +195,8 @@ export function GenerateInvoiceDialog({
                     variant="ghost"
                     size="sm"
                     className="text-xs gap-1.5 text-muted-foreground h-7"
-                    onClick={() => setSelectedId(eligibleInterventions[0].id)}
+                    onClick={() => setSelectedId(String(eligibleInterventions[0].id))}
+                    disabled={isLoading}
                   >
                     <Sparkles size={12} />
                     Charger un exemple
@@ -227,7 +210,7 @@ export function GenerateInvoiceDialog({
                     <h4 className="text-sm font-semibold text-foreground mb-1">Aperçu de la facture</h4>
                     <p className="text-xs text-muted-foreground">
                       Client : <span className="font-medium text-foreground">
-                        {(() => { const cl = mockClients.find((c) => c.id === selectedIntervention.clientId); return cl ? getClientDisplayName(cl) : ''; })()}
+                        {(() => { const cl = clients.find((c) => c.id === selectedIntervention.clientId); return cl ? getClientDisplayName(cl) : ''; })()}
                       </span>
                     </p>
                   </div>
@@ -287,12 +270,12 @@ export function GenerateInvoiceDialog({
         </div>
 
         <div className="flex gap-3 justify-end pt-2 border-t border-border">
-          <Button variant="outline" onClick={onClose}>
+          <Button variant="outline" onClick={onClose} disabled={isLoading}>
             Annuler
           </Button>
           <Button
             onClick={handleConfirm}
-            disabled={!selectedIntervention || eligibleInterventions.length === 0}
+            disabled={!selectedIntervention || eligibleInterventions.length === 0 || isLoading}
           >
             Confirmer et générer
           </Button>

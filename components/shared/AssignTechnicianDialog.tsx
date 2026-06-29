@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Intervention } from '@/types';
+import { Intervention, User } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -31,6 +31,7 @@ interface AssignTechnicianDialogProps {
   interventions: Intervention[];
   onClose: () => void;
   onAssign: (technicienId: string) => void;
+  users?: User[];
 }
 
 export function AssignTechnicianDialog({
@@ -39,11 +40,14 @@ export function AssignTechnicianDialog({
   interventions,
   onClose,
   onAssign,
+  users = [],
 }: AssignTechnicianDialogProps) {
   const [technicienId, setTechnicienId] = useState('');
   const [error, setError] = useState('');
 
-  const technicians = getActiveTechnicians();
+  const technicians = users.length > 0
+    ? users.filter((u) => u.role === 'technician' && u.actif)
+    : getActiveTechnicians();
 
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
@@ -51,7 +55,7 @@ export function AssignTechnicianDialog({
       setError('');
       onClose();
     } else if (intervention?.technicienId) {
-      setTechnicienId(intervention.technicienId);
+      setTechnicienId(String(intervention.technicienId));
     }
   };
 
@@ -63,7 +67,7 @@ export function AssignTechnicianDialog({
 
     if (
       !isTechnicianAvailable(
-        technicienId,
+        Number(technicienId),
         intervention.datePrevue,
         interventions,
         intervention.id
@@ -99,7 +103,7 @@ export function AssignTechnicianDialog({
               </SelectTrigger>
               <SelectContent>
                 {technicians.map((tech) => (
-                  <SelectItem key={tech.id} value={tech.id}>
+                  <SelectItem key={tech.id} value={String(tech.id)}>
                     {tech.prenom} {tech.nom}
                   </SelectItem>
                 ))}

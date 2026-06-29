@@ -2,7 +2,7 @@ import { Client } from '@/types';
 
 export const mockClients: Client[] = [
   {
-    id: 'client-1',
+    id: 1,
     typeClient: 'SOCIETE',
     societe: 'EDI Solutions',
     contact: 'Mohamed Trabelsi',
@@ -15,7 +15,7 @@ export const mockClients: Client[] = [
     nombreEquipements: 5,
   },
   {
-    id: 'client-2',
+    id: 2,
     typeClient: 'SOCIETE',
     societe: 'Résidence Les Berges du Lac',
     contact: 'Yassine Gharbi',
@@ -28,7 +28,7 @@ export const mockClients: Client[] = [
     nombreEquipements: 3,
   },
   {
-    id: 'client-3',
+    id: 3,
     typeClient: 'PERSONNE_PHYSIQUE',
     prenom: 'Ahmed',
     nom: 'Ben Salah',
@@ -41,7 +41,7 @@ export const mockClients: Client[] = [
     nombreEquipements: 3,
   },
   {
-    id: 'client-4',
+    id: 4,
     typeClient: 'SOCIETE',
     societe: 'Groupe Sahel Industrie',
     contact: 'Karim Bouazizi',
@@ -54,7 +54,7 @@ export const mockClients: Client[] = [
     nombreEquipements: 2,
   },
   {
-    id: 'client-5',
+    id: 5,
     typeClient: 'SOCIETE',
     societe: 'Hôtel Les Jasmins Hammamet',
     contact: 'Nour Belhaj',
@@ -67,7 +67,7 @@ export const mockClients: Client[] = [
     nombreEquipements: 2,
   },
   {
-    id: 'client-6',
+    id: 6,
     typeClient: 'SOCIETE',
     societe: 'Centre Médical Ibn Sina',
     contact: 'Sonia Belhaji',

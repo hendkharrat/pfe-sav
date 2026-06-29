@@ -1,6 +1,6 @@
 'use client';
 
-import { Client, ClientEquipement, Equipment } from '@/types';
+import { Client, ClientEquipement, Contract, Equipment } from '@/types';
 import {
   Dialog,
   DialogContent,
@@ -13,7 +13,6 @@ import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
 import { mockEquipments } from '@/data/mock-equipments';
-import { mockContracts } from '@/data/mock-contracts';
 import { EQUIPMENT_TYPE_LABELS } from '@/lib/constants';
 import { formatDate, getClientDisplayName, getClientTypeLabel } from '@/lib/utils';
 import { findActiveContractForClientEquipement } from '@/lib/interventions';
@@ -26,6 +25,7 @@ interface ClientDetailProps {
   onClose: () => void;
   clientEquipements?: ClientEquipement[];
   equipments?: Equipment[];
+  contracts?: Contract[];
   onEdit?: () => void;
 }
 
@@ -35,6 +35,7 @@ export function ClientDetail({
   onClose,
   clientEquipements = mockClientEquipements,
   equipments = mockEquipments,
+  contracts = [],
   onEdit,
 }: ClientDetailProps) {
   if (!client) return null;
@@ -153,7 +154,7 @@ export function ClientDetail({
                       const activeContract = findActiveContractForClientEquipement(
                         ce.id,
                         client.id,
-                        mockContracts
+                        contracts
                       );
                       return (
                         <tr

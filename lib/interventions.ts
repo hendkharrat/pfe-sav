@@ -8,7 +8,6 @@ import {
   User,
 } from '@/types';
 import { mockClientEquipements } from '@/data/mock-client-equipements';
-import { mockClients } from '@/data/mock-clients';
 import { mockContracts } from '@/data/mock-contracts';
 import { mockEquipments } from '@/data/mock-equipments';
 import { mockInterventions } from '@/data/mock-interventions';
@@ -18,13 +17,9 @@ import { mockUsers } from '@/data/mock-users';
 // Auth / role helpers
 // ---------------------------------------------------------------------------
 
-export function getClientIdForUser(user: User): string | null {
+export function getClientIdForUser(user: User): number | null {
   if (user.role !== 'client') return null;
-  // With the new auth model, user.id is the clientId for synthesized client sessions.
-  const byId = mockClients.find((c) => c.id === user.id);
-  if (byId) return user.id;
-  // Fallback: match by email for any edge case.
-  return mockClients.find((c) => c.email.toLowerCase() === user.email.toLowerCase())?.id ?? null;
+  return user.id;
 }
 
 export function filterInterventionsByRole(
@@ -63,7 +58,7 @@ export function calculateContractStatus(contract: Contract): ContractStatut {
 
 /** Returns all ClientEquipement records assigned to a given client. */
 export function getClientEquipements(
-  clientId: string,
+  clientId: number,
   clientEquipements: ClientEquipement[] = mockClientEquipements
 ): ClientEquipement[] {
   return clientEquipements.filter((ce) => ce.clientId === clientId);
@@ -74,7 +69,7 @@ export function getClientEquipements(
  * Returns undefined if either the CE or the equipment is not found.
  */
 export function getEquipementForClientEquipement(
-  clientEquipementId: string,
+  clientEquipementId: number,
   clientEquipements: ClientEquipement[] = mockClientEquipements,
   equipments: Equipment[] = mockEquipments
 ): Equipment | undefined {
@@ -88,8 +83,8 @@ export function getEquipementForClientEquipement(
  * Useful as a bridge when only the old (clientId, equipementId) pair is available.
  */
 export function getClientEquipementByEquipmentAndClient(
-  clientId: string,
-  equipementId: string,
+  clientId: number,
+  equipementId: number,
   clientEquipements: ClientEquipement[] = mockClientEquipements
 ): ClientEquipement | undefined {
   return clientEquipements.find(
@@ -102,7 +97,7 @@ export function getClientEquipementByEquipmentAndClient(
  * Format: "EQ-001 — CoolMax 3000 — Bureau Étage 2"
  */
 export function getClientEquipementLabel(
-  clientEquipementId: string,
+  clientEquipementId: number,
   clientEquipements: ClientEquipement[] = mockClientEquipements,
   equipments: Equipment[] = mockEquipments
 ): string {
@@ -123,8 +118,8 @@ export function getClientEquipementLabel(
  * Finds an active contract that covers the given ClientEquipement for the client.
  */
 export function findActiveContractForClientEquipement(
-  clientEquipementId: string,
-  clientId: string,
+  clientEquipementId: number,
+  clientId: number,
   contracts: Contract[] = mockContracts
 ): Contract | undefined {
   const today = new Date();
@@ -144,8 +139,8 @@ export function findActiveContractForClientEquipement(
 
 /** Returns true when an active contract covers the given CE/client pair. */
 export function getContractCoverageForClientEquipement(
-  clientEquipementId: string,
-  clientId: string,
+  clientEquipementId: number,
+  clientId: number,
   contracts: Contract[] = mockContracts
 ): boolean {
   return (
@@ -162,8 +157,8 @@ export function getContractCoverageForClientEquipement(
  * Resolves CE internally from clientId + equipementId, then delegates.
  */
 export function findActiveContractForEquipment(
-  equipmentId: string,
-  clientId: string,
+  equipmentId: number,
+  clientId: number,
   contracts: Contract[] = mockContracts,
   clientEquipements: ClientEquipement[] = mockClientEquipements
 ): Contract | null {
@@ -176,9 +171,9 @@ export function findActiveContractForEquipment(
  * @deprecated Use getContractCoverageForClientEquipement instead.
  */
 export function getContractCoverage(
-  equipmentId: string,
-  clientId: string
-): { couvertureContrat: boolean; contractId?: string } {
+  equipmentId: number,
+  clientId: number
+): { couvertureContrat: boolean; contractId?: number } {
   const contract = findActiveContractForEquipment(equipmentId, clientId);
   if (!contract) return { couvertureContrat: false };
   return { couvertureContrat: true, contractId: contract.id };
@@ -203,9 +198,9 @@ const PERIODICITE_MONTHS: Record<Contract['periodicite'], number> = {
  * Returns [] if dateDebut/dateFin are invalid or dateFin < dateDebut.
  */
 export function generatePreventiveInterventionPreviews(params: {
-  contractId?: string;
-  clientId: string;
-  clientEquipementIds: string[];
+  contractId?: number;
+  clientId: number;
+  clientEquipementIds: number[];
   dateDebut: string;
   dateFin: string;
   periodicite: Contract['periodicite'];
@@ -244,7 +239,7 @@ export function generatePreventiveInterventionPreviews(params: {
     while (current <= end) {
       const dateStr = current.toISOString().split('T')[0];
       result.push({
-        id: `preview-${ceId}-${dateStr}${contractId ? `-${contractId}` : ''}`,
+        id: `preview-${ceId}-${dateStr}${contractId != null ? `-${contractId}` : ''}`,
         datePrevue: dateStr,
         clientEquipementId: ceId,
         equipementId: ce.equipementId,
@@ -266,16 +261,17 @@ export function generatePreventiveInterventionPreviews(params: {
 /**
  * Converts a PreventiveInterventionPreview into a full Intervention record
  * ready to be appended to local state after contract creation.
+ * Uses a negative placeholder id (never persisted to DB).
  */
 export function preventivePreviewToIntervention(
   preview: PreventiveInterventionPreview,
-  options: { contractId: string; index: number }
+  options: { contractId: number; index: number }
 ): Intervention {
   const { contractId, index } = options;
   const seq = String(index + 1).padStart(3, '0');
   return {
-    id: `int-prev-${contractId}-${index + 1}`,
-    reference: `INT-PREV-${contractId.toUpperCase()}-${seq}`,
+    id: -(index + 1),
+    reference: `INT-PREV-CTR-${contractId}-${seq}`,
     type: 'PREVENTIVE',
     clientId: preview.clientId,
     equipementId: preview.equipementId,
@@ -301,10 +297,10 @@ export function preventivePreviewToIntervention(
  * so existing 3-arg and 4-arg callers continue to work unchanged.
  */
 export function isTechnicianAvailable(
-  technicienId: string,
+  technicienId: number,
   datePrevue: string,
   interventions: Intervention[] = mockInterventions,
-  excludeInterventionId?: string,
+  excludeInterventionId?: number,
   previewRows: PreventiveInterventionPreview[] = []
 ): boolean {
   const conflictsInInterventions = interventions.some(
@@ -328,7 +324,7 @@ export function isTechnicianAvailable(
 export const TECHNICIAN_UNAVAILABLE_MESSAGE =
   'Ce technicien est déjà affecté à une intervention à cette date.';
 
-export function getTechnicianName(technicienId?: string): string {
+export function getTechnicianName(technicienId?: number): string {
   if (!technicienId) return 'Non affecté';
   const tech = mockUsers.find((u) => u.id === technicienId);
   if (!tech) return 'N/A';

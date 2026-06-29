@@ -1,0 +1,260 @@
+// This is the Prisma schema for SAV Manager.
+// Architecture: Next.js App Router → app/api/ routes → Prisma → MySQL
+// Run: pnpm dlx prisma generate
+//      pnpm dlx prisma migrate dev --name init
+//      pnpm dlx prisma db seed
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+// ---------------------------------------------------------------------------
+// Enums
+// ---------------------------------------------------------------------------
+
+// Internal staff only — CLIENT is NOT here (clients use the Client table)
+enum UserRole {
+  ADMIN
+  TECHNICIAN
+}
+
+enum ClientType {
+  SOCIETE
+  PERSONNE_PHYSIQUE
+}
+
+enum EquipmentType {
+  CLIMATISEUR
+  SYSTEME_SURPRESSION
+}
+
+enum ContractStatus {
+  ACTIF
+  BIENTOT_EXPIRE
+  EXPIRE
+}
+
+enum Periodicite {
+  MENSUELLE
+  TRIMESTRIELLE
+  SEMESTRIELLE
+  ANNUELLE
+}
+
+enum InterventionType {
+  PREVENTIVE
+  CURATIVE
+}
+
+enum InterventionStatus {
+  PLANIFIEE
+  EN_COURS
+  REALISEE
+  ANNULEE
+}
+
+enum PanneStatus {
+  EN_ATTENTE
+  PRISE_EN_CHARGE
+  CONVERTIE
+  ANNULEE
+}
+
+enum FactureStatus {
+  PAYEE
+  IMPAYEE
+  EN_ATTENTE
+}
+
+// ---------------------------------------------------------------------------
+// Models
+// ---------------------------------------------------------------------------
+
+model User {
+  id            Int       @id @default(autoincrement())
+  prenom        String
+  nom           String
+  email         String    @unique
+  telephone     String?
+  passwordHash  String
+  role          UserRole
+  actif         Boolean   @default(true)
+  dateCreation  DateTime  @default(now())
+
+  interventions Intervention[] @relation("TechnicienInterventions")
+}
+
+// Clients are stored separately from Users.
+// A client session carries role: "client" in AuthSession,
+// but that value does NOT come from the UserRole enum.
+model Client {
+  id                Int                @id @default(autoincrement())
+  typeClient        ClientType
+  societe           String?
+  contact           String?
+  prenom            String?
+  nom               String?
+  email             String             @unique
+  telephone         String?
+  passwordHash      String
+  adresse           String?            @db.Text
+  ville             String?
+  dateCreation      DateTime           @default(now())
+
+  // nombreEquipements is NOT stored — derive via _count.clientEquipements in queries
+  clientEquipements ClientEquipement[]
+  contrats          Contract[]
+  pannes            Panne[]
+  interventions     Intervention[]
+  factures          Facture[]
+}
+
+// Global equipment catalog — not client-specific
+model Equipment {
+  id                Int                @id @default(autoincrement())
+  reference         String             @unique
+  type              EquipmentType
+  marque            String
+  modele            String
+  numeroSerie       String?
+  description       String?            @db.Text
+
+  images            EquipmentImage[]
+  clientEquipements ClientEquipement[]
+}
+
+model EquipmentImage {
+  id          Int       @id @default(autoincrement())
+  equipmentId Int
+  equipment   Equipment @relation(fields: [equipmentId], references: [id], onDelete: Cascade)
+  filename    String
+  url         String    // path under /public/uploads/ for demo
+  isMain      Boolean   @default(false)
+}
+
+// Join table linking Equipment catalog entries to specific client installations
+model ClientEquipement {
+  id               Int       @id @default(autoincrement())
+  clientId         Int
+  client           Client    @relation(fields: [clientId], references: [id])
+  equipementId     Int
+  equipement       Equipment @relation(fields: [equipementId], references: [id])
+  dateAchat        DateTime?
+  localisation     String?
+  dateInstallation DateTime
+  notes            String?   @db.Text
+
+  contracts     ContractEquipement[]
+  interventions Intervention[]
+  pannes        Panne[]
+}
+
+model Contract {
+  id          Int            @id @default(autoincrement())
+  reference   String         @unique
+  clientId    Int
+  client      Client         @relation(fields: [clientId], references: [id])
+  dateDebut   DateTime
+  dateFin     DateTime
+  periodicite Periodicite
+  statut      ContractStatus
+  description String?        @db.Text
+
+  equipements   ContractEquipement[]
+  interventions Intervention[]
+}
+
+// Explicit join table replacing clientEquipementIds: string[] from mock data
+model ContractEquipement {
+  contractId         Int
+  contract           Contract         @relation(fields: [contractId], references: [id], onDelete: Cascade)
+  clientEquipementId Int
+  clientEquipement   ClientEquipement @relation(fields: [clientEquipementId], references: [id])
+
+  @@id([contractId, clientEquipementId])
+}
+
+model Intervention {
+  id                 Int                @id @default(autoincrement())
+  reference          String             @unique
+  type               InterventionType
+  clientId           Int
+  client             Client             @relation(fields: [clientId], references: [id])
+  clientEquipementId Int?
+  clientEquipement   ClientEquipement?  @relation(fields: [clientEquipementId], references: [id])
+  technicienId       Int?
+  technicien         User?              @relation("TechnicienInterventions", fields: [technicienId], references: [id])
+  contractId         Int?
+  contract           Contract?          @relation(fields: [contractId], references: [id])
+  datePrevue         DateTime
+  dateRealisation    DateTime?
+  statut             InterventionStatus
+  couvertureContrat  Boolean            @default(false)
+  description        String             @db.Text
+  diagnostic         String?            @db.Text
+  actionsRealisees   String?            @db.Text
+  materielUtilise    String?            @db.Text
+  dureeMinutes       Int?
+  observations       String?            @db.Text
+
+  // equipementId (raw) is intentionally absent — resolve via clientEquipement.equipementId
+  facture Facture?
+  panne   Panne?
+}
+
+model Panne {
+  id                 Int               @id @default(autoincrement())
+  reference          String            @unique
+  clientId           Int
+  client             Client            @relation(fields: [clientId], references: [id])
+  clientEquipementId Int?
+  clientEquipement   ClientEquipement? @relation(fields: [clientEquipementId], references: [id])
+  dateDeclaration    DateTime          @default(now())
+  description        String            @db.Text
+  statut             PanneStatus       @default(EN_ATTENTE)
+  interventionId     Int?              @unique
+  intervention       Intervention?     @relation(fields: [interventionId], references: [id])
+
+  piecesJointes PieceJointe[]
+}
+
+model PieceJointe {
+  id       Int    @id @default(autoincrement())
+  panneId  Int
+  panne    Panne  @relation(fields: [panneId], references: [id], onDelete: Cascade)
+  filename String
+  url      String // path under /public/uploads/
+  size     Int
+  mimeType String
+}
+
+model Facture {
+  id             Int           @id @default(autoincrement())
+  numero         String        @unique
+  clientId       Int
+  client         Client        @relation(fields: [clientId], references: [id])
+  interventionId Int?          @unique
+  intervention   Intervention? @relation(fields: [interventionId], references: [id])
+  dateEmission   DateTime      @default(now())
+  montantHT      Float
+  tva            Float         // TVA amount in TND (not the rate)
+  montantTTC     Float
+  statut         FactureStatus @default(EN_ATTENTE)
+
+  lignes LigneFacture[]
+}
+
+model LigneFacture {
+  id           Int     @id @default(autoincrement())
+  factureId    Int
+  facture      Facture @relation(fields: [factureId], references: [id], onDelete: Cascade)
+  description  String  @db.Text
+  quantite     Float
+  prixUnitaire Float
+  montant      Float
+}

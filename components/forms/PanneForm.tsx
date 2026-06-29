@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ClientEquipement, PieceJointe } from '@/types';
+import { ClientEquipement, Equipment, PieceJointe } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Label } from '@/components/ui/label';
 import { Textarea } from '@/components/ui/textarea';
@@ -37,6 +37,7 @@ function readFileAsDataURL(file: File): Promise<string | undefined> {
 interface PanneFormProps {
   clientId: string;
   clientEquipements: ClientEquipement[];
+  equipments?: Equipment[];
   onSubmit: (data: {
     clientEquipementId: string;
     equipementId: string;
@@ -49,6 +50,7 @@ interface PanneFormProps {
 
 export function PanneForm({
   clientEquipements,
+  equipments = mockEquipments,
   onSubmit,
   isLoading = false,
   noCard = false,
@@ -79,7 +81,7 @@ export function PanneForm({
     const fileArray = Array.from(fileList);
     const previews = await Promise.all(fileArray.map(readFileAsDataURL));
     const newPJs: PieceJointe[] = fileArray.map((file, idx) => ({
-      id: `pj-${Date.now()}-${idx}`,
+      id: -(Date.now() + idx),
       filename: file.name,
       size: file.size,
       type: file.type || 'application/octet-stream',
@@ -89,18 +91,18 @@ export function PanneForm({
     e.target.value = '';
   };
 
-  const handleRemoveFile = (id: string) => {
+  const handleRemoveFile = (id: number) => {
     setFiles((prev) => prev.filter((f) => f.id !== id));
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!validateForm()) return;
-    const ce = clientEquipements.find((c) => c.id === formData.clientEquipementId);
+    const ce = clientEquipements.find((c) => String(c.id) === formData.clientEquipementId);
     if (!ce) return;
     onSubmit({
       clientEquipementId: formData.clientEquipementId,
-      equipementId: ce.equipementId,
+      equipementId: String(ce.equipementId),
       description: formData.description.trim(),
       piecesJointes: files,
     });
@@ -133,12 +135,12 @@ export function PanneForm({
               </SelectItem>
             ) : (
               clientEquipements.map((ce) => {
-                const eq = mockEquipments.find((e) => e.id === ce.equipementId);
+                const eq = equipments.find((e) => e.id === ce.equipementId);
                 const label = eq
                   ? `${eq.reference} — ${eq.marque} ${eq.modele}${ce.localisation ? ` (${ce.localisation})` : ''}`
-                  : ce.equipementId;
+                  : String(ce.equipementId);
                 return (
-                  <SelectItem key={ce.id} value={ce.id}>
+                  <SelectItem key={ce.id} value={String(ce.id)}>
                     {label}
                   </SelectItem>
                 );

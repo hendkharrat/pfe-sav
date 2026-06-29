@@ -4,12 +4,12 @@ import { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { List } from 'lucide-react';
-import { Intervention, InterventionStatut, InterventionType } from '@/types';
+import { Intervention, InterventionStatut, InterventionType, User } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { useAuth } from '@/hooks/useAuth';
+import { useToast } from '@/hooks/useToast';
 import { PlanningCalendar, type PlanningViewMode } from '@/components/shared/PlanningCalendar';
 import { InterventionDetail } from '@/components/shared/InterventionDetail';
-import { mockInterventions } from '@/data/mock-interventions';
 import { Button } from '@/components/ui/button';
 import {
   Select,
@@ -25,7 +25,6 @@ import {
 } from '@/lib/constants';
 import {
   filterInterventionsByRole,
-  getActiveTechnicians,
   getWeekStart,
 } from '@/lib/interventions';
 import { cn } from '@/lib/utils';
@@ -41,11 +40,13 @@ const VIEW_MODE_LABELS: Record<PlanningViewMode, string> = {
 export default function PlanningPage() {
   const router = useRouter();
   const { user, isLoading } = useAuth();
+  const { showError } = useToast();
 
   const [interventions, setInterventions] = useState<Intervention[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [viewMode, setViewMode] = useState<PlanningViewMode>('week');
   const [viewStart, setViewStart] = useState<Date>(() => getWeekStart(new Date()));
-  const [technicianFilter, setTechnicianFilter] = useState('all');
+  const [technicianFilter, setTechnicianFilter] = useState<number | 'all'>('all');
   const [typeFilter, setTypeFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
   const [detailIntervention, setDetailIntervention] = useState<Intervention | null>(null);
@@ -57,13 +58,26 @@ export default function PlanningPage() {
   }, [isLoading, user, router]);
 
   useEffect(() => {
-    setInterventions(mockInterventions);
-  }, []);
+    Promise.all([
+      fetch('/api/interventions').then((r) => r.json()),
+      fetch('/api/users').then((r) => r.json()),
+    ])
+      .then(([ivs, us]) => {
+        if (Array.isArray(ivs)) setInterventions(ivs);
+        if (Array.isArray(us)) setUsers(us);
+      })
+      .catch(() => showError('Erreur lors du chargement des données.'));
+  }, [showError]);
 
   const handleModeChange = (newMode: PlanningViewMode) => {
     setViewMode(newMode);
     setViewStart(newMode === 'month' ? new Date() : getWeekStart(new Date()));
   };
+
+  const activeTechnicians = useMemo(
+    () => users.filter((u) => u.role === 'technician' && u.actif),
+    [users]
+  );
 
   const filteredForPlanning = useMemo(() => {
     if (!user) return [];
@@ -130,14 +144,14 @@ export default function PlanningPage() {
 
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           {showTechnicianFilter && (
-            <Select value={technicianFilter} onValueChange={setTechnicianFilter}>
+            <Select value={technicianFilter === 'all' ? 'all' : String(technicianFilter)} onValueChange={(v) => setTechnicianFilter(v === 'all' ? 'all' : Number(v))}>
               <SelectTrigger className="h-9">
                 <SelectValue placeholder="Technicien" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">Tous les techniciens</SelectItem>
-                {getActiveTechnicians().map((tech) => (
-                  <SelectItem key={tech.id} value={tech.id}>
+                {activeTechnicians.map((tech) => (
+                  <SelectItem key={tech.id} value={String(tech.id)}>
                     {tech.prenom} {tech.nom}
                   </SelectItem>
                 ))}

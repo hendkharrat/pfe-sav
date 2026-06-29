@@ -69,7 +69,17 @@
       "Bash(dir /s /b \"plantuml*.jar\" \"C:\\\\\\\\\")",
       "PowerShell(npm list *)",
       "PowerShell($javaPath = \\(Get-Command java -ErrorAction SilentlyContinue\\).Source; if \\($javaPath\\) { & $javaPath -version 2>&1 | Select-Object -First 2 }; $plantUmlLocations = @\\(\"C:\\\\plantuml.jar\", \"$env:USERPROFILE\\\\plantuml.jar\", \"$env:USERPROFILE\\\\Downloads\\\\plantuml.jar\", \"C:\\\\tools\\\\plantuml.jar\"\\); foreach \\($p in $plantUmlLocations\\) { if \\(Test-Path $p\\) { Write-Output \"Found: $p\" } })",
-      "PowerShell($dest = \"$env:USERPROFILE\\\\plantuml.jar\"; Invoke-WebRequest -Uri \"https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml-1.2024.8.jar\" -OutFile $dest -UseBasicParsing; if \\(Test-Path $dest\\) { Write-Output \"Downloaded: $dest \\($\\('{0:N0}' -f \\(Get-Item $dest\\).Length\\) bytes\\)\" } else { Write-Output \"Download failed\" })"
+      "PowerShell($dest = \"$env:USERPROFILE\\\\plantuml.jar\"; Invoke-WebRequest -Uri \"https://github.com/plantuml/plantuml/releases/download/v1.2024.8/plantuml-1.2024.8.jar\" -OutFile $dest -UseBasicParsing; if \\(Test-Path $dest\\) { Write-Output \"Downloaded: $dest \\($\\('{0:N0}' -f \\(Get-Item $dest\\).Length\\) bytes\\)\" } else { Write-Output \"Download failed\" })",
+      "Bash(pnpm exec *)",
+      "Bash(pnpm tsc *)",
+      "Bash(echo \"EXIT_CODE:$?\")",
+      "Bash(cat .env)",
+      "Bash(cat .env.local)",
+      "PowerShell(Get-Service *)",
+      "Bash(grep -A 15 \"CREATE TABLE \\\\`LigneFacture\\\\`\" prisma/migrations/20260629020108_init/migration.sql)",
+      "Bash(echo \"TSC_EXIT:$?\")",
+      "Bash(echo \"TSC:$?\")",
+      "Bash(grep -v \"//.*OK\")"
     ]
   }
 }

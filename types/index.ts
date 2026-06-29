@@ -10,7 +10,7 @@ export type EquipmentType = 'CLIMATISEUR' | 'SYSTEME_SURPRESSION';
 export type InvoiceStatut = 'PAYEE' | 'IMPAYEE' | 'EN_ATTENTE';
 
 export interface User {
-  id: string;
+  id: number;
   prenom: string;
   nom: string;
   email: string;
@@ -22,7 +22,7 @@ export interface User {
 }
 
 export interface Client {
-  id: string;
+  id: number;
   typeClient: ClientType;
   /** Company name — required when typeClient === 'SOCIETE'. */
   societe?: string;
@@ -39,13 +39,13 @@ export interface Client {
   ville: string;
   dateCreation: string;
   nombreEquipements: number;
-  userId?: string;
+  userId?: number;
 }
 
 // --- Equipment ---
 
 export interface EquipmentImage {
-  id: string;
+  id: number;
   filename: string;
   previewUrl?: string;
   isMain: boolean;
@@ -53,7 +53,7 @@ export interface EquipmentImage {
 
 /** Generic equipment catalog record — not tied to a specific client installation. */
 export interface Equipment {
-  id: string;
+  id: number;
   reference: string;
   type: EquipmentType;
   marque: string;
@@ -65,9 +65,9 @@ export interface Equipment {
 
 /** Join record linking an Equipment model to a specific Client installation. */
 export interface ClientEquipement {
-  id: string;
-  clientId: string;
-  equipementId: string;
+  id: number;
+  clientId: number;
+  equipementId: number;
   dateAchat?: string;
   localisation?: string;
   dateInstallation: string;
@@ -77,32 +77,32 @@ export interface ClientEquipement {
 // --- Contract ---
 
 export interface Contract {
-  id: string;
+  id: number;
   reference: string;
-  clientId: string;
+  clientId: number;
   dateDebut: string;
   dateFin: string;
   periodicite: 'MENSUELLE' | 'TRIMESTRIELLE' | 'SEMESTRIELLE' | 'ANNUELLE';
   statut: ContractStatut;
   /** IDs of ClientEquipement records covered by this contract. */
-  clientEquipementIds: string[];
+  clientEquipementIds: number[];
   /** @deprecated Use clientEquipementIds instead. */
-  equipementIds?: string[];
+  equipementIds?: number[];
   description?: string;
 }
 
 // --- Intervention ---
 
 export interface Intervention {
-  id: string;
+  id: number;
   reference: string;
   type: InterventionType;
-  clientId: string;
-  equipementId: string;
+  clientId: number;
+  equipementId: number;
   /** Reference to the ClientEquipement join record (optional for backwards compatibility). */
-  clientEquipementId?: string;
-  technicienId?: string;
-  contractId?: string;
+  clientEquipementId?: number;
+  technicienId?: number;
+  contractId?: number;
   datePrevue: string;
   dateRealisation?: string;
   statut: InterventionStatut;
@@ -119,10 +119,10 @@ export interface Intervention {
 export interface PreventiveInterventionPreview {
   id: string;
   datePrevue: string;
-  clientEquipementId: string;
-  equipementId: string;
-  clientId: string;
-  technicienId?: string;
+  clientEquipementId: number;
+  equipementId: number;
+  clientId: number;
+  technicienId?: number;
   description: string;
 }
 
@@ -136,10 +136,10 @@ export interface LigneFacture {
 }
 
 export interface Invoice {
-  id: string;
+  id: number;
   numero: string;
-  clientId: string;
-  interventionId?: string;
+  clientId: number;
+  interventionId?: number;
   dateEmission: string;
   montantHT: number;
   tva: number;
@@ -151,7 +151,7 @@ export interface Invoice {
 // --- Pannes ---
 
 export interface PieceJointe {
-  id: string;
+  id: number;
   filename: string;
   size: number;
   type: string;
@@ -165,16 +165,16 @@ export type PanneStatut =
   | 'ANNULEE';
 
 export interface Panne {
-  id: string;
+  id: number;
   reference: string;
-  clientId: string;
-  equipementId: string;
+  clientId: number;
+  equipementId: number;
   /** Reference to the ClientEquipement join record for richer location resolution. */
-  clientEquipementId?: string;
+  clientEquipementId?: number;
   dateDeclaration: string;
   description: string;
   statut: PanneStatut;
-  interventionId?: string;
+  interventionId?: number;
   /** @deprecated Use piecesJointes instead. */
   pieceJointeNom?: string;
   piecesJointes?: PieceJointe[];
@@ -205,7 +205,7 @@ export interface AuthSession {
   email: string;
   telephone?: string;
   /** Set for admin / technician logins. */
-  userId?: string;
+  userId?: number;
   /** Set for client logins. */
-  clientId?: string;
+  clientId?: number;
 }

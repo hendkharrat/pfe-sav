@@ -2,16 +2,13 @@
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
 import { useRouter } from 'next/navigation';
-import { ClientEquipement, Equipment } from '@/types';
+import { Client, ClientEquipement, Equipment } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AdminOnly } from '@/components/shared/AdminOnly';
 import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { EquipmentForm } from '@/components/forms/EquipmentForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
-import { mockEquipments } from '@/data/mock-equipments';
-import { mockClientEquipements } from '@/data/mock-client-equipements';
-import { mockClients } from '@/data/mock-clients';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import {
@@ -47,13 +44,15 @@ import { EquipmentThumbnail } from '@/components/shared/EquipmentThumbnail';
 export default function EquipmentsPage() {
   const router = useRouter();
   const { user: currentUser, isLoading } = useAuth();
-  const { showSuccess } = useToast();
+  const { showSuccess, showError } = useToast();
 
   const [equipments, setEquipments] = useState<Equipment[]>([]);
   const [filteredEquipments, setFilteredEquipments] = useState<Equipment[]>([]);
-  const [clientEquipements, setClientEquipements] = useState<ClientEquipement[]>(mockClientEquipements);
+  const [clientEquipements, setClientEquipements] = useState<ClientEquipement[]>([]);
+  const [clients, setClients] = useState<Client[]>([]);
   const [searchTerm, setSearchTerm] = useState('');
   const [typeFilter, setTypeFilter] = useState('all');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [isFormOpen, setIsFormOpen] = useState(false);
   const [selectedEquipment, setSelectedEquipment] = useState<Equipment | undefined>();
@@ -65,8 +64,16 @@ export default function EquipmentsPage() {
   const [page, setPage] = useState(1);
 
   useEffect(() => {
-    setEquipments(mockEquipments);
-  }, []);
+    Promise.all([
+      fetch('/api/equipements').then((r) => r.json()),
+      fetch('/api/client-equipements').then((r) => r.json()),
+      fetch('/api/clients').then((r) => r.json()),
+    ]).then(([eqs, ces, cls]) => {
+      if (Array.isArray(eqs)) setEquipments(eqs);
+      if (Array.isArray(ces)) setClientEquipements(ces);
+      if (Array.isArray(cls)) setClients(cls);
+    }).catch(() => showError('Erreur lors du chargement des données.'));
+  }, [showError]);
 
   useEffect(() => {
     let result = equipments;
@@ -94,25 +101,56 @@ export default function EquipmentsPage() {
   }, [searchTerm, typeFilter]);
 
   const getUsageCount = useCallback(
-    (equipmentId: string) =>
+    (equipmentId: number) =>
       clientEquipements.filter((ce) => ce.equipementId === equipmentId).length,
     [clientEquipements]
   );
 
   const handleAddClientEquipement = useCallback(
-    (ce: ClientEquipement) => {
-      setClientEquipements((prev) => [...prev, ce]);
-      showSuccess('Équipement affecté avec succès');
+    async (ce: ClientEquipement) => {
+      try {
+        const res = await fetch('/api/client-equipements', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            clientId: ce.clientId,
+            equipementId: ce.equipementId,
+            dateInstallation: ce.dateInstallation,
+            dateAchat: ce.dateAchat ?? null,
+            localisation: ce.localisation ?? null,
+            notes: ce.notes ?? null,
+          }),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de l'affectation.");
+          return;
+        }
+        setClientEquipements((prev) => [...prev, data]);
+        showSuccess('Équipement affecté avec succès');
+      } catch {
+        showError("Erreur lors de l'affectation.");
+      }
     },
-    [showSuccess]
+    [showSuccess, showError]
   );
 
   const handleRemoveClientEquipement = useCallback(
-    (ceId: string) => {
-      setClientEquipements((prev) => prev.filter((ce) => ce.id !== ceId));
-      showSuccess('Affectation retirée');
+    async (ceId: number) => {
+      try {
+        const res = await fetch(`/api/client-equipements/${ceId}`, { method: 'DELETE' });
+        if (!res.ok && res.status !== 204) {
+          const data = await res.json().catch(() => ({}));
+          showError(data.error ?? "Erreur lors de la suppression de l'affectation.");
+          return;
+        }
+        setClientEquipements((prev) => prev.filter((ce) => ce.id !== ceId));
+        showSuccess('Affectation retirée');
+      } catch {
+        showError("Erreur lors de la suppression de l'affectation.");
+      }
     },
-    [showSuccess]
+    [showSuccess, showError]
   );
 
   const handleSort = useCallback((key: string) => {
@@ -140,40 +178,82 @@ export default function EquipmentsPage() {
   );
 
   const handleAddEquipment = useCallback(
-    (formData: Omit<Equipment, 'id'>) => {
-      const newEquipment: Equipment = {
-        ...formData,
-        id: `eq-${Date.now()}`,
-        images: formData.images ?? [],
-      };
-      setEquipments((prev) => [...prev, newEquipment]);
-      setIsFormOpen(false);
-      setSelectedEquipment(undefined);
-      showSuccess('Équipement ajouté avec succès');
+    async (formData: Omit<Equipment, 'id'>) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch('/api/equipements', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de la création de l'équipement.");
+          return;
+        }
+        setEquipments((prev) => [...prev, data]);
+        setIsFormOpen(false);
+        setSelectedEquipment(undefined);
+        showSuccess('Équipement ajouté avec succès');
+      } catch {
+        showError("Erreur lors de la création de l'équipement.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [showSuccess]
+    [showSuccess, showError]
   );
 
   const handleUpdateEquipment = useCallback(
-    (formData: Omit<Equipment, 'id'>) => {
+    async (formData: Omit<Equipment, 'id'>) => {
       if (!selectedEquipment) return;
-      setEquipments((prev) =>
-        prev.map((e) => (e.id === selectedEquipment.id ? { ...e, ...formData } : e))
-      );
-      setIsFormOpen(false);
-      setSelectedEquipment(undefined);
-      showSuccess('Équipement modifié avec succès');
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/equipements/${selectedEquipment.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de la modification de l'équipement.");
+          return;
+        }
+        setEquipments((prev) => prev.map((e) => (e.id === selectedEquipment.id ? data : e)));
+        setIsFormOpen(false);
+        setSelectedEquipment(undefined);
+        showSuccess('Équipement modifié avec succès');
+      } catch {
+        showError("Erreur lors de la modification de l'équipement.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [selectedEquipment, showSuccess]
+    [selectedEquipment, showSuccess, showError]
   );
 
-  const handleDeleteEquipment = useCallback(() => {
+  const handleDeleteEquipment = useCallback(async () => {
     if (!equipmentToDelete) return;
-    setEquipments((prev) => prev.filter((e) => e.id !== equipmentToDelete.id));
-    setIsConfirmOpen(false);
-    setEquipmentToDelete(null);
-    showSuccess('Équipement supprimé');
-  }, [equipmentToDelete, showSuccess]);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/equipements/${equipmentToDelete.id}`, { method: 'DELETE' });
+      if (!res.ok && res.status !== 204) {
+        const data = await res.json().catch(() => ({}));
+        showError(data.error ?? "Erreur lors de la suppression de l'équipement.");
+        setIsConfirmOpen(false);
+        setEquipmentToDelete(null);
+        return;
+      }
+      setEquipments((prev) => prev.filter((e) => e.id !== equipmentToDelete.id));
+      setIsConfirmOpen(false);
+      setEquipmentToDelete(null);
+      showSuccess('Équipement supprimé');
+    } catch {
+      showError("Erreur lors de la suppression de l'équipement.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [equipmentToDelete, showSuccess, showError]);
 
   const handleEditClick = (equipment: Equipment) => {
     setSelectedEquipment(equipment);
@@ -377,6 +457,7 @@ export default function EquipmentsPage() {
             setSelectedEquipment(undefined);
           }}
           onSubmit={selectedEquipment ? handleUpdateEquipment : handleAddEquipment}
+          isLoading={isSubmitting}
         />
 
         <EquipmentDetail
@@ -384,7 +465,8 @@ export default function EquipmentsPage() {
           equipment={detailEquipment}
           onClose={() => setIsDetailOpen(false)}
           clientEquipements={clientEquipements}
-          clients={mockClients}
+          clients={clients}
+          equipments={equipments}
           onAddClientEquipement={handleAddClientEquipement}
           onRemoveClientEquipement={handleRemoveClientEquipement}
         />
@@ -392,7 +474,7 @@ export default function EquipmentsPage() {
         <ConfirmDialog
           open={isConfirmOpen}
           title="Supprimer l'équipement"
-          description={`Êtes-vous sûr de vouloir supprimer ${equipmentToDelete?.reference} ? Cette suppression est simulée et concerne uniquement l'interface.`}
+          description={`Êtes-vous sûr de vouloir supprimer ${equipmentToDelete?.reference} ? Cette action est irréversible.`}
           actionLabel="Supprimer"
           actionVariant="destructive"
           onConfirm={handleDeleteEquipment}

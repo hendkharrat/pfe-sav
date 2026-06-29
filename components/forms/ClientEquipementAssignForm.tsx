@@ -26,14 +26,14 @@ import { getClientDisplayName } from '@/lib/utils';
 interface ClientEquipementAssignFormProps {
   open: boolean;
   onOpenChange: (open: boolean) => void;
-  /** Fixed when called from the client side. Pass '' when using fixedEquipementId mode. */
-  clientId: string;
+  /** Fixed when called from the client side. Pass 0 when using fixedEquipementId mode. */
+  clientId: number;
   existingAssignments: ClientEquipement[];
   equipments: Equipment[];
   editingAssignment?: ClientEquipement;
   onSubmit: (assignment: ClientEquipement) => void;
   /** When set, hides the equipment select and shows a client select instead. */
-  fixedEquipementId?: string;
+  fixedEquipementId?: number;
   /** Required when fixedEquipementId is set — list of clients for selection. */
   clients?: Client[];
 }
@@ -55,7 +55,9 @@ export function ClientEquipementAssignForm({
   const isEquipmentMode = !!fixedEquipementId;
 
   const [formData, setFormData] = useState({
-    equipementId: editingAssignment?.equipementId ?? (fixedEquipementId ?? ''),
+    equipementId: editingAssignment?.equipementId
+      ? String(editingAssignment.equipementId)
+      : fixedEquipementId ? String(fixedEquipementId) : '',
     selectedClientId: '',
     dateAchat: editingAssignment?.dateAchat ?? today(),
     localisation: editingAssignment?.localisation ?? '',
@@ -99,9 +101,9 @@ export function ClientEquipementAssignForm({
     if (!validate()) return;
 
     const assignment: ClientEquipement = {
-      id: editingAssignment?.id ?? `ce-local-${Date.now()}`,
-      clientId: isEquipmentMode ? formData.selectedClientId : clientId,
-      equipementId: isEquipmentMode ? (fixedEquipementId as string) : formData.equipementId,
+      id: editingAssignment?.id ?? -Date.now(),
+      clientId: isEquipmentMode ? Number(formData.selectedClientId) : clientId,
+      equipementId: isEquipmentMode ? fixedEquipementId! : Number(formData.equipementId),
       dateAchat: formData.dateAchat || undefined,
       localisation: formData.localisation.trim() || undefined,
       dateInstallation: formData.dateInstallation,
@@ -115,7 +117,7 @@ export function ClientEquipementAssignForm({
   const handleClose = () => {
     setErrors({});
     setFormData({
-      equipementId: fixedEquipementId ?? '',
+      equipementId: fixedEquipementId ? String(fixedEquipementId) : '',
       selectedClientId: '',
       dateAchat: today(),
       localisation: '',
@@ -175,7 +177,7 @@ export function ClientEquipementAssignForm({
                       </div>
                     ) : (
                       availableClients.map((c) => (
-                        <SelectItem key={c.id} value={c.id}>
+                        <SelectItem key={c.id} value={String(c.id)}>
                           {getClientDisplayName(c)}
                         </SelectItem>
                       ))
@@ -205,7 +207,7 @@ export function ClientEquipementAssignForm({
                       </div>
                     ) : (
                       availableEquipments.map((eq) => (
-                        <SelectItem key={eq.id} value={eq.id}>
+                        <SelectItem key={eq.id} value={String(eq.id)}>
                           {eq.reference} — {eq.modele} ({EQUIPMENT_TYPE_LABELS[eq.type]})
                         </SelectItem>
                       ))

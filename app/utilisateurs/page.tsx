@@ -1,7 +1,6 @@
 'use client';
 
 import { useEffect, useState, useCallback, useMemo } from 'react';
-import { useRouter } from 'next/navigation';
 import { User, UserRole } from '@/types';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { AdminOnly } from '@/components/shared/AdminOnly';
@@ -9,7 +8,6 @@ import { useAuth } from '@/hooks/useAuth';
 import { useToast } from '@/hooks/useToast';
 import { UserForm } from '@/components/forms/UserForm';
 import { ConfirmDialog } from '@/components/shared/ConfirmDialog';
-import { mockUsers } from '@/data/mock-users';
 import { ROLE_LABELS, ROLES } from '@/lib/constants';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -37,9 +35,9 @@ import { formatDate } from '@/lib/utils';
 import { Plus, Edit2, Trash2, RotateCcw, Filter } from 'lucide-react';
 
 export default function UsersPage() {
-  const router = useRouter();
   const { isLoading } = useAuth();
-  const { showSuccess } = useToast();
+  const { showSuccess, showError } = useToast();
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const [users, setUsers] = useState<User[]>([]);
   const [filteredUsers, setFilteredUsers] = useState<User[]>([]);
@@ -56,10 +54,12 @@ export default function UsersPage() {
   const [isRestoreConfirmOpen, setIsRestoreConfirmOpen] = useState(false);
   const [userToRestore, setUserToRestore] = useState<User | null>(null);
 
-  // Initialize users from mock data — client-role users are managed in the Clients module
   useEffect(() => {
-    setUsers(mockUsers.filter((u) => u.role !== ROLES.CLIENT));
-  }, []);
+    fetch('/api/users')
+      .then((r) => r.json())
+      .then((data) => { if (Array.isArray(data)) setUsers(data); })
+      .catch(() => showError('Erreur lors du chargement des utilisateurs.'));
+  }, [showError]);
 
   // Filter users
   useEffect(() => {
@@ -111,55 +111,109 @@ export default function UsersPage() {
   );
 
   const handleAddUser = useCallback(
-    (formData: Omit<User, 'id' | 'dateCreation'> & { password?: string }) => {
-      const newUser: User = {
-        ...formData,
-        id: `user-${Date.now()}`,
-        dateCreation: new Date().toISOString().split('T')[0],
-      };
-      setUsers([...users, newUser]);
-      setIsFormOpen(false);
-      setSelectedUser(undefined);
-      showSuccess('Utilisateur ajouté avec succès');
+    async (formData: Omit<User, 'id' | 'dateCreation'> & { password?: string }) => {
+      setIsSubmitting(true);
+      try {
+        const res = await fetch('/api/users', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de la création de l'utilisateur.");
+          return;
+        }
+        setUsers((prev) => [...prev, data]);
+        setIsFormOpen(false);
+        setSelectedUser(undefined);
+        showSuccess('Utilisateur ajouté avec succès');
+      } catch {
+        showError("Erreur lors de la création de l'utilisateur.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [users, showSuccess]
+    [showSuccess, showError]
   );
 
   const handleUpdateUser = useCallback(
-    (formData: Omit<User, 'id' | 'dateCreation'> & { password?: string }) => {
+    async (formData: Omit<User, 'id' | 'dateCreation'> & { password?: string }) => {
       if (!selectedUser) return;
-      const updated = users.map((u) =>
-        u.id === selectedUser.id ? { ...u, ...formData } : u
-      );
-      setUsers(updated);
-      setIsFormOpen(false);
-      setSelectedUser(undefined);
-      showSuccess('Utilisateur modifié avec succès');
+      setIsSubmitting(true);
+      try {
+        const res = await fetch(`/api/users/${selectedUser.id}`, {
+          method: 'PATCH',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(formData),
+        });
+        const data = await res.json();
+        if (!res.ok) {
+          showError(data.error ?? "Erreur lors de la modification de l'utilisateur.");
+          return;
+        }
+        setUsers((prev) => prev.map((u) => (u.id === selectedUser.id ? data : u)));
+        setIsFormOpen(false);
+        setSelectedUser(undefined);
+        showSuccess('Utilisateur modifié avec succès');
+      } catch {
+        showError("Erreur lors de la modification de l'utilisateur.");
+      } finally {
+        setIsSubmitting(false);
+      }
     },
-    [users, selectedUser, showSuccess]
+    [selectedUser, showSuccess, showError]
   );
 
-  const handleDeactivateUser = useCallback(() => {
+  const handleDeactivateUser = useCallback(async () => {
     if (!userToDeactivate) return;
-    const updated = users.map((u) =>
-      u.id === userToDeactivate.id ? { ...u, actif: false } : u
-    );
-    setUsers(updated);
-    setIsConfirmOpen(false);
-    setUserToDeactivate(null);
-    showSuccess('Utilisateur désactivé');
-  }, [users, userToDeactivate, showSuccess]);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/users/${userToDeactivate.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ actif: false }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showError(data.error ?? "Erreur lors de la désactivation de l'utilisateur.");
+        return;
+      }
+      setUsers((prev) => prev.map((u) => (u.id === userToDeactivate.id ? data : u)));
+      setIsConfirmOpen(false);
+      setUserToDeactivate(null);
+      showSuccess('Utilisateur désactivé');
+    } catch {
+      showError("Erreur lors de la désactivation de l'utilisateur.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [userToDeactivate, showSuccess, showError]);
 
-  const handleRestoreUser = useCallback(() => {
+  const handleRestoreUser = useCallback(async () => {
     if (!userToRestore) return;
-    const updated = users.map((u) =>
-      u.id === userToRestore.id ? { ...u, actif: true } : u
-    );
-    setUsers(updated);
-    setIsRestoreConfirmOpen(false);
-    setUserToRestore(null);
-    showSuccess('Utilisateur restauré');
-  }, [users, userToRestore, showSuccess]);
+    setIsSubmitting(true);
+    try {
+      const res = await fetch(`/api/users/${userToRestore.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ actif: true }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        showError(data.error ?? "Erreur lors de la restauration de l'utilisateur.");
+        return;
+      }
+      setUsers((prev) => prev.map((u) => (u.id === userToRestore.id ? data : u)));
+      setIsRestoreConfirmOpen(false);
+      setUserToRestore(null);
+      showSuccess('Utilisateur restauré');
+    } catch {
+      showError("Erreur lors de la restauration de l'utilisateur.");
+    } finally {
+      setIsSubmitting(false);
+    }
+  }, [userToRestore, showSuccess, showError]);
 
   const handleEditClick = (user: User) => {
     setSelectedUser(user);
@@ -341,6 +395,7 @@ export default function UsersPage() {
             setSelectedUser(undefined);
           }}
           onSubmit={selectedUser ? handleUpdateUser : handleAddUser}
+          isLoading={isSubmitting}
         />
 
         <ConfirmDialog
