@@ -1,9 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { ContractStatus, InterventionStatus, InterventionType, Periodicite } from '@prisma/client'
+import { ContractStatus, InterventionStatus, InterventionType, Periodicite, UserRole } from '@prisma/client'
 import { prisma } from '@/lib/prisma'
 
 function err(msg: string, status: number) {
   return NextResponse.json({ error: msg }, { status })
+}
+
+function toDateKey(d: Date): string {
+  const y = d.getFullYear()
+  const m = String(d.getMonth() + 1).padStart(2, '0')
+  const day = String(d.getDate()).padStart(2, '0')
+  return `${y}-${m}-${day}`
 }
 
 const PERIODICITE_MONTHS: Record<Periodicite, number> = {
@@ -67,7 +74,7 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => null)
     if (!body) return err('Corps de la requête invalide.', 400)
 
-    const { reference, dateDebut, dateFin, periodicite, description, clientEquipementIds } =
+    const { reference, dateDebut, dateFin, periodicite, description, clientEquipementIds, preventiveInterventions } =
       body as Record<string, unknown>
 
     const clientId = Number((body as Record<string, unknown>).clientId)
@@ -108,9 +115,17 @@ export async function POST(req: NextRequest) {
 
     let contractRef = typeof reference === 'string' ? reference.trim() : ''
     if (!contractRef) {
-      const year = new Date().getFullYear()
-      const count = await prisma.contract.count()
-      contractRef = `CTR-${year}-${String(count + 1).padStart(3, '0')}`
+      const latestContract = await prisma.contract.findFirst({
+        where: { reference: { startsWith: 'CTR-' } },
+        orderBy: { reference: 'desc' },
+        select: { reference: true },
+      })
+      let seq = 1
+      if (latestContract) {
+        const n = parseInt(latestContract.reference.slice('CTR-'.length), 10)
+        if (!isNaN(n)) seq = n + 1
+      }
+      contractRef = `CTR-${String(seq).padStart(3, '0')}`
     }
     const existingRef = await prisma.contract.findUnique({ where: { reference: contractRef } })
     if (existingRef) return err(`La référence "${contractRef}" existe déjà.`, 409)
@@ -131,6 +146,70 @@ export async function POST(req: NextRequest) {
         next.setMonth(next.getMonth() + intervalMonths)
         cur = next
       }
+    }
+
+    // Match client-echoed preview rows (with optional technicienId) back onto the
+    // server-generated rows by clientEquipementId + calendar date.
+    const technicienByRow = new Map<string, number>()
+    if (Array.isArray(preventiveInterventions)) {
+      for (const raw of preventiveInterventions as unknown[]) {
+        if (!raw || typeof raw !== 'object') continue
+        const r = raw as Record<string, unknown>
+        const ceId = Number(r.clientEquipementId)
+        const techId = Number(r.technicienId)
+        const dateStr = typeof r.datePrevue === 'string' ? r.datePrevue : ''
+        if (!Number.isInteger(ceId) || ceId <= 0) continue
+        if (!dateStr) continue
+        if (!Number.isInteger(techId) || techId <= 0) continue
+        const d = new Date(dateStr + 'T12:00:00')
+        if (isNaN(d.getTime())) continue
+        technicienByRow.set(`${ceId}|${toDateKey(d)}`, techId)
+      }
+    }
+
+    const rowsWithTech = intRows.map((row) => ({
+      ...row,
+      technicienId: technicienByRow.get(`${row.ceId}|${toDateKey(row.datePrevue)}`),
+    }))
+
+    const technicienIds = Array.from(new Set(rowsWithTech.map((r) => r.technicienId).filter((id): id is number => !!id)))
+    if (technicienIds.length > 0) {
+      const techUsers = await prisma.user.findMany({
+        where: { id: { in: technicienIds }, role: UserRole.TECHNICIAN },
+        select: { id: true },
+      })
+      if (techUsers.length !== technicienIds.length)
+        return err('Un ou plusieurs techniciens sélectionnés sont introuvables.', 404)
+    }
+
+    const seenTechDate = new Set<string>()
+    for (const row of rowsWithTech) {
+      if (!row.technicienId) continue
+      const dateKey = toDateKey(row.datePrevue)
+      const pairKey = `${row.technicienId}|${dateKey}`
+      if (seenTechDate.has(pairKey))
+        return err(
+          `Le technicien sélectionné est déjà affecté à une autre intervention prévue le ${dateKey}.`,
+          409
+        )
+      seenTechDate.add(pairKey)
+    }
+
+    for (const pairKey of seenTechDate) {
+      const [techIdStr, dateKey] = pairKey.split('|')
+      const conflict = await prisma.intervention.findFirst({
+        where: {
+          technicienId: Number(techIdStr),
+          statut: { not: InterventionStatus.ANNULEE },
+          datePrevue: { gte: new Date(`${dateKey}T00:00:00`), lte: new Date(`${dateKey}T23:59:59`) },
+        },
+        select: { id: true },
+      })
+      if (conflict)
+        return err(
+          `Un technicien sélectionné est déjà affecté à une intervention existante le ${dateKey}.`,
+          409
+        )
     }
 
     const year = new Date().getFullYear()
@@ -165,13 +244,14 @@ export async function POST(req: NextRequest) {
         include: { equipements: { select: { clientEquipementId: true } } },
       })
 
-      if (intRows.length > 0) {
+      if (rowsWithTech.length > 0) {
         await tx.intervention.createMany({
-          data: intRows.map((row, i) => ({
+          data: rowsWithTech.map((row, i) => ({
             reference: `${prefix}${String(nextSeq + i).padStart(3, '0')}`,
             type: InterventionType.PREVENTIVE,
             clientId,
             clientEquipementId: row.ceId,
+            technicienId: row.technicienId ?? null,
             contractId: created.id,
             datePrevue: row.datePrevue,
             statut: InterventionStatus.PLANIFIEE,

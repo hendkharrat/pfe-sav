@@ -22,6 +22,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { INTERVENTION_STATUS_LABELS } from '@/lib/constants';
+import { getTodayDateInputValue } from '@/lib/interventions';
 
 export interface CloseInterventionData {
   dateRealisation: string;
@@ -46,9 +47,9 @@ export function CloseInterventionDialog({
   onClose,
   onSubmit,
 }: CloseInterventionDialogProps) {
-  const today = new Date().toISOString().split('T')[0];
+  const todayStr = getTodayDateInputValue();
   const [formData, setFormData] = useState<CloseInterventionData>({
-    dateRealisation: today,
+    dateRealisation: todayStr,
     diagnostic: '',
     actionsRealisees: '',
     materielUtilise: '',
@@ -61,7 +62,7 @@ export function CloseInterventionDialog({
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       setFormData({
-        dateRealisation: today,
+        dateRealisation: todayStr,
         diagnostic: '',
         actionsRealisees: '',
         materielUtilise: '',
@@ -78,6 +79,8 @@ export function CloseInterventionDialog({
     const newErrors: Record<string, string> = {};
     if (!formData.dateRealisation) {
       newErrors.dateRealisation = 'La date de réalisation est obligatoire';
+    } else if (formData.dateRealisation < todayStr) {
+      newErrors.dateRealisation = "La date de réalisation doit être aujourd'hui ou une date future.";
     }
     if (!formData.diagnostic.trim()) {
       newErrors.diagnostic = 'Le diagnostic est obligatoire';
@@ -134,6 +137,7 @@ export function CloseInterventionDialog({
           <FormRow label="Date de réalisation *" error={errors.dateRealisation}>
             <Input
               type="date"
+              min={todayStr}
               value={formData.dateRealisation}
               onChange={(e) =>
                 setFormData({ ...formData, dateRealisation: e.target.value })

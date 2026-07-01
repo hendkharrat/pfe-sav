@@ -25,9 +25,26 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     if (intervention.statut === InterventionStatus.ANNULEE)
       return err('Une intervention annulée ne peut pas être clôturée.', 422)
 
+    let dateRealisation: Date = intervention.dateRealisation ?? new Date()
+    if (typeof body.dateRealisation !== 'undefined') {
+      if (typeof body.dateRealisation !== 'string')
+        return err('Date de réalisation invalide.', 400)
+      const d = new Date(body.dateRealisation + 'T12:00:00')
+      if (isNaN(d.getTime())) return err('Date de réalisation invalide.', 400)
+
+      const today = new Date()
+      today.setHours(0, 0, 0, 0)
+      const dDay = new Date(d)
+      dDay.setHours(0, 0, 0, 0)
+      if (dDay < today)
+        return err("La date de réalisation doit être aujourd'hui ou une date future.", 400)
+
+      dateRealisation = d
+    }
+
     const updateData: Record<string, unknown> = {
       statut: InterventionStatus.REALISEE,
-      dateRealisation: intervention.dateRealisation ?? new Date(),
+      dateRealisation,
     }
 
     if (typeof body.diagnostic === 'string') updateData.diagnostic = body.diagnostic || null

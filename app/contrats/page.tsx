@@ -160,7 +160,7 @@ export default function ContratsPage() {
   );
 
   const handleAddContract = useCallback(
-    async ({ contract: contractData }: ContractFormSubmitPayload) => {
+    async ({ contract: contractData, preventiveInterventions }: ContractFormSubmitPayload) => {
       setIsSubmitting(true);
       try {
         const res = await fetch('/api/contracts', {
@@ -174,6 +174,11 @@ export default function ContratsPage() {
             periodicite: contractData.periodicite,
             description: contractData.description,
             clientEquipementIds: contractData.clientEquipementIds,
+            preventiveInterventions: preventiveInterventions.map((p) => ({
+              clientEquipementId: p.clientEquipementId,
+              datePrevue: p.datePrevue,
+              technicienId: p.technicienId,
+            })),
           }),
         });
         const data = await res.json();

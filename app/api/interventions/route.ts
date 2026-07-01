@@ -120,7 +120,7 @@ export async function GET(req: NextRequest) {
 
     const items = await prisma.intervention.findMany({
       where,
-      orderBy: { datePrevue: 'asc' },
+      orderBy: { id: 'desc' },
       include: INT_INCLUDE,
     })
     return NextResponse.json(items.map(mapIntervention))

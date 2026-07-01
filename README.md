@@ -61,11 +61,12 @@ L'application suit une **architecture trois couches** dans un seul projet Next.j
 - Gestion des clients : société ou personne physique, sélection de ville tunisienne, affectation d'équipements.
 - Catalogue d'équipements indépendant du client, avec images multiples (une image principale).
 - Affectation des équipements du catalogue aux clients via une relation `ClientEquipement` (date d'achat, localisation facultative, date d'installation).
-- Contrats de maintenance couvrant les équipements affectés, avec calcul automatique du statut (actif / bientôt expiré / expiré).
-- Génération et prévisualisation du planning préventif à la création d'un contrat (périodicité, dates, technicien).
+- Contrats de maintenance couvrant les équipements affectés, avec calcul automatique du statut (actif / bientôt expiré / expiré) et référence générée automatiquement.
+- Génération et prévisualisation du planning préventif à la création d'un contrat (périodicité, dates, technicien) : le technicien choisi dans la prévisualisation est affecté aux interventions générées.
 - Vérification de disponibilité des techniciens par date pour les interventions.
 - Déclaration de pannes avec pièces jointes multiples (images conservées en base sous forme de data URL pour la prévisualisation, autres fichiers en métadonnées, sans stockage fichier réel), prise en charge et conversion en intervention curative.
-- Interventions préventives et curatives sans champ de priorité.
+- Interventions préventives et curatives sans champ de priorité, liste affichée par défaut du plus récent au plus ancien.
+- Clôture d'intervention avec date de réalisation contrôlée : aujourd'hui ou date future.
 - Génération de factures pour les interventions curatives réalisées et hors couverture contrat, avec TVA à 19 % (TND).
 - Planning en vue hebdomadaire (1 semaine, 2 semaines) et mensuelle.
 - Export CSV de l'historique.
@@ -340,6 +341,10 @@ Tous les identifiants techniques sont des **entiers auto-incrémentés** (`INT A
 - Le planning préventif est généré automatiquement à la création d'un contrat selon les dates et la périodicité choisies.
 - La conversion d'une panne en intervention curative crée une nouvelle intervention liée à la panne.
 - Les numéros de téléphone sont stockés sur 8 chiffres, sans indicatif pays.
+- La référence d'un contrat est générée automatiquement au format CTR-XXX.
+- Lors de la génération du planning préventif, le technicien sélectionné est affecté aux interventions générées après vérification de disponibilité.
+- La date de réalisation saisie lors de la clôture d'une intervention doit être égale ou postérieure à la date du jour.
+- La liste des interventions est affichée par défaut avec les interventions les plus récentes en premier.
 
 ---
 

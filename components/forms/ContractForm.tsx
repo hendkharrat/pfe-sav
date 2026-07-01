@@ -156,7 +156,6 @@ export function ContractForm({
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.reference.trim()) newErrors.reference = 'La référence est obligatoire';
     if (!formData.clientId) newErrors.clientId = 'Le client est obligatoire';
     if (!formData.dateDebut) {
       newErrors.dateDebut = 'La date de début est obligatoire';
@@ -243,15 +242,13 @@ export function ContractForm({
           <div className="flex-1 min-h-0 min-w-0 overflow-y-auto px-6 py-4 space-y-6">
           {/* Référence */}
           <div className="space-y-2">
-            <Label htmlFor="reference">Référence *</Label>
+            <Label htmlFor="reference">Référence</Label>
             <Input
               id="reference"
               value={formData.reference}
-              onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-              disabled={isLoading}
-              placeholder="CTR-001"
+              disabled
+              placeholder="Généré automatiquement à la création"
             />
-            {errors.reference && <p className="text-xs text-red-500">{errors.reference}</p>}
           </div>
 
           {/* Client */}

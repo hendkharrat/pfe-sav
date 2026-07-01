@@ -425,6 +425,7 @@ export default function InterventionsPage() {
             method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({
+              dateRealisation: data.dateRealisation,
               diagnostic: data.diagnostic,
               actionsRealisees: data.actionsRealisees,
               materielUtilise: data.materielUtilise,
