@@ -80,7 +80,8 @@
       "Bash(echo \"TSC_EXIT:$?\")",
       "Bash(echo \"TSC:$?\")",
       "Bash(grep -v \"//.*OK\")",
-      "PowerShell(Get-Process *)"
+      "PowerShell(Get-Process *)",
+      "Bash(pnpm build *)"
     ]
   }
 }

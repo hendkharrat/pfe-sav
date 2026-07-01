@@ -26,7 +26,7 @@ L'application est une **plateforme full-stack** : les données sont stockées da
 | Tailwind CSS | 4.x | Styles utilitaires |
 | shadcn/ui | — | Composants UI (Radix UI + CVA) |
 | lucide-react | 0.564 | Icônes |
-| Recharts | 2.15 | Graphiques des dashboards |
+| Recharts | 2.15 | Dépendance présente (scaffold `components/ui/chart.tsx`) — non utilisée activement, les dashboards affichent des cartes KPI (`StatCard`) plutôt que des graphiques |
 | next-themes | 0.4.6 | Thème clair / sombre |
 | Prisma ORM | 5.22.0 | Accès à la base de données |
 | MySQL | — | Base de données relationnelle |
@@ -56,7 +56,7 @@ L'application suit une **architecture trois couches** dans un seul projet Next.j
 ## Fonctionnalités principales
 
 - Authentification par rôle (administrateur, technicien, client), par email **ou numéro de téléphone (8 chiffres, sans indicatif)**, avec vérification bcrypt.
-- Tableaux de bord adaptés à chaque rôle avec KPIs et graphiques.
+- Tableaux de bord adaptés à chaque rôle avec KPIs et cartes statistiques.
 - Gestion des utilisateurs internes (administrateur et technicien) avec désactivation/restauration de compte.
 - Gestion des clients : société ou personne physique, sélection de ville tunisienne, affectation d'équipements.
 - Catalogue d'équipements indépendant du client, avec images multiples (une image principale).
@@ -77,7 +77,7 @@ L'application suit une **architecture trois couches** dans un seul projet Next.j
 
 ### Administrateur
 
-- **Dashboard global** : statistiques, KPIs, graphiques d'activité par mois et par type.
+- **Dashboard global** : statistiques et KPIs affichés via des cartes (`StatCard`).
 - **Utilisateurs** : CRUD des utilisateurs internes (administrateur et technicien). Un utilisateur désactivé reste visible avec une action **Restaurer**. Un utilisateur inactif ne peut pas se connecter.
 - **Clients** : CRUD, société ou personne physique, ville sélectionnée depuis une liste de villes tunisiennes, affectation d'équipements via `ClientEquipement`.
 - **Équipements** : catalogue global avec images multiples et image principale ; CRUD complet avec filtres. Affectation à un client directement depuis la fiche équipement (enregistrée dans `ClientEquipement`).
@@ -115,17 +115,32 @@ La connexion accepte **l'email ou le numéro de téléphone** comme identifiant.
 | Rôle | Email | Téléphone | Mot de passe |
 |---|---|---|---|
 | Administrateur | `admin@sav.com` | `71100200` | `admin123` |
-| Technicien | `tech@sav.com` | `98200300` | `tech123` |
+| Technicien 1 | `tech@sav.com` | `98200300` | `tech123` |
+| Technicien 2 | `tech2@sav.com` | `98200301` | `tech123` |
+| Technicien 3 | `tech3@sav.com` | `98200302` | `tech123` |
 
 ### Clients (portail client)
 
 | Client | Email | Téléphone | Mot de passe |
 |---|---|---|---|
-| Ahmed Ben Salah (particulier) | `ahmed.bensalah@mail.tn` | `98765432` | `ahmed123` |
-| EDI Solutions (société) | `contact@edi-solutions.tn` | `71345678` | `edi123` |
-| Centre Médical Ibn Sina (société) | `maintenance@ibnsina.tn` | `71234567` | `ibnsina123` |
+| EDI Solutions Démo (société — **client principal de démo**) | `contact@edi-demo.tn` | `71345678` | `demo123` |
+| Clinique El Amel (société) | `contact@clinique-demo.tn` | `71345679` | `demo123` |
+| Sara Mejri (particulier) | `sara.mejri@demo.tn` | `55667788` | `demo123` |
 
-> **Important** : avant la première connexion, vider le `localStorage` du navigateur pour supprimer toute ancienne session résiduelle (`sav_session`).
+> **Important** : avant la première connexion (ou après une réinitialisation de la base), vider le `localStorage` du navigateur (clé `sav_session`) pour supprimer toute ancienne session résiduelle. Si `pnpm exec prisma generate` reste bloqué sous Windows, arrêter le serveur de développement (`pnpm dev`) avant de relancer la commande — il peut verrouiller le client Prisma généré.
+
+---
+
+## Scénario de démonstration PFE
+
+La base de démonstration est volontairement **minimale et centrée sur un seul client principal, EDI Solutions Démo** (société), pour un parcours de soutenance clair en six étapes :
+
+1. **Contrat CTR-001 (ACTIF)** — connecté en administrateur, ouvrir le contrat de maintenance d'EDI Solutions Démo : il couvre les installations CE-1 (EQ-001) et CE-2 (EQ-002). CTR-002 (BIENTOT_EXPIRE) et CTR-003 (EXPIRE) illustrent les autres statuts de contrat dans la liste.
+2. **Planning préventif** — les interventions `INT-2026-001` (02/07/2026) et `INT-2026-002` (02/10/2026) ont été générées automatiquement à la création de CTR-001 ; les retrouver dans le planning.
+3. **Panne PAN-2026-001** — en tant que client (ou admin), ouvrir la panne `PAN-2026-001` (statut `EN_ATTENTE`) déclarée sur l'équipement hors contrat CE-3 (EQ-003).
+4. **Prise en charge et conversion** — prendre en charge la panne puis la convertir en intervention curative. Dans la boîte de dialogue de conversion, choisir la date `02/07/2026` : le technicien Mohamed Trabelsi (`tech@sav.com`) apparaît **indisponible** ce jour-là (déjà affecté à `INT-2026-001`), démontrant la vérification de disponibilité.
+5. **Facture FAC-2026-001** — dans la liste des factures, `FAC-2026-001` est déjà visible (liée à l'intervention curative historique `INT-2026-004`, statut payée).
+6. **Génération d'une nouvelle facture** — `INT-2026-003` (curative, réalisée, hors contrat, sans facture) est éligible à la facturation : la générer depuis la liste des interventions ou des factures pour obtenir `FAC-2026-002`.
 
 ---
 

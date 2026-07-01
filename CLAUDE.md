@@ -56,7 +56,7 @@ Three layers:
 | `app/` | Next.js pages (`page.tsx` per route) and active API routes (`app/api/`) |
 | `components/ui/` | shadcn/ui primitives (Radix UI wrappers — do not edit) |
 | `components/shared/` | Reusable app-level components (dialogs, badges, detail panels, tables, planning calendar) |
-| `components/forms/` | Form components built with react-hook-form + Zod |
+| `components/forms/` | Form components built with `useState` and manual validation (no react-hook-form/Zod) |
 | `components/layout/` | `AppLayout`, `AppSidebar`, `AppHeader`, `MobileNavDialog`, `navItems` |
 | `data/` | Fallback/demo reference data only — not used as runtime source of truth |
 | `lib/` | Business logic, auth helpers, table utilities, display constants, Prisma client |
@@ -79,11 +79,13 @@ Actual credential verification is in `POST /api/auth/login`: queries `User` or `
 **Important:** If a stale session causes unexpected auth state after a DB reset or migration, clear `sav_session` from `localStorage` in the browser DevTools.
 
 **Demo credentials** (seeded into MySQL — login accepts email or 8-digit phone number):
-- Admin: `admin@sav.com` / `admin123`
-- Technician: `tech@sav.com` / `tech123`
-- Client (individual): `ahmed.bensalah@mail.tn` / `ahmed123`
-- Client (company): `contact@edi-solutions.tn` / `edi123`
-- Client (company): `maintenance@ibnsina.tn` / `ibnsina123`
+- Admin: `admin@sav.com` / `admin123` (phone `71100200`)
+- Technician 1: `tech@sav.com` / `tech123` (phone `98200300`)
+- Technician 2: `tech2@sav.com` / `tech123` (phone `98200301`)
+- Technician 3: `tech3@sav.com` / `tech123` (phone `98200302`)
+- Client — EDI Solutions Démo (société, main demo client): `contact@edi-demo.tn` / `demo123` (phone `71345678`)
+- Client — Clinique El Amel (société): `contact@clinique-demo.tn` / `demo123` (phone `71345679`)
+- Client — Sara Mejri (personne physique): `sara.mejri@demo.tn` / `demo123` (phone `55667788`)
 
 ### Role-based navigation
 `components/layout/navItems.tsx` `getNavItems(role)` returns different nav items for `admin`, `technician`, and `client`. Admins see all routes; technicians see their own interventions and planning; clients see only their own pannes, interventions, factures, and historique.
@@ -111,7 +113,7 @@ Active routes used by frontend pages. Full CRUD for: `users`, `clients`, `equipe
 ### UI stack
 - **Tailwind CSS v4** with `tw-animate-css`
 - **shadcn/ui** in `components/ui/` — add new ones via `pnpm dlx shadcn@latest add <component>`
-- **Recharts** for charts on the dashboard
+- Dashboards display KPIs via `components/dashboard/StatCard` cards, not charts. **Recharts** is a dependency (used only by the unused `components/ui/chart.tsx` scaffold) — no dashboard page renders an actual chart with it.
 - **Sonner** for toasts — use `useToast()` from `hooks/useToast.tsx` (`showSuccess`, `showError`, `showInfo`)
 - **lucide-react** for icons
 
@@ -122,3 +124,13 @@ Active routes used by frontend pages. Full CRUD for: `users`, `clients`, `equipe
 
 ### Localization
 All UI text is in **French**. Domain constants (status labels, type labels, city list) are centralized in `lib/constants.ts`. Dates in data and forms use ISO `YYYY-MM-DD` strings; always append `T12:00:00` when constructing `Date` objects from these strings to avoid timezone-shift bugs.
+
+### Demo seed (`prisma/seed.ts`)
+The seed is a **minimal, company-focused demo** for the PFE soutenance, built around one main client, **EDI Solutions Démo** (`clientId: 1`):
+- **CTR-001** (ACTIF), **CTR-002** (BIENTOT_EXPIRE), **CTR-003** (EXPIRE) exist specifically to exercise the contract status filters.
+- EDI Solutions Démo's `ClientEquipement` installations: CE-1/EQ-001 and CE-2/EQ-002 are covered by CTR-001; **CE-3/EQ-003 is deliberately left hors contrat** to drive the panne → curative → facture demo path.
+- **INT-2026-003** (curative, REALISEE, hors contrat, no facture) stays facture-eligible — it's the intervention `GenerateInvoiceDialog` should pick up live during the demo.
+- **FAC-2026-001** is pre-seeded (linked to INT-2026-004) and visible in the factures list; the next generated facture will be `FAC-2026-002`.
+- **PAN-2026-001** (EN_ATTENTE) is the live-demo panne — walk through prise en charge → conversion during the soutenance.
+- Technician `tech@sav.com` (Mohamed Trabelsi, `userId: 2`) is unavailable on `2026-07-02` because of INT-2026-001 — used to demo the technician-availability conflict check in the convert-panne dialog.
+- Re-seeding is idempotent: `pnpm exec prisma db push --force-reset && pnpm exec prisma db seed`. If Prisma commands hang on Windows, stop the dev server first (it can hold a lock on the generated client), then retry.
