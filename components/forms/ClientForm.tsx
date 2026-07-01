@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Client, ClientEquipement, ClientType, Contract, Equipment } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -75,6 +75,25 @@ export function ClientForm({
   const [isAssignFormOpen, setIsAssignFormOpen] = useState(false);
   const [editingAssignment, setEditingAssignment] = useState<ClientEquipement | undefined>();
 
+  // Rehydrate the form from the selected client whenever the dialog opens
+  useEffect(() => {
+    if (!open) return;
+    setFormData({
+      typeClient: (client?.typeClient ?? 'SOCIETE') as ClientType,
+      societe: client?.societe ?? '',
+      contact: client?.contact ?? '',
+      prenom: client?.prenom ?? '',
+      nom: client?.nom ?? '',
+      email: client?.email ?? '',
+      telephone: client?.telephone ?? '',
+      adresse: client?.adresse ?? '',
+      ville: client?.ville ?? '',
+      password: '',
+    });
+    setAssignments(client ? clientEquipements.filter((ce) => ce.clientId === client.id) : []);
+    setErrors({});
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, client]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};

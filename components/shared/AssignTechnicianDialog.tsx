@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Intervention, User } from '@/types';
 import {
   Dialog,
@@ -49,13 +49,18 @@ export function AssignTechnicianDialog({
     ? users.filter((u) => u.role === 'technician' && u.actif)
     : getActiveTechnicians();
 
+  // Rehydrate the selected technician from the selected intervention whenever the dialog opens
+  useEffect(() => {
+    if (!open) return;
+    setTechnicienId(intervention?.technicienId ? String(intervention.technicienId) : '');
+    setError('');
+  }, [open, intervention]);
+
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       setTechnicienId('');
       setError('');
       onClose();
-    } else if (intervention?.technicienId) {
-      setTechnicienId(String(intervention.technicienId));
     }
   };
 

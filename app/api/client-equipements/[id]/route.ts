@@ -28,7 +28,10 @@ export async function PATCH(req: NextRequest, { params }: Params) {
     const { id: rawId } = await params
     const id = Number(rawId)
     if (!Number.isInteger(id) || id <= 0) return err('Identifiant invalide.', 400)
-    const ce = await prisma.clientEquipement.findUnique({ where: { id }, select: { id: true } })
+    const ce = await prisma.clientEquipement.findUnique({
+      where: { id },
+      select: { id: true, dateAchat: true, dateInstallation: true },
+    })
     if (!ce) return err('Équipement client introuvable.', 404)
 
     const body = await req.json().catch(() => ({})) as Record<string, unknown>
@@ -42,6 +45,18 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       updateData.dateAchat = body.dateAchat ? new Date(body.dateAchat + 'T12:00:00') : null
     if (typeof body.dateInstallation === 'string' && body.dateInstallation)
       updateData.dateInstallation = new Date(body.dateInstallation + 'T12:00:00')
+
+    // Validate the effective date pair (incoming update merged with existing values)
+    const effectiveDateAchat = typeof body.dateAchat === 'string'
+      ? (body.dateAchat || null)
+      : (ce.dateAchat ? ce.dateAchat.toISOString().split('T')[0] : null)
+    const effectiveDateInstallation = typeof body.dateInstallation === 'string' && body.dateInstallation
+      ? body.dateInstallation
+      : ce.dateInstallation.toISOString().split('T')[0]
+
+    if (effectiveDateAchat && effectiveDateInstallation < effectiveDateAchat) {
+      return err("La date d'installation doit être égale ou postérieure à la date d'achat.", 400)
+    }
 
     const updated = await prisma.clientEquipement.update({ where: { id }, data: updateData })
     return NextResponse.json(mapCE(updated))

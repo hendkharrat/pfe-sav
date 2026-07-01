@@ -66,6 +66,9 @@ Three layers:
 ### State management pattern
 Pages fetch data from API routes on mount and hold it in React state. CRUD writes go through API routes and persist to MySQL. Some forms and shared components use mock arrays only as fallback default values. There is no global store.
 
+### Edit dialog hydration
+Edit dialogs (`ClientForm`, `UserForm`, `EquipmentForm`, `ContractForm`, `ClientEquipementAssignForm`, `AssignTechnicianDialog`, `ChangeStatusDialog`, `InterventionForm`) stay mounted across opens — the parent page never unmounts them and never passes a `key` prop tied to the entity id. Because of this, a form's local `formData` must **not** rely solely on `useState(initialFromProps)`, since that initializer only runs on the very first mount and won't pick up a different selected entity on a later "Modifier" click. Every edit-capable form/dialog rehydrates `formData` via `useEffect(() => { if (open) { setFormData(...); setErrors({}); } }, [open, entity, ...])`, re-deriving the same field shape the initial `useState` used. When `entity` is `undefined`/`null`, the effect resets to the same blank/default values as create mode (so create mode is preserved). `UserForm` always resets `password` to `''` in this effect regardless of edit/create mode. `InterventionForm` was the original reference implementation of this pattern.
+
 ### Authentication
 
 `lib/auth.ts` is exclusively a localStorage session helper — it reads, writes, and clears the `AuthSession` object under key `sav_session`. It does not authenticate credentials.
@@ -100,6 +103,7 @@ Actual credential verification is in `POST /api/auth/login`: queries `User` or `
 - `User.role` Prisma enum: `ADMIN | TECHNICIAN`. Clients are in the separate `Client` table and never appear in `User`.
 - All technical IDs are `Int @id @default(autoincrement())`. Business reference strings (`CTR-001`, `INT-2026-001`, `PAN-2026-001`, `FAC-2026-001`, `EQ-001`) are separate `String @unique` fields.
 - Dynamic API route params are parsed as positive integers; body/query IDs are coerced safely to numbers.
+- `ClientEquipement.dateInstallation` must be equal to or later than `dateAchat`. Validated both client-side in `components/forms/ClientEquipementAssignForm.tsx` (live on change + on submit) and server-side in `app/api/client-equipements/route.ts` (POST) and `app/api/client-equipements/[id]/route.ts` (PATCH, comparing the effective merged date pair against the existing record).
 
 ### Business logic (`lib/interventions.ts`)
 All domain helpers: contract coverage checks, preventive intervention generation from contract parameters, technician availability, reference number generation, CE resolution helpers, and French date formatting (`formatDateFr`, `formatMonthYearFr`, etc.). Some helpers accept optional mock arrays as fallback defaults — at runtime the caller should pass the data fetched from the API. Extend this file rather than duplicating logic in page components. IDs passed to helpers are numeric.
@@ -116,6 +120,7 @@ Active routes used by frontend pages. Full CRUD for: `users`, `clients`, `equipe
 - Dashboards display KPIs via `components/dashboard/StatCard` cards, not charts. **Recharts** is a dependency (used only by the unused `components/ui/chart.tsx` scaffold) — no dashboard page renders an actual chart with it.
 - **Sonner** for toasts — use `useToast()` from `hooks/useToast.tsx` (`showSuccess`, `showError`, `showInfo`)
 - **lucide-react** for icons
+- Business-form dialogs must avoid horizontal overflow — prefer responsive width (`max-w-[95vw]` alongside a `sm:max-w-*` cap), `overflow-x-hidden` on `DialogContent`, and wrapping table cells (`table-fixed w-full`, `whitespace-normal break-words` on the widest column) over fixed pixel widths. `GenerateInvoiceDialog` is the reference implementation. Fix these in the business component's own classes rather than editing `components/ui/dialog.tsx` or `components/ui/table.tsx`.
 
 ### Utility helpers (`lib/utils.ts`)
 - `cn(...)` — Tailwind class merge (clsx + tailwind-merge)

@@ -327,6 +327,7 @@ Tous les identifiants techniques sont des **entiers auto-incrémentés** (`INT A
 - Les utilisateurs internes s'authentifient via la table `User` (rôles `ADMIN` / `TECHNICIAN`). Les clients s'authentifient via la table `Client`. Les mots de passe sont vérifiés côté serveur avec bcrypt.
 - Un utilisateur interne inactif ne peut pas se connecter.
 - La localisation d'un équipement chez le client (`ClientEquipement`) est facultative.
+- Lors de l'affectation d'un équipement à un client, la date d'installation doit être égale ou postérieure à la date d'achat.
 - La description d'une panne est obligatoire.
 - Un **technicien** ne voit que les interventions qui lui sont assignées.
 - Un **client** ne voit que ses propres données (équipements, interventions, pannes, factures).
@@ -348,7 +349,7 @@ Tous les identifiants techniques sont des **entiers auto-incrémentés** (`INT A
 - **Design** : style SaaS professionnel, thème clair/sombre via `next-themes`.
 - **Responsive** : compatible desktop, tablette et mobile.
 - **Navigation** : sidebar sur desktop, navigation mobile adaptée selon le rôle.
-- **Dialogs** : détails et formulaires en modales centrées.
+- **Dialogs** : détails et formulaires en modales centrées, responsives et sans débordement horizontal (notamment l'aperçu de génération de facture).
 - **Tableaux** : pagination et colonnes triables sur toutes les pages de listes.
 - **Planning** : vue hebdomadaire (1 semaine, 2 semaines) et vue mensuelle avec grille calendrier.
 

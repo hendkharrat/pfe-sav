@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Client, ClientEquipement, Equipment } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -67,6 +67,22 @@ export function ClientEquipementAssignForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  // Rehydrate the form from the selected assignment whenever the dialog opens
+  useEffect(() => {
+    if (!open) return;
+    setFormData({
+      equipementId: editingAssignment?.equipementId
+        ? String(editingAssignment.equipementId)
+        : fixedEquipementId ? String(fixedEquipementId) : '',
+      selectedClientId: '',
+      dateAchat: editingAssignment?.dateAchat ?? today(),
+      localisation: editingAssignment?.localisation ?? '',
+      dateInstallation: editingAssignment?.dateInstallation ?? '',
+      notes: editingAssignment?.notes ?? '',
+    });
+    setErrors({});
+  }, [open, editingAssignment, fixedEquipementId]);
+
   // Client-side mode: which equipment IDs are already assigned to this client
   const alreadyAssignedEquipmentIds = new Set(
     existingAssignments
@@ -83,6 +99,8 @@ export function ClientEquipementAssignForm({
     (c) => !alreadyAssignedClientIds.has(c.id)
   );
 
+  const DATE_ORDER_ERROR = "La date d'installation doit être égale ou postérieure à la date d'achat.";
+
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
     if (isEquipmentMode) {
@@ -91,9 +109,37 @@ export function ClientEquipementAssignForm({
       if (!formData.equipementId) newErrors.equipementId = 'Veuillez sélectionner un équipement';
     }
     if (!formData.dateAchat) newErrors.dateAchat = "La date d'achat est obligatoire";
-    if (!formData.dateInstallation) newErrors.dateInstallation = "La date d'installation est obligatoire";
+    if (!formData.dateInstallation) {
+      newErrors.dateInstallation = "La date d'installation est obligatoire";
+    } else if (formData.dateAchat && formData.dateInstallation < formData.dateAchat) {
+      newErrors.dateInstallation = DATE_ORDER_ERROR;
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
+  };
+
+  const handleDateAchatChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, dateAchat: value }));
+    setErrors((prev) => {
+      if (!value || !formData.dateInstallation || formData.dateInstallation >= value) {
+        if (!prev.dateInstallation) return prev;
+        const { dateInstallation: _dateInstallation, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, dateInstallation: DATE_ORDER_ERROR };
+    });
+  };
+
+  const handleDateInstallationChange = (value: string) => {
+    setFormData((prev) => ({ ...prev, dateInstallation: value }));
+    setErrors((prev) => {
+      if (!formData.dateAchat || !value || value >= formData.dateAchat) {
+        if (!prev.dateInstallation) return prev;
+        const { dateInstallation: _dateInstallation, ...rest } = prev;
+        return rest;
+      }
+      return { ...prev, dateInstallation: DATE_ORDER_ERROR };
+    });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -129,7 +175,7 @@ export function ClientEquipementAssignForm({
 
   return (
     <Dialog open={open} onOpenChange={(v) => !v && handleClose()}>
-      <DialogContent className="max-w-lg max-h-[90vh] overflow-y-auto">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-lg max-h-[90vh] overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle>
             {isEditing ? "Modifier l'affectation" : 'Affecter un équipement'}
@@ -145,14 +191,14 @@ export function ClientEquipementAssignForm({
 
         <form onSubmit={handleSubmit} className="space-y-4 mt-2">
           {/* Row 1: Date d'achat + Client (equipment mode) or Équipement (client mode) */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
             <div className="space-y-2">
               <Label htmlFor="dateAchat">Date d&apos;achat *</Label>
               <Input
                 id="dateAchat"
                 type="date"
                 value={formData.dateAchat}
-                onChange={(e) => setFormData({ ...formData, dateAchat: e.target.value })}
+                onChange={(e) => handleDateAchatChange(e.target.value)}
               />
               {errors.dateAchat && (
                 <p className="text-xs text-red-500">{errors.dateAchat}</p>
@@ -222,14 +268,15 @@ export function ClientEquipementAssignForm({
           </div>
 
           {/* Row 2: Date d'installation / Localisation */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 min-w-0">
             <div className="space-y-2">
               <Label htmlFor="dateInstallation">Date d&apos;installation *</Label>
               <Input
                 id="dateInstallation"
                 type="date"
                 value={formData.dateInstallation}
-                onChange={(e) => setFormData({ ...formData, dateInstallation: e.target.value })}
+                min={formData.dateAchat || undefined}
+                onChange={(e) => handleDateInstallationChange(e.target.value)}
               />
               {errors.dateInstallation && (
                 <p className="text-xs text-red-500">{errors.dateInstallation}</p>

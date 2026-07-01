@@ -338,7 +338,7 @@ export default function ClientsPage() {
               <h1 className="text-3xl font-bold text-foreground">Clients</h1>
               <p className="text-muted-foreground mt-2">Gestion des clients et contacts</p>
             </div>
-            <Button
+            <Button 
               onClick={() => {
                 setSelectedClient(undefined);
                 setIsFormOpen(true);

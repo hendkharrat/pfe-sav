@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { User, UserRole } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -43,6 +43,21 @@ export function UserForm({ open, user, onClose, onSubmit, isLoading = false }: U
   });
 
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Rehydrate the form from the selected user whenever the dialog opens
+  useEffect(() => {
+    if (!open) return;
+    setFormData({
+      prenom: user?.prenom || '',
+      nom: user?.nom || '',
+      email: user?.email || '',
+      telephone: user?.telephone || '',
+      role: user?.role || ('technician' as UserRole),
+      actif: user?.actif ?? true,
+      password: '',
+    });
+    setErrors({});
+  }, [open, user]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};

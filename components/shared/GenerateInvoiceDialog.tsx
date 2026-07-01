@@ -142,7 +142,7 @@ export function GenerateInvoiceDialog({
 
   return (
     <Dialog open={open} onOpenChange={handleOpenChange}>
-      <DialogContent className="max-h-[90vh] overflow-y-auto sm:max-w-2xl">
+      <DialogContent className="w-[calc(100%-2rem)] max-w-[95vw] sm:max-w-2xl max-h-[90vh] overflow-y-auto overflow-x-hidden">
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <FileText size={18} />
@@ -216,28 +216,28 @@ export function GenerateInvoiceDialog({
                   </div>
 
                   <div className="rounded-md border border-border overflow-hidden">
-                    <Table>
+                    <Table className="table-fixed w-full">
                       <TableHeader>
                         <TableRow className="bg-muted/40">
-                          <TableHead className="font-semibold">Description</TableHead>
-                          <TableHead className="text-right font-semibold w-20">Qté</TableHead>
-                          <TableHead className="text-right font-semibold w-28">P.U. (TND)</TableHead>
-                          <TableHead className="text-right font-semibold w-28">Montant (TND)</TableHead>
+                          <TableHead className="font-semibold whitespace-normal">Description</TableHead>
+                          <TableHead className="text-right font-semibold w-14 whitespace-normal">Qté</TableHead>
+                          <TableHead className="text-right font-semibold w-20 whitespace-normal">P.U. (TND)</TableHead>
+                          <TableHead className="text-right font-semibold w-24 whitespace-normal">Montant (TND)</TableHead>
                         </TableRow>
                       </TableHeader>
                       <TableBody>
                         {previewLines.map((ligne, idx) => (
                           <TableRow key={idx}>
-                            <TableCell className="text-sm">{ligne.description}</TableCell>
-                            <TableCell className="text-right text-sm">
+                            <TableCell className="text-sm whitespace-normal break-words">{ligne.description}</TableCell>
+                            <TableCell className="text-right text-sm whitespace-nowrap">
                               {ligne.quantite === 1
                                 ? '1'
                                 : `${ligne.quantite.toFixed(2)} h`}
                             </TableCell>
-                            <TableCell className="text-right text-sm">
+                            <TableCell className="text-right text-sm whitespace-nowrap">
                               {ligne.prixUnitaire.toFixed(2)}
                             </TableCell>
-                            <TableCell className="text-right text-sm font-medium">
+                            <TableCell className="text-right text-sm font-medium whitespace-nowrap">
                               {ligne.montant.toFixed(2)}
                             </TableCell>
                           </TableRow>

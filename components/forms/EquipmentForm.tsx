@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Equipment, EquipmentImage } from '@/types';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -49,6 +49,21 @@ export function EquipmentForm({
 
   const [images, setImages] = useState<EquipmentImage[]>(equipment?.images ?? []);
   const [errors, setErrors] = useState<Record<string, string>>({});
+
+  // Rehydrate the form from the selected equipment whenever the dialog opens
+  useEffect(() => {
+    if (!open) return;
+    setFormData({
+      reference: equipment?.reference ?? '',
+      type: equipment?.type ?? ('CLIMATISEUR' as const),
+      marque: equipment?.marque ?? '',
+      modele: equipment?.modele ?? '',
+      numeroSerie: equipment?.numeroSerie ?? '',
+      description: equipment?.description ?? '',
+    });
+    setImages(equipment?.images ?? []);
+    setErrors({});
+  }, [open, equipment]);
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};

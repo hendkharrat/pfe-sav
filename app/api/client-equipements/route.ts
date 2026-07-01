@@ -51,6 +51,10 @@ export async function POST(req: NextRequest) {
     if (typeof dateInstallation !== 'string' || !dateInstallation)
       return err("La date d'installation est requise.", 400)
 
+    if (typeof dateAchat === 'string' && dateAchat && dateInstallation < dateAchat) {
+      return err("La date d'installation doit être égale ou postérieure à la date d'achat.", 400)
+    }
+
     const client = await prisma.client.findUnique({ where: { id: clientId }, select: { id: true } })
     if (!client) return err('Client introuvable.', 404)
 

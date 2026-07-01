@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Intervention, InterventionStatut } from '@/types';
 import {
   Dialog,
@@ -44,11 +44,15 @@ export function ChangeStatusDialog({
     intervention?.statut ?? 'PLANIFIEE'
   );
 
+  // Rehydrate the selected status from the selected intervention whenever the dialog opens
+  useEffect(() => {
+    if (!open) return;
+    setStatut(intervention?.statut ?? 'PLANIFIEE');
+  }, [open, intervention]);
+
   const handleOpenChange = (isOpen: boolean) => {
     if (!isOpen) {
       onClose();
-    } else if (intervention) {
-      setStatut(intervention.statut);
     }
   };
 

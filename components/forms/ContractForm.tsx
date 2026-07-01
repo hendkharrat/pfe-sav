@@ -111,6 +111,21 @@ export function ContractForm({
     [formData.clientId, formData.dateDebut, formData.dateFin, formData.periodicite, formData.clientEquipementIds]
   );
 
+  // Rehydrate the form from the selected contract whenever the dialog opens
+  useEffect(() => {
+    if (!open) return;
+    setFormData({
+      reference: contract?.reference ?? '',
+      clientId: contract?.clientId ? String(contract.clientId) : '',
+      clientEquipementIds: contract?.clientEquipementIds ?? ([] as number[]),
+      dateDebut: contract?.dateDebut ?? '',
+      dateFin: contract?.dateFin ?? '',
+      periodicite: contract?.periodicite ?? ('MENSUELLE' as const),
+      description: contract?.description ?? '',
+    });
+    setErrors({});
+  }, [open, contract]);
+
   // Regenerate previews (create mode only) when key fields change
   useEffect(() => {
     if (contract) {

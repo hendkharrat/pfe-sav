@@ -253,7 +253,7 @@ export default function UsersPage() {
               <h1 className="text-3xl font-bold text-foreground">Utilisateurs</h1>
               <p className="text-muted-foreground mt-2">Gestion des utilisateurs et permissions</p>
             </div>
-            <Button
+            <Button 
               onClick={() => {
                 setSelectedUser(undefined);
                 setIsFormOpen(true);
