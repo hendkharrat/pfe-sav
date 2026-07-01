@@ -24,8 +24,8 @@ export function getNavItems(role: UserRole): NavItem[] {
     return [
       { label: 'Tableau de bord', href: '/dashboard', icon: <LayoutDashboard size={20} /> },
       { label: 'Utilisateurs', href: '/utilisateurs', icon: <Users size={20} /> },
-      { label: 'Clients', href: '/clients', icon: <Building2 size={20} /> },
       { label: 'Équipements', href: '/equipements', icon: <Wrench size={20} /> },
+      { label: 'Clients', href: '/clients', icon: <Building2 size={20} /> },
       { label: 'Contrats', href: '/contrats', icon: <FileText size={20} /> },
       { label: 'Interventions', href: '/interventions', icon: <ClipboardList size={20} /> },
       { label: 'Planning', href: '/interventions/planning', icon: <Calendar size={20} /> },
