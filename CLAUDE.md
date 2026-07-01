@@ -90,6 +90,8 @@ Actual credential verification is in `POST /api/auth/login`: queries `User` or `
 - Client — Clinique El Amel (société): `contact@clinique-demo.tn` / `demo123` (phone `71345679`)
 - Client — Sara Mejri (personne physique): `sara.mejri@demo.tn` / `demo123` (phone `55667788`)
 
+The login page's demo-accounts card (`app/login/page.tsx`) intentionally shows only 4 quick accounts, in this order: admin, technician (`tech@sav.com`), EDI Solutions Démo (client société), Sara Mejri (client particulier).
+
 ### Role-based navigation
 `components/layout/navItems.tsx` `getNavItems(role)` returns different nav items for `admin`, `technician`, and `client`. Admins see all routes; technicians see their own interventions and planning; clients see only their own pannes, interventions, factures, and historique.
 
@@ -104,6 +106,7 @@ Actual credential verification is in `POST /api/auth/login`: queries `User` or `
 - All technical IDs are `Int @id @default(autoincrement())`. Business reference strings (`CTR-001`, `INT-2026-001`, `PAN-2026-001`, `FAC-2026-001`, `EQ-001`) are separate `String @unique` fields.
 - Dynamic API route params are parsed as positive integers; body/query IDs are coerced safely to numbers.
 - `ClientEquipement.dateInstallation` must be equal to or later than `dateAchat`. Validated both client-side in `components/forms/ClientEquipementAssignForm.tsx` (live on change + on submit) and server-side in `app/api/client-equipements/route.ts` (POST) and `app/api/client-equipements/[id]/route.ts` (PATCH, comparing the effective merged date pair against the existing record).
+- `PieceJointe.url` is `String @db.LongText` because image attachments are stored as base64 data URLs for demo preview (a `VARCHAR(191)` truncated/rejected them). Non-image panne attachments may use `url: ''` and should not be filtered out if they have a filename — this is a demo/simulated upload approach, not production file storage.
 
 ### Business logic (`lib/interventions.ts`)
 All domain helpers: contract coverage checks, preventive intervention generation from contract parameters, technician availability, reference number generation, CE resolution helpers, and French date formatting (`formatDateFr`, `formatMonthYearFr`, etc.). Some helpers accept optional mock arrays as fallback defaults — at runtime the caller should pass the data fetched from the API. Extend this file rather than duplicating logic in page components. IDs passed to helpers are numeric.

@@ -12,8 +12,8 @@ import type { AuthSession } from '@/types';
 const TEST_ACCOUNTS = [
   { label: 'Administrateur', identifier: 'admin@sav.com', phone: '71100200', password: 'admin123' },
   { label: 'Technicien', identifier: 'tech@sav.com', phone: '98200300', password: 'tech123' },
-  { label: 'Client (particulier)', identifier: 'ahmed.bensalah@mail.tn', phone: '98765432', password: 'ahmed123' },
-  { label: 'Client (société)', identifier: 'contact@edi-solutions.tn', phone: '71345678', password: 'edi123' },
+  { label: 'Client (société)', identifier: 'contact@edi-demo.tn', phone: '71345678', password: 'demo123' },
+  { label: 'Client (particulier)', identifier: 'sara.mejri@demo.tn', phone: '55667788', password: 'demo123' },
 ] as const;
 
 export default function LoginPage() {

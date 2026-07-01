@@ -118,10 +118,10 @@ export async function POST(req: NextRequest) {
         piecesJointes: Array.isArray(piecesJointes) && piecesJointes.length > 0
           ? {
               create: (piecesJointes as { filename: string; url: string; size: number; mimeType: string }[])
-                .filter((pj) => pj.filename && pj.url)
+                .filter((pj) => pj.filename)
                 .map((pj) => ({
                   filename: pj.filename,
-                  url: pj.url,
+                  url: pj.url ?? '',
                   size: pj.size ?? 0,
                   mimeType: pj.mimeType ?? 'application/octet-stream',
                 })),

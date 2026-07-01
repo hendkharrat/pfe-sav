@@ -228,7 +228,7 @@ model PieceJointe {
   panneId  Int
   panne    Panne  @relation(fields: [panneId], references: [id], onDelete: Cascade)
   filename String
-  url      String // path under /public/uploads/
+  url      String @db.LongText // base64 data URL for images (demo-only, no real file storage)
   size     Int
   mimeType String
 }

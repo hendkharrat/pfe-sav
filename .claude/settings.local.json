@@ -81,7 +81,10 @@
       "Bash(echo \"TSC:$?\")",
       "Bash(grep -v \"//.*OK\")",
       "PowerShell(Get-Process *)",
-      "Bash(pnpm build *)"
+      "Bash(pnpm build *)",
+      "PowerShell(pnpm exec *)",
+      "PowerShell(pnpm tsc *)",
+      "PowerShell(pnpm build *)"
     ]
   }
 }

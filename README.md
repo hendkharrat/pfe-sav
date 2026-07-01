@@ -64,7 +64,7 @@ L'application suit une **architecture trois couches** dans un seul projet Next.j
 - Contrats de maintenance couvrant les équipements affectés, avec calcul automatique du statut (actif / bientôt expiré / expiré).
 - Génération et prévisualisation du planning préventif à la création d'un contrat (périodicité, dates, technicien).
 - Vérification de disponibilité des techniciens par date pour les interventions.
-- Déclaration de pannes avec pièces jointes multiples (métadonnées uniquement, sans stockage réel), prise en charge et conversion en intervention curative.
+- Déclaration de pannes avec pièces jointes multiples (images conservées en base sous forme de data URL pour la prévisualisation, autres fichiers en métadonnées, sans stockage fichier réel), prise en charge et conversion en intervention curative.
 - Interventions préventives et curatives sans champ de priorité.
 - Génération de factures pour les interventions curatives réalisées et hors couverture contrat, avec TVA à 19 % (TND).
 - Planning en vue hebdomadaire (1 semaine, 2 semaines) et mensuelle.
@@ -98,7 +98,7 @@ L'application suit une **architecture trois couches** dans un seul projet Next.j
 ### Client
 
 - **Dashboard personnel** : équipements assignés, interventions en cours, pannes ouvertes, factures en attente.
-- **Déclaration de panne** : signalement sur ses équipements affectés, avec pièces jointes (métadonnées).
+- **Déclaration de panne** : signalement sur ses équipements affectés, avec pièces jointes (images prévisualisées, autres fichiers en métadonnées).
 - **Mes pannes** : suivi des déclarations et de leur statut.
 - **Mes interventions** : liste des interventions sur ses équipements.
 - **Mes factures** : consultation des factures le concernant.
@@ -314,7 +314,7 @@ Tous les identifiants techniques sont des **entiers auto-incrémentés** (`INT A
 | `ContractEquipement` | Table de jonction entre un contrat et les `ClientEquipement` couverts |
 | `Intervention` | Intervention préventive ou curative, sans champ de priorité |
 | `Panne` | Déclaration de panne soumise par un client |
-| `PieceJointe` | Métadonnées d'une pièce jointe associée à une panne (pas de stockage réel) |
+| `PieceJointe` | Pièce jointe associée à une panne : images en data URL base64 pour la prévisualisation, autres fichiers en métadonnées (pas de stockage fichier réel) |
 | `Facture` | Facture générée pour une intervention curative réalisée hors contrat |
 | `LigneFacture` | Ligne de détail d'une facture (main-d'œuvre, matériel) |
 
@@ -387,7 +387,7 @@ Connexion → Dashboard → Déclaration de panne (avec pièces jointes)
 | Limitation | Détail |
 |---|---|
 | Session localStorage | Pas de JWT ni de cookie HttpOnly ; la session est stockée côté client dans `localStorage` |
-| Upload de fichiers | Simulé : les métadonnées sont enregistrées en base, mais aucun fichier n'est réellement stocké |
+| Upload de fichiers | Simulé : les images de panne sont conservées en base sous forme de data URL pour la prévisualisation, tandis que les autres fichiers conservent leurs métadonnées ; aucun stockage fichier réel n'est mis en place |
 | Données mockées résiduelles | Les fichiers `data/mock-*.ts` subsistent comme valeurs de secours dans certains composants et helpers — ils ne sont pas la source de données principale |
 | Pas de déploiement production | Aucune configuration de déploiement (Dockerfile, CI/CD, variables d'environnement de production) |
 | Pas de notifications | Aucun système d'emails ou de notifications push |
