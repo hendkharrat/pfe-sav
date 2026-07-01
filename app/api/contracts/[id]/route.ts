@@ -86,6 +86,7 @@ export async function PATCH(req: NextRequest, { params }: Params) {
       const newEnd = body.dateFin
         ? new Date((body.dateFin as string) + 'T12:00:00')
         : existing.dateFin
+      if (isNaN(newStart.getTime()) || isNaN(newEnd.getTime())) return err('Dates invalides.', 400)
       if (newEnd <= newStart) return err('La date de fin doit être postérieure à la date de début.', 400)
       if (body.dateDebut) updateData.dateDebut = newStart
       if (body.dateFin) {

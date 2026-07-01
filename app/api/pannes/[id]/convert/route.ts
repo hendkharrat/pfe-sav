@@ -56,6 +56,9 @@ export async function POST(req: NextRequest, { params }: Params) {
 
     const date = new Date(body.datePrevue + 'T12:00:00')
     if (isNaN(date.getTime())) return err('Date prévue invalide.', 400)
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const dateDay = new Date(date); dateDay.setHours(0, 0, 0, 0)
+    if (dateDay < today) return err('La date prévue doit être aujourd\'hui ou une date future.', 400)
 
     let techId: number | undefined
     const rawTechId = body.technicienId

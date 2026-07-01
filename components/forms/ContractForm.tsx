@@ -33,7 +33,9 @@ import { getClientDisplayName } from '@/lib/utils';
 import {
   generatePreventiveInterventionPreviews,
   getClientEquipementLabel,
+  getTodayDateInputValue,
 } from '@/lib/interventions';
+import { useToast } from '@/hooks/useToast';
 import { PreventiveInterventionPreviewTable } from '@/components/shared/PreventiveInterventionPreviewTable';
 
 export type ContractFormSubmitPayload = {
@@ -74,6 +76,19 @@ export function ContractForm({
 
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [previewRows, setPreviewRows] = useState<PreventiveInterventionPreview[]>([]);
+
+  const { showError } = useToast();
+  const todayStr = getTodayDateInputValue();
+  const dateFinMin = formData.dateDebut
+    ? (() => {
+        const d = new Date(formData.dateDebut + 'T12:00:00')
+        d.setDate(d.getDate() + 1)
+        const y = d.getFullYear()
+        const mo = String(d.getMonth() + 1).padStart(2, '0')
+        const dy = String(d.getDate()).padStart(2, '0')
+        return `${y}-${mo}-${dy}`
+      })()
+    : undefined;
 
   const clientIdNum = formData.clientId ? Number(formData.clientId) : 0;
 
@@ -128,14 +143,22 @@ export function ContractForm({
     const newErrors: Record<string, string> = {};
     if (!formData.reference.trim()) newErrors.reference = 'La référence est obligatoire';
     if (!formData.clientId) newErrors.clientId = 'Le client est obligatoire';
-    if (!formData.dateDebut) newErrors.dateDebut = 'La date de début est obligatoire';
-    if (!formData.dateFin) newErrors.dateFin = 'La date de fin est obligatoire';
-    if (formData.dateFin && formData.dateDebut && formData.dateFin <= formData.dateDebut) {
-      newErrors.dateFin = 'La date de fin doit être après la date de début';
+    if (!formData.dateDebut) {
+      newErrors.dateDebut = 'La date de début est obligatoire';
+    } else if (!contract && formData.dateDebut < todayStr) {
+      newErrors.dateDebut = 'La date de début doit être aujourd\'hui ou une date future.';
+    }
+    if (!formData.dateFin) {
+      newErrors.dateFin = 'La date de fin est obligatoire';
+    } else if (formData.dateDebut && formData.dateFin <= formData.dateDebut) {
+      newErrors.dateFin = 'La date de fin doit être postérieure à la date de début.';
     }
     if (!formData.periodicite) newErrors.periodicite = 'La périodicité est obligatoire';
     if (formData.clientEquipementIds.length === 0) {
       newErrors.clientEquipementIds = 'Au moins une installation est obligatoire';
+    }
+    if (newErrors.dateDebut || newErrors.dateFin) {
+      showError('Veuillez corriger les dates du contrat avant de continuer.');
     }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -248,7 +271,16 @@ export function ContractForm({
                 id="dateDebut"
                 type="date"
                 value={formData.dateDebut}
-                onChange={(e) => setFormData({ ...formData, dateDebut: e.target.value })}
+                min={!contract ? todayStr : undefined}
+                onChange={(e) => {
+                  const newDebut = e.target.value;
+                  setErrors((prev) => ({ ...prev, dateDebut: '', dateFin: '' }));
+                  setFormData((prev) => ({
+                    ...prev,
+                    dateDebut: newDebut,
+                    dateFin: prev.dateFin && prev.dateFin <= newDebut ? '' : prev.dateFin,
+                  }));
+                }}
                 disabled={isLoading}
               />
               {errors.dateDebut && <p className="text-xs text-red-500">{errors.dateDebut}</p>}
@@ -259,7 +291,11 @@ export function ContractForm({
                 id="dateFin"
                 type="date"
                 value={formData.dateFin}
-                onChange={(e) => setFormData({ ...formData, dateFin: e.target.value })}
+                min={dateFinMin}
+                onChange={(e) => {
+                  setErrors((prev) => ({ ...prev, dateFin: '' }));
+                  setFormData({ ...formData, dateFin: e.target.value });
+                }}
                 disabled={isLoading}
               />
               {errors.dateFin && <p className="text-xs text-red-500">{errors.dateFin}</p>}

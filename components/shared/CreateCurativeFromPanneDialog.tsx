@@ -30,8 +30,10 @@ import {
   findActiveContractForClientEquipement,
   isTechnicianAvailable,
   TECHNICIAN_UNAVAILABLE_MESSAGE,
+  getTodayDateInputValue,
 } from '@/lib/interventions';
 import { getClientDisplayName } from '@/lib/utils';
+import { useToast } from '@/hooks/useToast';
 import { ShieldCheck, AlertCircle } from 'lucide-react';
 
 interface CreateCurativeFromPanneDialogProps {
@@ -66,6 +68,9 @@ export function CreateCurativeFromPanneDialog({
   const [description, setDescription] = useState<string>('');
   const [errors, setErrors] = useState<Record<string, string>>({});
 
+  const { showError } = useToast();
+  const todayStr = getTodayDateInputValue();
+
   const technicians = users.length > 0
     ? users.filter((u) => u.role === 'technician' && u.actif)
     : getActiveTechnicians();
@@ -95,13 +100,8 @@ export function CreateCurativeFromPanneDialog({
     const newErrors: Record<string, string> = {};
     if (!datePrevue) {
       newErrors.datePrevue = "La date d'intervention est obligatoire";
-    } else {
-      const selectedDate = new Date(datePrevue);
-      const today = new Date();
-      today.setHours(0, 0, 0, 0);
-      if (selectedDate < today) {
-        newErrors.datePrevue = "La date prévue ne peut pas être dans le passé";
-      }
+    } else if (datePrevue < todayStr) {
+      newErrors.datePrevue = 'La date prévue doit être aujourd\'hui ou une date future.';
     }
     if (!description.trim()) {
       newErrors.description = "La description de l'intervention est obligatoire";
@@ -115,6 +115,9 @@ export function CreateCurativeFromPanneDialog({
       newErrors.technicienId = TECHNICIAN_UNAVAILABLE_MESSAGE;
     }
 
+    if (newErrors.datePrevue) {
+      showError('Veuillez corriger la date prévue avant de continuer.');
+    }
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -188,6 +191,7 @@ export function CreateCurativeFromPanneDialog({
                 id="datePrevue"
                 type="date"
                 value={datePrevue}
+                min={todayStr}
                 onChange={(e) => {
                   setDatePrevue(e.target.value);
                   if (errors.datePrevue) setErrors((prev) => ({ ...prev, datePrevue: '' }));

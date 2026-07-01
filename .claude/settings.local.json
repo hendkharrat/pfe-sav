@@ -79,7 +79,8 @@
       "Bash(grep -A 15 \"CREATE TABLE \\\\`LigneFacture\\\\`\" prisma/migrations/20260629020108_init/migration.sql)",
       "Bash(echo \"TSC_EXIT:$?\")",
       "Bash(echo \"TSC:$?\")",
-      "Bash(grep -v \"//.*OK\")"
+      "Bash(grep -v \"//.*OK\")",
+      "PowerShell(Get-Process *)"
     ]
   }
 }

@@ -86,6 +86,9 @@ export async function POST(req: NextRequest) {
     const end = new Date(dateFin + 'T12:00:00')
     if (isNaN(start.getTime()) || isNaN(end.getTime())) return err('Dates invalides.', 400)
     if (end <= start) return err('La date de fin doit être postérieure à la date de début.', 400)
+    const today = new Date(); today.setHours(0, 0, 0, 0)
+    const startDay = new Date(start); startDay.setHours(0, 0, 0, 0)
+    if (startDay < today) return err('La date de début doit être aujourd\'hui ou une date future.', 400)
 
     const client = await prisma.client.findUnique({ where: { id: clientId }, select: { id: true } })
     if (!client) return err('Client introuvable.', 404)
