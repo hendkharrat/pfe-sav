@@ -67,19 +67,25 @@ export default function FacturesPage() {
   const [sortConfig, setSortConfig] = useState<SortConfig | null>(null);
   const [page, setPage] = useState(1);
 
-  useEffect(() => {
-    Promise.all([
-      fetch('/api/factures').then((r) => r.json()),
-      fetch('/api/interventions').then((r) => r.json()),
-      fetch('/api/clients').then((r) => r.json()),
-    ])
-      .then(([facs, ivs, cls]) => {
-        if (Array.isArray(facs)) setInvoices(facs);
-        if (Array.isArray(ivs)) setInterventions(ivs);
-        if (Array.isArray(cls)) setClients(cls);
-      })
-      .catch(() => showError('Erreur lors du chargement des données.'));
+  const loadData = useCallback(async () => {
+    try {
+      const [facs, ivs, cls] = await Promise.all([
+        fetch('/api/factures').then((r) => r.json()),
+        fetch('/api/interventions').then((r) => r.json()),
+        fetch('/api/clients').then((r) => r.json()),
+      ]);
+      if (Array.isArray(facs)) setInvoices(facs);
+      if (Array.isArray(ivs)) setInterventions(ivs);
+      if (Array.isArray(cls)) setClients(cls);
+    } catch {
+      showError('Erreur lors du chargement des données.');
+    }
   }, [showError]);
+
+  useEffect(() => {
+    loadData();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const clientId = useMemo(() => {
     if (!currentUser || currentUser.role !== 'client') return null;
@@ -298,7 +304,10 @@ export default function FacturesPage() {
           {isAdmin && (
             <Button
               className="gap-2 shrink-0"
-              onClick={() => setIsGenerateOpen(true)}
+              onClick={async () => {
+                await loadData();
+                setIsGenerateOpen(true);
+              }}
             >
               <FilePlus size={16} />
               Générer une facture

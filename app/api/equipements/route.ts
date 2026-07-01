@@ -45,11 +45,9 @@ export async function POST(req: NextRequest) {
     const body = await req.json().catch(() => null)
     if (!body) return err('Corps de la requête invalide.', 400)
 
-    const { reference, type, marque, modele, numeroSerie, description, images } =
+    const { type, marque, modele, numeroSerie, description, images } =
       body as Record<string, unknown>
 
-    if (typeof reference !== 'string' || !reference.trim())
-      return err('La référence est obligatoire.', 400)
     if (typeof type !== 'string' || !['CLIMATISEUR', 'SYSTEME_SURPRESSION'].includes(type))
       return err('Le type est invalide.', 400)
     if (typeof marque !== 'string' || !marque.trim())
@@ -57,18 +55,31 @@ export async function POST(req: NextRequest) {
     if (typeof modele !== 'string' || !modele.trim())
       return err('Le modèle est obligatoire.', 400)
 
+    const prefix = 'EQ-'
+    const latestEquipment = await prisma.equipment.findFirst({
+      where: { reference: { startsWith: prefix } },
+      orderBy: { reference: 'desc' },
+      select: { reference: true },
+    })
+    let seq = 1
+    if (latestEquipment) {
+      const n = parseInt(latestEquipment.reference.slice(prefix.length), 10)
+      if (!isNaN(n)) seq = n + 1
+    }
+    const reference = `${prefix}${String(seq).padStart(3, '0')}`
+
     const existing = await prisma.equipment.findUnique({
-      where: { reference: reference.trim() },
+      where: { reference },
       select: { id: true },
     })
-    if (existing) return err('Un équipement avec cette référence existe déjà.', 409)
+    if (existing) return err(`La référence "${reference}" existe déjà.`, 409)
 
     type ImageInput = { filename?: string; previewUrl?: string; isMain?: boolean }
     const imagesData: ImageInput[] = Array.isArray(images) ? (images as ImageInput[]) : []
 
     const created = await prisma.equipment.create({
       data: {
-        reference: reference.trim(),
+        reference,
         type: type as 'CLIMATISEUR' | 'SYSTEME_SURPRESSION',
         marque: marque.trim(),
         modele: modele.trim(),

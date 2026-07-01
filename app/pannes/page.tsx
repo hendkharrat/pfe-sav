@@ -180,9 +180,7 @@ export default function PannesPage() {
       list = list.filter((p) => p.clientId === clientFilter);
     }
 
-    return [...list].sort(
-      (a, b) => new Date(b.dateDeclaration).getTime() - new Date(a.dateDeclaration).getTime()
-    );
+    return [...list].sort((a, b) => b.id - a.id);
   }, [pannes, currentUser, clientInfo.clientId, searchTerm, statusFilter, clientFilter, getClientName, getEquipmentName]);
 
   useEffect(() => { setPage(1); }, [searchTerm, statusFilter, clientFilter]);

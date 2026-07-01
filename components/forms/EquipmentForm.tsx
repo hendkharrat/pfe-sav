@@ -67,7 +67,6 @@ export function EquipmentForm({
 
   const validateForm = () => {
     const newErrors: Record<string, string> = {};
-    if (!formData.reference.trim()) newErrors.reference = 'La référence est obligatoire';
     if (!formData.type) newErrors.type = 'Le type est obligatoire';
     if (!formData.marque.trim()) newErrors.marque = 'La marque est obligatoire';
     if (!formData.modele.trim()) newErrors.modele = 'Le modèle est obligatoire';
@@ -127,15 +126,13 @@ export function EquipmentForm({
         <form onSubmit={handleSubmit} className="space-y-6 mt-4">
           {/* Référence */}
           <div className="space-y-2">
-            <Label htmlFor="reference">Référence *</Label>
+            <Label htmlFor="reference">Référence</Label>
             <Input
               id="reference"
               value={formData.reference}
-              onChange={(e) => setFormData({ ...formData, reference: e.target.value })}
-              disabled={isLoading}
-              placeholder="EQ-001"
+              disabled
+              placeholder="Généré automatiquement à la création"
             />
-            {errors.reference && <p className="text-xs text-red-500">{errors.reference}</p>}
           </div>
 
           {/* Type */}

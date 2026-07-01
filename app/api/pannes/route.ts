@@ -69,7 +69,7 @@ export async function GET(req: NextRequest) {
 
     const pannes = await prisma.panne.findMany({
       where,
-      orderBy: { dateDeclaration: 'desc' },
+      orderBy: { id: 'desc' },
       include: PANNE_INCLUDE,
     })
     return NextResponse.json(pannes.map(mapPanne))
